@@ -1,4 +1,4 @@
-"""Remove pauses and add transitions (zoom punch / whip pan + whoosh) at scene changes."""
+"""Remove pauses and add transitions at scene changes: white flash first, then zoom-in pulls (no sound)."""
 import subprocess, sys, wave
 import numpy as np
 from PIL import Image, ImageFilter
@@ -30,7 +30,7 @@ for k, s in enumerate(SCENES):
     for a, b in CUTS:
         if a <= s < b:
             t = b
-    trans.append((src_to_out(t), "zoom" if k % 2 == 0 else "whip"))
+    trans.append((src_to_out(t), "flash" if k == 0 else "zoom"))
 print("output", len(src_frames) / FPS, "s; transitions at", [round(t, 2) for t, _ in trans], file=sys.stderr)
 
 
@@ -52,15 +52,16 @@ def effect(frame, oi):
         if -HALF <= d < HALF:
             p = 1 - (abs(d + 0.5) / HALF)  # 0 far .. 1 at the cut
             p = ease(min(max(p, 0), 1))
+            if kind == "flash":
+                arr = frame.astype(np.float32)
+                return (arr + (255 - arr) * p).clip(0, 255).astype(np.uint8)
             if kind == "zoom":
                 sc = 1 + 0.35 * p
                 im = Image.fromarray(frame)
                 cw, ch = int(W / sc), int(H / sc)
                 im = im.crop(((W - cw) // 2, (H - ch) // 2, (W + cw) // 2, (H + ch) // 2)).resize((W, H), Image.BILINEAR)
                 im = im.filter(ImageFilter.GaussianBlur(10 * p))
-                arr = np.asarray(im).astype(np.float32)
-                arr = arr + (255 - arr) * 0.25 * p  # small flash
-                return arr.clip(0, 255).astype(np.uint8)
+                return np.asarray(im)
             else:  # whip pan: outgoing slides left, incoming arrives from the right
                 shift = int(W * 0.45 * p) * (1 if d < 0 else -1)
                 arr = np.roll(frame, -shift, axis=1)
@@ -114,28 +115,6 @@ for s in segs:
 audio = np.concatenate(segs)
 audio = audio[:int(len(src_frames) / FPS * SR)]
 
-rng = np.random.default_rng(1)
-L = int(0.38 * SR)
-noise = rng.standard_normal(L)
-# swept band-pass whoosh via a moving FFT mask
-spec = np.fft.rfft(noise)
-freqs = np.fft.rfftfreq(L, 1 / SR)
-wh = np.zeros(L)
-chunks = 12
-for k in range(chunks):
-    fc = 400 * (6 ** (k / (chunks - 1)))
-    m = np.exp(-0.5 * ((np.log(freqs + 1) - np.log(fc)) / 0.5) ** 2)
-    part = np.fft.irfft(spec * m, L)
-    lo, hi = k * L // chunks, (k + 1) * L // chunks
-    wh[lo:hi] = part[lo:hi]
-env = np.sin(np.linspace(0, np.pi, L)) ** 2
-wh = wh * env
-wh = wh / np.abs(wh).max() * 0.22
-for tt, _ in trans:
-    s0 = int(tt * SR) - L // 2
-    s0 = max(s0, 0)
-    e0 = min(s0 + L, len(audio))
-    audio[s0:e0] += wh[:e0 - s0, None]
 audio = np.clip(audio, -1, 1)
 with wave.open(OUT + ".audio.wav", "wb") as wv:
     wv.setnchannels(2); wv.setsampwidth(2); wv.setframerate(SR)
