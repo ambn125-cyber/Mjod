@@ -124,15 +124,20 @@ for cap in CAPS:
             else:
                 prices.append(dict(kind="solo", text=sar(text), t0=t, t1=out))
                 events.append(("ding", t)); events.append(("scribble", t + 0.12))
-for num, label, t in SECTIONS:
-    events.append(("flash", t)); events.append(("boom", t + 0.05))
+SECTIONS = [tuple(x) + (True,) * (4 - len(x)) for x in SECTIONS]  # (num, label, t, flash)
+for num, label, t, fl in SECTIONS:
+    if fl:
+        events.append(("flash", t)); events.append(("boom", t + 0.05))
+    else:
+        events.append(("pop", t))
 for t in SCENES:
     events.append(("whoosh", t))
 first_price = sorted(p["t0"] for p in prices)
 sections = []
-for num, label, t in SECTIONS:
-    nxt = [p for p in first_price if p > t]
-    sections.append(dict(num=str(num), label=label, t0=t, t1=min(t + 1.6, (nxt[0] - 0.05) if nxt else 1e9)))
+starts = [x[2] for x in SECTIONS]
+for num, label, t, fl in SECTIONS:
+    nxt = [p for p in first_price if p > t] + [x for x in starts if x > t]
+    sections.append(dict(num=str(num), label=label, t0=t, t1=min(t + 1.6, (min(nxt) - 0.02) if nxt else 1e9)))
 json.dump(sorted(events, key=lambda e: e[1]), open(OUT + ".events.json", "w"))
 
 
@@ -199,6 +204,8 @@ def draw_sections(c, t):
 
 def flash(frame, t):
     for s in SECTIONS:
+        if not s[3]:
+            continue
         dt = t - s[2]
         if -0.04 <= dt < 0.28:
             a = 0.92 * (1 - max(dt, 0) / 0.28) if dt >= 0 else 0.5
