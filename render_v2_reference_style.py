@@ -15,7 +15,9 @@ CAPS, SECTIONS = spec["CAPS"], spec.get("SECTIONS", [])
 KEY = spec.get("KEY_COLOR", (232, 28, 40))
 Y_WORD, Y_PRICE = spec.get("Y_WORD", 1180), spec.get("Y_PRICE", 330)
 SCENES = spec.get("SCENES", [])
-WHITE, GREEN, OLD = (255, 255, 255), (52, 235, 52), (226, 30, 30)
+WHITE, OLD = (255, 255, 255), (226, 30, 30)
+GREEN = tuple(spec.get("PRICE_COLOR", (52, 235, 52)))
+LOGOS = spec.get("LOGOS", [])  # (png path, t0, t1, center y, width)
 
 
 def font(name, size, var=None):
@@ -81,11 +83,11 @@ def place(canvas, im, cx, cy, scale=1.0, alpha=1.0):
 
 def sar(text):
     n = re.search(r"\d+(?:\.\d+)?", text).group()
-    return f"{n} SAR"
+    return f"{n}%" if "%" in text else f"{n} SAR"
 
 
 def is_price(text):
-    return bool(re.search(r"\d", text)) and "ريال" in text
+    return bool(re.search(r"\d", text)) and ("ريال" in text or "%" in text)
 
 
 # ---------------- build timeline ----------------
@@ -214,8 +216,24 @@ def flash(frame, t):
     return frame
 
 
+_logos = {}
+
+
+def draw_logos(c, t):
+    for path, t0, t1, y, w in LOGOS:
+        if not (t0 <= t < t1 + 0.25):
+            continue
+        if path not in _logos:
+            lg = Image.open(path).convert("RGBA")
+            _logos[path] = lg.resize((w, int(lg.height * w / lg.width)), Image.LANCZOS)
+        q = ease((t - t0) / 0.35)
+        out = 1 - ease((t - t1) / 0.25) if t > t1 else 1.0
+        place(c, _logos[path], W / 2, y, 0.85 + 0.15 * q, q * out)
+
+
 def composite(frame, t):
     img = Image.fromarray(flash(frame, t)).convert("RGBA")
+    draw_logos(img, t)
     draw_sections(img, t)
     draw_prices(img, t)
     draw_words(img, t)
