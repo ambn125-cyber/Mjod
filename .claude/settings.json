@@ -5,9 +5,16 @@
         "source": "github",
         "repo": "heygen-com/hyperframes"
       }
+    },
+    "lemolab": {
+      "source": {
+        "source": "github",
+        "repo": "lemomo-ai/lemo-opuscar"
+      }
     }
   },
   "enabledPlugins": {
-    "hyperframes@hyperframes": true
+    "hyperframes@hyperframes": true,
+    "lemo-opuscar@lemolab": true
   }
 }
