@@ -1,0 +1,52 @@
+<template>
+  <style>
+    @font-face { font-family: "Tajawal"; src: url("assets/fonts/Tajawal-ExtraBold.ttf"); font-weight: 800; }
+    @font-face { font-family: "Tajawal"; src: url("assets/fonts/Tajawal-Black.ttf"); font-weight: 900; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Tajawal", sans-serif; color: #231F1E; direction: rtl; }
+    .k05-tamara-bg { position: absolute; inset: 0; background: radial-gradient(120% 70% at 50% 30%, #ffffff 0%, #F5F9FD 55%, #e4f1fb 100%); }
+    .k05-tamara-pill { border: 4px solid #1E1E1E; border-radius: 9999px; box-shadow: 10px 10px 0 rgba(26,26,26,0.10); }
+    .k05-tamara-card { border: 4px solid #1E1E1E; border-radius: 48px; box-shadow: 14px 14px 0 rgba(26,26,26,0.10); overflow: hidden; background: #fff; }
+    .k05-tamara-num { position: absolute; width: 190px; height: 190px; border-radius: 50%; background: #F26A21; color: #fff; border: 4px solid #1E1E1E;
+      font-weight: 900; font-size: 130px; line-height: 205px; text-align: center; box-shadow: 10px 10px 0 rgba(26,26,26,0.10); direction: ltr; }
+    .k05-tamara-w { display: inline-block; }
+    .k05-tamara-or { color: #F26A21; } .k05-tamara-bl { color: #087FBD; }
+
+    #k05-tamara-n { left: 790px; top: 200px; }
+    #k05-tamara-h { position: absolute; left: 0; right: 0; top: 440px; text-align: center; font-weight: 900; font-size: 130px; line-height: 1.1; }
+    #k05-tamara-phone { position: absolute; left: 60px; top: 760px; width: 520px; height: 780px; }
+    #k05-tamara-phone img { width: 100%; display: block; }
+    .k05-tamara-pay { position: absolute; left: 630px; width: 400px; height: 130px; line-height: 140px; text-align: center; background: #fff; font-size: 44px; font-weight: 800; }
+    .k05-tamara-pay b { font-weight: 900; font-size: 60px; color: #087FBD; direction: ltr; display: inline-block; }
+    .k05-tamara-pay span { color: #6b7a88; }
+
+  </style>
+  <div id="root" data-composition-id="05-tamara" data-width="1080" data-height="1920" data-duration="7">
+    <div id="k05-tamara-ground" class="clip k05-tamara-bg" data-start="0" data-duration="7" data-track-index="0"></div>
+
+    <div id="k05-tamara-n" class="k05-tamara-num">3</div>
+    <div id="k05-tamara-h"><div id="k05-tamara-h1">قسّطها</div><div id="k05-tamara-h2">مع <span class="k05-tamara-or">تمارا</span></div></div>
+    <div id="k05-tamara-phone" class="k05-tamara-card"><img src="assets/tamara.jpg" alt=""></div>
+    <div id="k05-tamara-p0" class="k05-tamara-pill k05-tamara-pay" style="top:860px"><b>12.99</b> <span>دفعة ١</span></div>
+    <div id="k05-tamara-p1" class="k05-tamara-pill k05-tamara-pay" style="top:1030px"><b>12.99</b> <span>دفعة ٢</span></div>
+    <div id="k05-tamara-p2" class="k05-tamara-pill k05-tamara-pay" style="top:1200px"><b>12.99</b> <span>دفعة ٣</span></div>
+    <div id="k05-tamara-p3" class="k05-tamara-pill k05-tamara-pay" style="top:1370px"><b>12.99</b> <span>دفعة ٤</span></div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      tl.fromTo("#k05-tamara-n", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, 0.1);
+      tl.fromTo("#k05-tamara-h1", { opacity: 0, y: 60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 1.0);
+      tl.fromTo("#k05-tamara-h2", { opacity: 0, y: 60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 1.5);
+      tl.fromTo("#k05-tamara-phone", { opacity: 0, y: 200, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out" }, 2.6);
+      tl.fromTo("#k05-tamara-p0", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.5, ease: "back.out(1.6)" }, 4.40);
+      tl.fromTo("#k05-tamara-p1", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.5, ease: "back.out(1.6)" }, 4.70);
+      tl.fromTo("#k05-tamara-p2", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.5, ease: "back.out(1.6)" }, 5.00);
+      tl.fromTo("#k05-tamara-p3", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.5, ease: "back.out(1.6)" }, 5.30);
+
+      window.__timelines["05-tamara"] = tl;
+    })();
+  </script>
+</template>

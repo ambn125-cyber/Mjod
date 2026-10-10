@@ -1,0 +1,42 @@
+<template>
+  <style>
+    @font-face { font-family: "Tajawal"; src: url("assets/fonts/Tajawal-ExtraBold.ttf"); font-weight: 800; }
+    @font-face { font-family: "Tajawal"; src: url("assets/fonts/Tajawal-Black.ttf"); font-weight: 900; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Tajawal", sans-serif; color: #231F1E; direction: rtl; }
+    .k02-intro-bg { position: absolute; inset: 0; background: radial-gradient(120% 70% at 50% 30%, #ffffff 0%, #F5F9FD 55%, #e4f1fb 100%); }
+    .k02-intro-pill { border: 4px solid #1E1E1E; border-radius: 9999px; box-shadow: 10px 10px 0 rgba(26,26,26,0.10); }
+    .k02-intro-card { border: 4px solid #1E1E1E; border-radius: 48px; box-shadow: 14px 14px 0 rgba(26,26,26,0.10); overflow: hidden; background: #fff; }
+    .k02-intro-num { position: absolute; width: 190px; height: 190px; border-radius: 50%; background: #F26A21; color: #fff; border: 4px solid #1E1E1E;
+      font-weight: 900; font-size: 130px; line-height: 205px; text-align: center; box-shadow: 10px 10px 0 rgba(26,26,26,0.10); direction: ltr; }
+    .k02-intro-w { display: inline-block; }
+    .k02-intro-or { color: #F26A21; } .k02-intro-bl { color: #087FBD; }
+
+    #k02-intro-logo { position: absolute; left: 50%; top: 110px; width: 420px; margin-left: -210px; }
+    #k02-intro-logo img { width: 100%; display: block; }
+    #k02-intro-phone { position: absolute; left: 50%; top: 600px; width: 660px; height: 960px; margin-left: -330px; }
+    #k02-intro-phone img { width: 100%; display: block; }
+    #k02-intro-chip { position: absolute; left: 640px; top: 560px; height: 100px; padding: 0 40px; line-height: 108px; background: #F26A21; color: #fff; font-weight: 900; font-size: 52px; white-space: nowrap; }
+
+  </style>
+  <div id="root" data-composition-id="02-intro" data-width="1080" data-height="1920" data-duration="6">
+    <div id="k02-intro-ground" class="clip k02-intro-bg" data-start="0" data-duration="6" data-track-index="0"></div>
+
+    <div id="k02-intro-logo"><img src="assets/logo.png" alt=""></div>
+    <div id="k02-intro-phone" class="k02-intro-card"><img id="k02-intro-shot" src="assets/home.jpg" alt=""></div>
+    <div id="k02-intro-chip" class="k02-intro-pill">الحين أونلاين</div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      tl.fromTo("#k02-intro-logo", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)" }, 0.1);
+      tl.fromTo("#k02-intro-phone", { opacity: 0, y: 220, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out" }, 1.4);
+      tl.fromTo("#k02-intro-shot", { y: 0 }, { y: -170, duration: 3.2, ease: "power2.inOut" }, 2.3);
+      tl.fromTo("#k02-intro-chip", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.7)" }, 3.6);
+
+      window.__timelines["02-intro"] = tl;
+    })();
+  </script>
+</template>

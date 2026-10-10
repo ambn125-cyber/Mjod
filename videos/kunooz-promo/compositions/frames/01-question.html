@@ -1,0 +1,48 @@
+<template>
+  <style>
+    @font-face { font-family: "Tajawal"; src: url("assets/fonts/Tajawal-ExtraBold.ttf"); font-weight: 800; }
+    @font-face { font-family: "Tajawal"; src: url("assets/fonts/Tajawal-Black.ttf"); font-weight: 900; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Tajawal", sans-serif; color: #231F1E; direction: rtl; }
+    .k01-question-bg { position: absolute; inset: 0; background: radial-gradient(120% 70% at 50% 30%, #ffffff 0%, #F5F9FD 55%, #e4f1fb 100%); }
+    .k01-question-pill { border: 4px solid #1E1E1E; border-radius: 9999px; box-shadow: 10px 10px 0 rgba(26,26,26,0.10); }
+    .k01-question-card { border: 4px solid #1E1E1E; border-radius: 48px; box-shadow: 14px 14px 0 rgba(26,26,26,0.10); overflow: hidden; background: #fff; }
+    .k01-question-num { position: absolute; width: 190px; height: 190px; border-radius: 50%; background: #F26A21; color: #fff; border: 4px solid #1E1E1E;
+      font-weight: 900; font-size: 130px; line-height: 205px; text-align: center; box-shadow: 10px 10px 0 rgba(26,26,26,0.10); direction: ltr; }
+    .k01-question-w { display: inline-block; }
+    .k01-question-or { color: #F26A21; } .k01-question-bl { color: #087FBD; }
+
+    #k01-question-l1, #k01-question-l2 { position: absolute; left: 0; right: 0; top: 520px; text-align: center; font-weight: 900; font-size: 150px; line-height: 1.15; }
+    #k01-question-l1 .k01-question-w, #k01-question-l2 .k01-question-w { margin: 0 18px; }
+    #k01-question-under { position: absolute; left: 140px; width: 380px; top: 880px; height: 26px; background: #087FBD; border-radius: 13px; transform-origin: 100% 50%; }
+    #k01-question-tag { position: absolute; left: 50%; top: 1180px; width: 640px; margin-left: -320px; height: 130px; line-height: 140px; text-align: center; background: #087FBD; color: #fff; font-weight: 900; font-size: 64px; }
+
+  </style>
+  <div id="root" data-composition-id="01-question" data-width="1080" data-height="1920" data-duration="5">
+    <div id="k01-question-ground" class="clip k01-question-bg" data-start="0" data-duration="5" data-track-index="0"></div>
+
+    <div id="k01-question-l1"><span class="k01-question-w" id="k01-question-a">ليش</span><span class="k01-question-w" id="k01-question-b">تروح</span><div></div><span class="k01-question-w k01-question-bl" id="k01-question-c">الصيدلية؟</span></div>
+    <div id="k01-question-under"></div>
+    <div id="k01-question-l2"><span class="k01-question-w" id="k01-question-d">وهي</span><span class="k01-question-w k01-question-or" id="k01-question-e">تجيك</span><div></div><span class="k01-question-w" id="k01-question-f">لين بابك؟</span></div>
+    <div id="k01-question-tag" class="k01-question-pill">توصيل لين البيت</div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      tl.fromTo("#k01-question-a", { opacity: 0, y: 60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 0.15);
+      tl.fromTo("#k01-question-b", { opacity: 0, y: 60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 0.55);
+      tl.fromTo("#k01-question-c", { opacity: 0, y: 60, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 0.95);
+      tl.fromTo("#k01-question-under", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 1.45);
+      tl.set("#k01-question-l1", { opacity: 0 }, 2.2); tl.set("#k01-question-under", { opacity: 0 }, 2.2);
+      tl.fromTo("#k01-question-l2", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 2.2);
+      tl.fromTo("#k01-question-d", { opacity: 0, y: 40, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" }, 2.2);
+      tl.fromTo("#k01-question-e", { opacity: 0, y: 40, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }, 2.45);
+      tl.fromTo("#k01-question-f", { opacity: 0, y: 40, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power3.out" }, 2.75);
+      tl.fromTo("#k01-question-tag", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.7)" }, 3.5);
+
+      window.__timelines["01-question"] = tl;
+    })();
+  </script>
+</template>

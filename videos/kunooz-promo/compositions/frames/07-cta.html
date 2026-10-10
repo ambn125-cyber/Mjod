@@ -1,0 +1,41 @@
+<template>
+  <style>
+    @font-face { font-family: "Tajawal"; src: url("assets/fonts/Tajawal-ExtraBold.ttf"); font-weight: 800; }
+    @font-face { font-family: "Tajawal"; src: url("assets/fonts/Tajawal-Black.ttf"); font-weight: 900; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Tajawal", sans-serif; color: #231F1E; direction: rtl; }
+    .k07-cta-bg { position: absolute; inset: 0; background: radial-gradient(120% 70% at 50% 30%, #ffffff 0%, #F5F9FD 55%, #e4f1fb 100%); }
+    .k07-cta-pill { border: 4px solid #1E1E1E; border-radius: 9999px; box-shadow: 10px 10px 0 rgba(26,26,26,0.10); }
+    .k07-cta-card { border: 4px solid #1E1E1E; border-radius: 48px; box-shadow: 14px 14px 0 rgba(26,26,26,0.10); overflow: hidden; background: #fff; }
+    .k07-cta-num { position: absolute; width: 190px; height: 190px; border-radius: 50%; background: #F26A21; color: #fff; border: 4px solid #1E1E1E;
+      font-weight: 900; font-size: 130px; line-height: 205px; text-align: center; box-shadow: 10px 10px 0 rgba(26,26,26,0.10); direction: ltr; }
+    .k07-cta-w { display: inline-block; }
+    .k07-cta-or { color: #F26A21; } .k07-cta-bl { color: #087FBD; }
+
+    #k07-cta-logo { position: absolute; left: 50%; top: 330px; width: 620px; margin-left: -310px; }
+    #k07-cta-logo img { width: 100%; display: block; }
+    #k07-cta-url { position: absolute; left: 90px; width: 900px; top: 1060px; height: 140px; line-height: 150px; text-align: center; background: #fff; font-weight: 800; font-size: 66px; color: #087FBD; direction: ltr; }
+    #k07-cta-cta { position: absolute; left: 50%; margin-left: -280px; width: 560px; top: 1290px; height: 150px; line-height: 162px; text-align: center; background: #F26A21; color: #fff; font-weight: 900; font-size: 82px; }
+
+  </style>
+  <div id="root" data-composition-id="07-cta" data-width="1080" data-height="1920" data-duration="7">
+    <div id="k07-cta-ground" class="clip k07-cta-bg" data-start="0" data-duration="7" data-track-index="0"></div>
+
+    <div id="k07-cta-logo"><img src="assets/logo.png" alt=""></div>
+    <div id="k07-cta-url" class="k07-cta-pill"><span id="k07-cta-txt"></span></div>
+    <div id="k07-cta-cta" class="k07-cta-pill">اطلب الحين</div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      tl.fromTo("#k07-cta-logo", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 1.0, ease: "back.out(1.4)" }, 0.15);
+      tl.fromTo("#k07-cta-url", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.7)" }, 1.4);
+      const U = "kunooz-alsaada.com", s = { n: 0 }; tl.fromTo(s, { n: 0 }, { n: U.length, duration: 1.3, ease: "none", onUpdate: () => { q("#k07-cta-txt").textContent = U.slice(0, Math.round(s.n)); } }, 1.75);
+      tl.fromTo("#k07-cta-cta", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, 3.6);
+
+      window.__timelines["07-cta"] = tl;
+    })();
+  </script>
+</template>
