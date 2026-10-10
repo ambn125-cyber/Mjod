@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 3,
+  "composition": {
+    "fps": 30,
+    "width": 1080,
+    "height": 1920,
+    "durationSeconds": 44.71,
+    "layout": "portrait",
+    "themeId": "kunooz",
+    "seed": 7
+  },
+  "videoTrack": {
+    "sourcePath": "public/input-video.mp4",
+    "startSec": 0,
+    "endSec": 45.12,
+    "cuts": [
+      [
+        1.58,
+        1.78
+      ],
+      [
+        7.82,
+        8.03
+      ]
+    ]
+  },
+  "subtitles": {
+    "enabled": false
+  },
+  "cards": [
+    {
+      "id": "k01",
+      "intent": "discount up to 70%",
+      "startSec": 0.0,
+      "endSec": 1.5333,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "خصم يوصل إلى",
+          "70"
+        ]
+      }
+    },
+    {
+      "id": "k02",
+      "intent": "free delivery",
+      "startSec": 1.5333,
+      "endSec": 3.4,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "توصيل لباب بيتك",
+          "مجاناً"
+        ]
+      }
+    },
+    {
+      "id": "k03",
+      "intent": "instalments",
+      "startSec": 3.4,
+      "endSec": 4.8667,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "وفوقها متوفر عندهم",
+          "تقسيط"
+        ]
+      }
+    },
+    {
+      "id": "k04",
+      "intent": "website + branches",
+      "startSec": 5.6,
+      "endSec": 9.1,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "متوفرة في",
+          "موقع كنوز السعادة الجديد",
+          "وفي جميع الفروع"
+        ]
+      }
+    },
+    {
+      "id": "k05",
+      "intent": "baby milk",
+      "startSec": 9.1,
+      "endSec": 12.1,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "خذ أي حبتين من",
+          "حليب الأطفال",
+          "والثالثة خصم",
+          "60"
+        ]
+      }
+    },
+    {
+      "id": "k06",
+      "intent": "baby care prices",
+      "startSec": 12.1,
+      "endSec": 16.5,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "بيبي جوي البوكس<b>85</b>ريال",
+          "الكيس<b>75</b>ريال",
+          "كرتون بامبرز<b>77</b>ريال"
+        ]
+      }
+    },
+    {
+      "id": "k07",
+      "intent": "Johnson's 25% off",
+      "startSec": 16.5,
+      "endSec": 18.8333,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "جميع منتجات جونسون",
+          "عليها خصم",
+          "25"
+        ]
+      }
+    },
+    {
+      "id": "k08",
+      "intent": "wipes 1+1",
+      "startSec": 18.8333,
+      "endSec": 21.2,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "مناديل أطفال",
+          "خذ حبة والثانية",
+          "مجاناً"
+        ]
+      }
+    },
+    {
+      "id": "k09",
+      "intent": "QV cream",
+      "startSec": 21.2,
+      "endSec": 22.7333,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "كريم QV",
+          "<b>55</b>ريال"
+        ]
+      }
+    },
+    {
+      "id": "k10",
+      "intent": "Bioderma",
+      "startSec": 22.7333,
+      "endSec": 25.5,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "كريم بيوديرما",
+          "<b>59.95</b>ريال"
+        ]
+      }
+    },
+    {
+      "id": "k11",
+      "intent": "Eucerin lotion",
+      "startSec": 25.5,
+      "endSec": 28.0,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "يوسيرين لوشن",
+          "كل الأنواع",
+          "<b>59</b>ريال"
+        ]
+      }
+    },
+    {
+      "id": "k12",
+      "intent": "Lux shampoo",
+      "startSec": 28.0,
+      "endSec": 32.3333,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "شامبو لوكس",
+          "700 مل<b>21</b>ريال",
+          "500 مل<b>15</b>ريال"
+        ]
+      }
+    },
+    {
+      "id": "k13",
+      "intent": "Herbal shampoo",
+      "startSec": 32.3333,
+      "endSec": 34.6667,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "شامبو هيربل",
+          "جميع الأنواع",
+          "<b>18</b>ريال"
+        ]
+      }
+    },
+    {
+      "id": "k14",
+      "intent": "Astera 30% off",
+      "startSec": 34.6667,
+      "endSec": 36.9333,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "جميع منتجات استيرا",
+          "عليها خصم",
+          "30"
+        ]
+      }
+    },
+    {
+      "id": "k15",
+      "intent": "vitamins",
+      "startSec": 36.9333,
+      "endSec": 40.6667,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "خصومات قوية على",
+          "جميع الفيتامينات",
+          "للنساء · للرجال · للأطفال"
+        ]
+      }
+    },
+    {
+      "id": "k16",
+      "intent": "all branches",
+      "startSec": 40.6667,
+      "endSec": 42.6667,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "وعلى فكرة العروض هذه",
+          "متوفرة في جميع الفروع"
+        ]
+      }
+    },
+    {
+      "id": "k17",
+      "intent": "website: stronger offers",
+      "startSec": 42.6667,
+      "endSec": 44.7,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "lines": [
+          "ولو تدخل الموقع",
+          "بتحصل عروض",
+          "أقوى"
+        ]
+      }
+    }
+  ]
+}
