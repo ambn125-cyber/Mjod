@@ -6,3 +6,4 @@ output.mp4
 renders/
 .hyperframes/
 __pycache__/
+.output.hf-transaction-*/
