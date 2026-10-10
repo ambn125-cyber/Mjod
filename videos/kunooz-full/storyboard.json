@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 3,
+  "composition": {
+    "fps": 30,
+    "width": 1080,
+    "height": 1920,
+    "durationSeconds": 44.71,
+    "layout": "portrait",
+    "themeId": "kunooz",
+    "seed": 7
+  },
+  "videoTrack": {
+    "sourcePath": "public/input-video.mp4",
+    "startSec": 0,
+    "endSec": 45.12,
+    "cuts": [
+      [
+        1.58,
+        1.78
+      ],
+      [
+        7.82,
+        8.03
+      ]
+    ]
+  },
+  "subtitles": {
+    "enabled": false
+  },
+  "cards": [
+    {
+      "id": "k01",
+      "intent": "hook: discount up to 70%",
+      "startSec": 0.0,
+      "endSec": 1.5333,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "kicker": "خصم يوصل إلى",
+        "title": "70%"
+      }
+    },
+    {
+      "id": "k02",
+      "intent": "free home delivery",
+      "startSec": 1.5333,
+      "endSec": 3.4,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "title": "توصيل لباب بيتك",
+        "chip": "مجاناً"
+      }
+    },
+    {
+      "id": "k03",
+      "intent": "instalments available",
+      "startSec": 3.4,
+      "endSec": 4.8667,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "title": "متوفر تقسيط"
+      }
+    },
+    {
+      "id": "k04",
+      "intent": "available on the new website + all branches",
+      "startSec": 5.6,
+      "endSec": 9.1,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "title": "موقع كنوز السعادة الجديد",
+        "detail": "وفي جميع الفروع"
+      }
+    },
+    {
+      "id": "k05",
+      "intent": "buy two baby milk, third 60% off",
+      "startSec": 9.1,
+      "endSec": 12.1,
+      "accentIndex": 0,
+      "zone": "lower-third",
+      "contentHints": {
+        "title": "حليب الأطفال",
+        "detail": "الثالثة خصم 60%"
+      }
+    },
+    {
+      "id": "k06",
+      "intent": "Baby Joy box 85, bag 75, Pampers carton 77",
+      "startSec": 12.1,
+      "endSec": 16.5,
+      "accentIndex": 0,
+      "zone": "side-panel",
+      "contentHints": {
+        "rows": [
+          "بيبي جوي البوكس 85",
+          "الكيس 75",
+          "كرتون بامبرز 77"
+        ]
+      }
+    },
+    {
+      "id": "k07",
+      "intent": "all Johnson's products 25% off",
+      "startSec": 16.5,
+      "endSec": 18.8333,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "title": "جونسون",
+        "stat": "25%"
+      }
+    },
+    {
+      "id": "k08",
+      "intent": "baby wipes: buy one, get the second free",
+      "startSec": 18.8333,
+      "endSec": 21.2,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "title": "مناديل أطفال",
+        "stat": "1 + 1"
+      }
+    },
+    {
+      "id": "k09",
+      "intent": "skincare prices: QV 55, Bioderma 59.95, Eucerin 59",
+      "startSec": 21.2,
+      "endSec": 28.0,
+      "accentIndex": 0,
+      "zone": "fullscreen",
+      "contentHints": {
+        "rows": [
+          "QV 55",
+          "Bioderma 59.95",
+          "Eucerin 59"
+        ]
+      }
+    },
+    {
+      "id": "k10",
+      "intent": "Lux 700ml 21, 500ml 15; Herbal all types 18",
+      "startSec": 28.0,
+      "endSec": 34.6667,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "rows": [
+          "Lux 700ml 21",
+          "Lux 500ml 15",
+          "Herbal 18"
+        ]
+      }
+    },
+    {
+      "id": "k11",
+      "intent": "all Astera products 30% off",
+      "startSec": 34.6667,
+      "endSec": 36.9333,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "title": "استيرا",
+        "stat": "30%"
+      }
+    },
+    {
+      "id": "k12",
+      "intent": "strong discounts on vitamins for women, men, kids",
+      "startSec": 36.9333,
+      "endSec": 40.6667,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "title": "خصومات الفيتامينات",
+        "chips": [
+          "للنساء",
+          "للرجال",
+          "للأطفال"
+        ]
+      }
+    },
+    {
+      "id": "k13",
+      "intent": "these offers are in all branches",
+      "startSec": 40.6667,
+      "endSec": 42.6667,
+      "accentIndex": 0,
+      "zone": "video-overlay",
+      "contentHints": {
+        "title": "متوفرة في جميع الفروع"
+      }
+    },
+    {
+      "id": "k14",
+      "intent": "go to the website for even stronger offers",
+      "startSec": 42.6667,
+      "endSec": 44.7,
+      "accentIndex": 0,
+      "zone": "fullscreen",
+      "contentHints": {
+        "title": "بالموقع عروض أقوى"
+      }
+    }
+  ]
+}

@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<style>
+@font-face{font-family:"Inter";src:url("fonts/Inter-400-latin.woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Inter";src:url("fonts/Inter-700-latin.woff2");font-weight:700;font-display:block}
+@font-face{font-family:"Tajawal";src:url("fonts/Tajawal-ExtraBold.ttf");font-weight:800;font-display:block}
+@font-face{font-family:"Tajawal";src:url("fonts/Tajawal-Black.ttf");font-weight:900;font-display:block}
+@font-face{font-family:"Lalezar";src:url("fonts/Lalezar-Regular.ttf");font-weight:400;font-display:block}
+@font-face{font-family:"Marhey";src:url("fonts/Marhey.ttf");font-weight:300 700;font-display:block}
+@font-face{font-family:"El Messiri";src:url("fonts/ElMessiri.ttf");font-weight:400 700;font-display:block}
+@font-face{font-family:"Rakkas";src:url("fonts/Rakkas-Regular.ttf");font-weight:400;font-display:block}
+@font-face{font-family:"Changa";src:url("fonts/Changa.ttf");font-weight:200 800;font-display:block}
+@font-face{font-family:"Cairo";src:url("fonts/Cairo.ttf");font-weight:200 1000;font-display:block}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0a0c12;
+  font-family: "Tajawal", "Cairo", "Inter", sans-serif; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #0a0c12; }
+.video-wrapper { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; z-index: 1; transform-origin: 0 0; clip-path: inset(0px 0px 0px 0px round 0px); }
+.video-wrapper video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.video-wrapper.pip-pill { border-radius: 96px; }
+.card-host { position: absolute; pointer-events: none; overflow: hidden; z-index: 3; }
+.card-host .card { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.card-host .char { display: inline-block; }
+.site-phone { position: absolute; z-index: 8; opacity: 0; border-radius: 44px; overflow: hidden; background: #fff;
+  border: 10px solid #111; box-shadow: 0 40px 90px -20px rgba(0,0,0,.65), 0 0 0 4px rgba(255,255,255,.9); }
+.site-phone video { width: 100%; height: 100%; object-fit: cover; display: block; }
+</style>
+</head>
+<body>
+<div id="stage" data-composition-id="talking-head-recut" data-start="0" data-duration="44.71" data-fps="30" data-width="1080" data-height="1920">
+<div class="video-wrapper" id="video-wrap">
+<video id="take1" src="input-video.mp4" playsinline data-has-audio="true" data-start="0.0" data-duration="1.5667" data-media-start="0.0" data-track-index="1"></video>
+<video id="take2" src="input-video.mp4" playsinline data-has-audio="true" data-start="1.5667" data-duration="6.0333" data-media-start="1.78" data-track-index="1"></video>
+<video id="take3" src="input-video.mp4" playsinline data-has-audio="true" data-start="7.6333" data-duration="37.1" data-media-start="8.03" data-track-index="1"></video>
+</div>
+<div id="host-k01" class="card-host clip" data-card-id="k01" data-start="0.0" data-duration="1.5333" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k01">
+<style>
+.card[data-card-id="k01"] .root {position:absolute;inset:0;direction:rtl;font-family:'Lalezar','Tajawal',sans-serif}
+.card[data-card-id="k01"] .slab {position:absolute;right:0;top:150px;width:0;height:420px;background:#0a0a0a}
+.card[data-card-id="k01"] .lime {position:absolute;right:0;top:110px;width:440px;height:86px;background:#d4ff00}
+.card[data-card-id="k01"] .pink {position:absolute;left:70px;top:470px;width:150px;height:150px;background:#ff2e88}
+.card[data-card-id="k01"] .kick {position:absolute;right:56px;top:120px;font-size:64px;line-height:1;color:#0a0a0a;padding-top:10px}
+.card[data-card-id="k01"] .big {position:absolute;right:50px;top:200px;font:700 300px/1 'Inter';color:#d4ff00;letter-spacing:-.04em;direction:ltr}
+.card[data-card-id="k01"] .big .pc {-webkit-text-stroke:6px #d4ff00;color:transparent}
+
+</style>
+<div class="root"><span id="k01-slab" class="slab" data-anim="grow-x" data-anim-at="0.0" data-anim-duration="0.35" data-anim-target-w="820"></span><span id="k01-lime" class="lime" data-anim="slide-in" data-anim-at="0.05" data-anim-duration="0.3" data-anim-from="right" data-anim-distance="440"></span><span id="k01-pink" class="pink" data-anim="scale-pop" data-anim-at="0.35" data-anim-duration="0.35"></span><div id="k01-kick" class="kick" data-anim="fade-in" data-anim-at="0.1" data-anim-duration="0.25">خصم يوصل إلى</div><div class="big"><span id="k01-num" data-anim="count-up" data-anim-at="0.15" data-anim-duration="0.6" data-anim-from="0" data-anim-to="70" data-anim-format=".0f">0</span><span class="pc">%</span></div></div>
+</div>
+</div>
+<div id="host-k02" class="card-host clip" data-card-id="k02" data-start="1.5333" data-duration="1.8667" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k02">
+<style>
+.card[data-card-id="k02"] .root {position:absolute;inset:0;direction:rtl;font-family:'Marhey','Tajawal',sans-serif}
+.card[data-card-id="k02"] .box {position:absolute;left:60px;right:60px;top:150px;padding:40px 44px 34px;background:#fff8f0;border-radius:44px;box-shadow:0 30px 70px -20px rgba(0,0,0,.45)}
+.card[data-card-id="k02"] .tags {display:flex;gap:14px;margin-bottom:18px}
+.card[data-card-id="k02"] .tag {font-size:30px;color:#ff2e63;background:#ffe3ea;border-radius:999px;padding:8px 22px}
+.card[data-card-id="k02"] .t {font-size:96px;line-height:1.15;color:#1b1b1b;font-weight:700}
+.card[data-card-id="k02"] .free {display:inline-block;margin-top:16px;font-size:92px;color:#fff;background:#ff2e63;border-radius:28px;padding:4px 40px 14px}
+.card[data-card-id="k02"] .row {display:flex;gap:30px;margin-top:24px;font:700 30px 'Inter';color:#8a7d78;direction:ltr;justify-content:flex-end}
+
+</style>
+<div class="root"><div id="k02-box" class="box" data-anim="slide-in" data-anim-at="0.0" data-anim-duration="0.35" data-anim-from="top" data-anim-distance="120"><div class="tags"><span id="k02-tg1" class="tag" data-anim="fade-in" data-anim-at="0.1" data-anim-duration="0.25">#توصيل</span><span id="k02-tg2" class="tag" data-anim="fade-in" data-anim-at="0.2" data-anim-duration="0.25">#كنوز_السعادة</span></div><div id="k02-t" class="t" data-anim="kinetic-chars" data-anim-at="0.15" data-anim-duration="0.3" data-anim-stagger="0.12" data-anim-pattern="pop"><span class="char">توصيل</span> <span class="char">لباب</span> <span class="char">بيتك</span></div><div id="k02-free" class="free" data-anim="scale-pop" data-anim-at="1.3399999999999999" data-anim-duration="0.3">مجاناً</div><div id="k02-row" class="row" data-anim="fade-in" data-anim-at="0.9" data-anim-duration="0.3">♥ 2.4k &nbsp; 💬 312</div></div></div>
+</div>
+</div>
+<div id="host-k03" class="card-host clip" data-card-id="k03" data-start="3.4" data-duration="1.4667" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k03">
+<style>
+.card[data-card-id="k03"] .root {position:absolute;inset:0;direction:rtl;font-family:'Tajawal',sans-serif}
+.card[data-card-id="k03"] .band {position:absolute;left:0;right:0;top:1270px;height:300px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.card[data-card-id="k03"] .s {font:800 40px/1 'Tajawal';color:#777;letter-spacing:.02em}
+.card[data-card-id="k03"] .t {font:900 150px/1.1 'Tajawal';color:#000;margin-top:10px}
+.card[data-card-id="k03"] .u {position:absolute;bottom:34px;height:10px;width:0;background:#000}
+
+</style>
+<div class="root"><div id="k03-band" class="band" data-anim="mask-reveal" data-anim-at="0.0" data-anim-duration="0.3" data-anim-direction="right"><div id="k03-s" class="s" data-anim="fade-in" data-anim-at="0.15" data-anim-duration="0.25">وفوقها متوفر عندهم</div><div id="k03-t" class="t" data-anim="blur-in" data-anim-at="1.1199999999999997" data-anim-duration="0.3">تقسيط</div><span id="k03-u" class="u" data-anim="grow-x" data-anim-at="1.2199999999999998" data-anim-duration="0.35" data-anim-target-w="380"></span></div></div>
+</div>
+</div>
+<div id="host-k04" class="card-host clip" data-card-id="k04" data-start="5.6" data-duration="3.5" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k04">
+<style>
+.card[data-card-id="k04"] .root {position:absolute;inset:0;direction:rtl;font-family:'Cairo','Tajawal',sans-serif}
+.card[data-card-id="k04"] .panel {position:absolute;right:40px;top:120px;width:560px;background:#fff;padding:30px 34px 34px}
+.card[data-card-id="k04"] .r1 {height:6px;background:#111;width:0}
+.card[data-card-id="k04"] .r2 {height:2px;background:#111;margin-top:6px;width:0}
+.card[data-card-id="k04"] .k {font:700 26px/1 'Inter';letter-spacing:.24em;color:#e8190f;margin:22px 0 6px;direction:ltr;text-align:right}
+.card[data-card-id="k04"] .t {font:900 76px/1.15 'Cairo';color:#111}
+.card[data-card-id="k04"] .t b {color:#e8190f}
+.card[data-card-id="k04"] .d {display:flex;align-items:center;gap:16px;margin-top:22px;font:800 44px/1 'Cairo';color:#111}
+.card[data-card-id="k04"] .d i {display:inline-block;width:26px;height:26px;background:#e8190f}
+
+</style>
+<div class="root"><div id="k04-panel" class="panel" data-anim="fade-in" data-anim-at="0.0" data-anim-duration="0.2"><div id="k04-r1" class="r1" data-anim="grow-x" data-anim-at="0.0" data-anim-duration="0.3" data-anim-target-w="492"></div><div id="k04-r2" class="r2" data-anim="grow-x" data-anim-at="0.08" data-anim-duration="0.3" data-anim-target-w="492"></div><div id="k04-k" class="k" data-anim="fade-in" data-anim-at="0.2" data-anim-duration="0.25">KUNOOZ · ONLINE</div><div id="k04-t" class="t" data-anim="kinetic-chars" data-anim-at="0.6200000000000001" data-anim-duration="0.25" data-anim-stagger="0.22" data-anim-pattern="pop"><span class="char">موقع</span> <span class="char">كنوز</span> <span class="char"><b>السعادة</b></span> <span class="char">الجديد</span></div><div id="k04-d" class="d" data-anim="slide-in" data-anim-at="2.37" data-anim-duration="0.3" data-anim-from="right" data-anim-distance="60"><i></i>وفي جميع الفروع</div></div></div>
+</div>
+</div>
+<div id="host-k05" class="card-host clip" data-card-id="k05" data-start="9.1" data-duration="3.0" data-track-index="3" style="left:0px;top:844px;width:1080px;height:1076px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k05">
+<style>
+.card[data-card-id="k05"] .root {position:absolute;inset:0;direction:rtl;background:#f6efe4;font-family:'El Messiri','Tajawal',serif;color:#1d1a17}
+.card[data-card-id="k05"] .block {position:absolute;left:0;top:0;width:0;height:100%;background:#ff3a2d}
+.card[data-card-id="k05"] .k {position:absolute;right:60px;top:70px;font:700 40px/1 'El Messiri';color:#ff3a2d}
+.card[data-card-id="k05"] .t {position:absolute;right:60px;top:130px;font:700 120px/1.15 'El Messiri'}
+.card[data-card-id="k05"] .d {position:absolute;right:60px;top:300px;font:600 56px/1.3 'El Messiri';color:#5a524b}
+.card[data-card-id="k05"] .big {position:absolute;right:60px;left:200px;top:400px;display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.card[data-card-id="k05"] .big .w {font:700 84px/1 'El Messiri'}
+.card[data-card-id="k05"] .big .n {font:700 190px/1 'Inter';color:#ff3a2d;direction:ltr;margin-top:10px}
+
+</style>
+<div class="root"><span id="k05-block" class="block" data-anim="grow-x" data-anim-at="0.1" data-anim-duration="0.5" data-anim-target-w="150"></span><div id="k05-k" class="k" data-anim="fade-in" data-anim-at="0.15" data-anim-duration="0.3">— عرض الحليب</div><div id="k05-t" class="t" data-anim="mask-reveal" data-anim-at="0.840000000000001" data-anim-duration="0.4" data-anim-direction="right">حليب الأطفال</div><div id="k05-d" class="d" data-anim="fade-in" data-anim-at="0.25" data-anim-duration="0.3">خذ لك أي حبتين…</div><div class="big"><span id="k05-w" class="w" data-anim="fade-in" data-anim-at="1.6799999999999997" data-anim-duration="0.25">والثالثة خصم</span><span class="n"><span id="k05-n" data-anim="count-up" data-anim-at="2.42" data-anim-duration="0.45" data-anim-from="0" data-anim-to="60" data-anim-format=".0f">0</span>%</span></div></div>
+</div>
+</div>
+<div id="host-k06" class="card-host clip" data-card-id="k06" data-start="12.1" data-duration="4.4" data-track-index="3" style="left:0px;top:0px;width:1080px;height:946px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k06">
+<style>
+.card[data-card-id="k06"] .root {position:absolute;inset:0;direction:rtl;background:#efe4c8;font-family:'Changa','Tajawal',sans-serif;color:#2a2118}
+.card[data-card-id="k06"] .paper {position:absolute;left:70px;right:70px;top:60px;bottom:40px;background:#fbf6e9;box-shadow:0 18px 40px -18px rgba(0,0,0,.35);padding:40px 50px}
+.card[data-card-id="k06"] .h {display:flex;justify-content:space-between;align-items:baseline;border-bottom:3px double #2a2118;padding-bottom:16px}
+.card[data-card-id="k06"] .h .t {font:700 64px/1 'Changa'}
+.card[data-card-id="k06"] .h .m {font:400 26px/1 'Inter';color:#8b1d1d;direction:ltr}
+.card[data-card-id="k06"] .row {display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px dashed #b9ab8a;padding:22px 0}
+.card[data-card-id="k06"] .row .n {font:600 52px/1.1 'Changa'}
+.card[data-card-id="k06"] .row .p {font:700 76px/1 'Inter';direction:ltr}
+.card[data-card-id="k06"] .row .p small {font:600 30px 'Changa';color:#8b1d1d;margin-left:8px}
+.card[data-card-id="k06"] .stamp {position:absolute;left:60px;bottom:50px;border:6px solid #8b1d1d;color:#8b1d1d;font:700 56px/1 'Changa';padding:10px 26px 18px;border-radius:10px}
+
+</style>
+<div class="root"><div id="k06-paper" class="paper" data-anim="slide-in" data-anim-at="0.0" data-anim-duration="0.4" data-anim-from="top" data-anim-distance="200"><div class="h"><span class="t">أسعار الأطفال</span><span class="m">BABY · SAR</span></div><div id="k06-r1" class="row" data-anim="slide-in" data-anim-at="0.0" data-anim-duration="0.3" data-anim-from="right" data-anim-distance="80"><span class="n">بيبي جوي · البوكس</span><span class="p">85<small>ريال</small></span></div><div id="k06-r2" class="row" data-anim="slide-in" data-anim-at="1.7400000000000002" data-anim-duration="0.3" data-anim-from="right" data-anim-distance="80"><span class="n">بيبي جوي · الكيس</span><span class="p">75<small>ريال</small></span></div><div id="k06-r3" class="row" data-anim="slide-in" data-anim-at="2.74" data-anim-duration="0.3" data-anim-from="right" data-anim-distance="80"><span class="n">كرتون بامبرز</span><span class="p">77<small>ريال</small></span></div><div id="k06-st" class="stamp" data-anim="scale-pop" data-anim-at="3.4800000000000004" data-anim-duration="0.3">عرض خاص</div></div></div>
+</div>
+</div>
+<div id="host-k07" class="card-host clip" data-card-id="k07" data-start="16.5" data-duration="2.3333" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k07">
+<style>
+.card[data-card-id="k07"] .root {position:absolute;inset:0;direction:rtl;font-family:'Rakkas','Tajawal',serif}
+.card[data-card-id="k07"] .g {position:absolute;left:50px;right:50px;top:140px;height:470px;border-radius:36px;background:radial-gradient(120% 140% at 80% 0%,#3b2a7a 0%,#160f33 60%,#0b0820 100%);box-shadow:0 0 90px rgba(167,139,250,.55);overflow:hidden}
+.card[data-card-id="k07"] .k {position:absolute;right:50px;top:44px;font:400 46px/1 'Rakkas';color:#c4b5fd}
+.card[data-card-id="k07"] .t {position:absolute;right:50px;top:110px;font:400 130px/1.1 'Rakkas';color:#fff}
+.card[data-card-id="k07"] .n {position:absolute;left:50px;top:150px;font:700 190px/1 'Inter';color:#a78bfa;direction:ltr;text-shadow:0 0 40px rgba(167,139,250,.9)}
+.card[data-card-id="k07"] .s {position:absolute;right:50px;top:300px;font:400 54px/1 'Rakkas';color:#e9e3ff}
+
+</style>
+<div class="root"><div id="k07-g" class="g" data-anim="scale-pop" data-anim-at="0.0" data-anim-duration="0.35"><div id="k07-k" class="k" data-anim="fade-in" data-anim-at="0.1" data-anim-duration="0.3">جميع منتجات</div><div id="k07-t" class="t" data-anim="blur-in" data-anim-at="0.639999999999997" data-anim-duration="0.35">جونسون</div><div id="k07-s" class="s" data-anim="fade-in" data-anim-at="0.9599999999999973" data-anim-duration="0.25">عليها خصم</div><div class="n"><span id="k07-n" data-anim="count-up" data-anim-at="1.3999999999999986" data-anim-duration="0.45" data-anim-from="0" data-anim-to="25" data-anim-format=".0f">0</span>%</div></div></div>
+</div>
+</div>
+<div id="host-k08" class="card-host clip" data-card-id="k08" data-start="18.8333" data-duration="2.3667" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k08">
+<style>
+.card[data-card-id="k08"] .root {position:absolute;inset:0;direction:rtl;font-family:'Marhey','Tajawal',sans-serif}
+.card[data-card-id="k08"] .p {position:absolute;left:60px;right:60px;top:140px;height:480px;background:#fffdf6;border:5px solid #1e1e1e;border-radius:26px 40px 30px 44px;box-shadow:10px 12px 0 #1e1e1e}
+.card[data-card-id="k08"] .t {position:absolute;right:50px;top:40px;font:700 92px/1.2 'Marhey';color:#1e1e1e}
+.card[data-card-id="k08"] .d {position:absolute;right:50px;top:170px;font:500 52px/1.3 'Marhey';color:#444}
+.card[data-card-id="k08"] .big {position:absolute;left:90px;top:250px;font:700 150px/1 'Inter';color:#ff6b35;direction:ltr}
+.card[data-card-id="k08"] .f {position:absolute;right:50px;top:330px;font:700 84px/1 'Marhey';color:#ff6b35}
+.card[data-card-id="k08"] svg {position:absolute;left:40px;top:215px}
+
+</style>
+<div class="root"><div id="k08-p" class="p" data-anim="slide-in" data-anim-at="0.0" data-anim-duration="0.35" data-anim-from="left" data-anim-distance="140"><div id="k08-t" class="t" data-anim="kinetic-chars" data-anim-at="0.1" data-anim-duration="0.3" data-anim-stagger="0.15" data-anim-pattern="pop"><span class="char">مناديل</span> <span class="char">أطفال</span></div><div id="k08-d" class="d" data-anim="fade-in" data-anim-at="0.9600000000000009" data-anim-duration="0.25">خذ حبة والثانية</div><div id="k08-f" class="f" data-anim="scale-pop" data-anim-at="1.9000000000000021" data-anim-duration="0.3">مجاناً</div><div id="k08-big" class="big" data-anim="scale-pop" data-anim-at="1.5800000000000018" data-anim-duration="0.3">1+1</div><svg width="420" height="250" viewBox="0 0 420 250"><path id="k08-c" data-anim="draw-path" data-anim-at="1.6600000000000001" data-anim-duration="0.5" style="fill:none;stroke:#1e1e1e;stroke-width:7;stroke-linecap:round" d="M370 60 C 300 10, 80 20, 40 110 C 10 190, 160 240, 280 225 C 390 210, 410 120, 330 70"></path></svg></div></div>
+</div>
+</div>
+<div id="host-k09" class="card-host clip" data-card-id="k09" data-start="21.2" data-duration="6.8" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k09">
+<style>
+.card[data-card-id="k09"] .root {position:absolute;inset:0;direction:rtl;background:#f7f3ea;font-family:'Cairo','Tajawal',sans-serif;color:#1f2430;
+ background-image:linear-gradient(#e6dfcf 1px,transparent 1px),linear-gradient(90deg,#e6dfcf 1px,transparent 1px);background-size:60px 60px}
+.card[data-card-id="k09"] .k {position:absolute;right:70px;top:120px;font:700 34px/1 'Inter';letter-spacing:.2em;color:#2557a7;direction:ltr}
+.card[data-card-id="k09"] .t {position:absolute;right:70px;left:380px;top:170px;font:900 100px/1.15 'Cairo'}
+.card[data-card-id="k09"] .hl {position:absolute;right:62px;top:420px;height:26px;width:0;background:rgba(37,87,167,.25)}
+.card[data-card-id="k09"] .list {position:absolute;left:70px;right:70px;top:660px}
+.card[data-card-id="k09"] .row {display:flex;justify-content:space-between;align-items:center;background:#fff;border-right:12px solid #2557a7;border-radius:18px;padding:34px 40px;margin-bottom:34px;box-shadow:0 14px 30px -18px rgba(0,0,0,.35)}
+.card[data-card-id="k09"] .row .n {font:800 60px/1.2 'Cairo'}
+.card[data-card-id="k09"] .row .n small {display:block;font:600 34px 'Cairo';color:#6b7280}
+.card[data-card-id="k09"] .row .p {font:700 96px/1 'Inter';color:#2557a7;direction:ltr}
+.card[data-card-id="k09"] .row .p small {font:700 34px 'Cairo';margin-left:10px;color:#1f2430}
+
+</style>
+<div class="root"><div id="k09-k" class="k" data-anim="fade-in" data-anim-at="0.3" data-anim-duration="0.3">SKIN CARE · PRICES</div><div id="k09-t" class="t" data-anim="mask-reveal" data-anim-at="0.35" data-anim-duration="0.45" data-anim-direction="right">العناية بالبشرة</div><span id="k09-hl" class="hl" data-anim="grow-x" data-anim-at="0.7" data-anim-duration="0.4" data-anim-target-w="600"></span><div class="list"><div id="k09-r1" class="row" data-anim="slide-in" data-anim-at="0.21999999999999886" data-anim-duration="0.35" data-anim-from="right" data-anim-distance="120"><span class="n">كريم QV</span><span class="p">55<small>ريال</small></span></div><div id="k09-r2" class="row" data-anim="slide-in" data-anim-at="1.5199999999999996" data-anim-duration="0.35" data-anim-from="right" data-anim-distance="120"><span class="n">بيوديرما<small>Atoderm</small></span><span class="p">59.95<small>ريال</small></span></div><div id="k09-r3" class="row" data-anim="slide-in" data-anim-at="4.279999999999998" data-anim-duration="0.35" data-anim-from="right" data-anim-distance="120"><span class="n">يوسيرين لوشن<small>كل الأنواع</small></span><span class="p">59<small>ريال</small></span></div></div></div>
+</div>
+</div>
+<div id="host-k10" class="card-host clip" data-card-id="k10" data-start="28.0" data-duration="6.6667" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k10">
+<style>
+.card[data-card-id="k10"] .root {position:absolute;inset:0;direction:rtl;font-family:'Changa','Tajawal',sans-serif}
+.card[data-card-id="k10"] .term {position:absolute;left:44px;right:44px;top:120px;background:rgba(10,14,12,.9);border:2px solid #4ade80;border-radius:20px;padding:26px 40px 30px;box-shadow:0 30px 70px -20px rgba(0,0,0,.6)}
+.card[data-card-id="k10"] .bar {display:flex;gap:12px;direction:ltr;margin-bottom:14px}
+.card[data-card-id="k10"] .bar i {width:20px;height:20px;border-radius:50%;background:#4ade80;opacity:.5}
+.card[data-card-id="k10"] .cmd {font:700 30px/1 'Inter';color:#4ade80;direction:ltr;text-align:left;margin-bottom:12px}
+.card[data-card-id="k10"] .row {display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-bottom:1px dashed rgba(74,222,128,.35);color:#e7ffe9}
+.card[data-card-id="k10"] .row .n {font:600 54px/1.15 'Changa'}
+.card[data-card-id="k10"] .row .n small {font:500 36px 'Changa';color:#86efac}
+.card[data-card-id="k10"] .row .p {font:700 78px/1 'Inter';color:#4ade80;direction:ltr}
+.card[data-card-id="k10"] .row .p small {font:600 30px 'Changa';color:#e7ffe9;margin-left:8px}
+
+</style>
+<div class="root"><div id="k10-term" class="term" data-anim="mask-reveal" data-anim-at="0.0" data-anim-duration="0.35" data-anim-direction="top"><div class="bar"><i></i><i></i><i></i></div><div id="k10-cmd" class="cmd" data-anim="fade-in" data-anim-at="0.15" data-anim-duration="0.25">$ kunooz --shampoo</div><div id="k10-r1" class="row" data-anim="fade-in" data-anim-at="0.5399999999999991" data-anim-duration="0.3"><span class="n">شامبو لوكس <small>700 مل</small></span><span class="p">21<small>ريال</small></span></div><div id="k10-r2" class="row" data-anim="fade-in" data-anim-at="2.4599999999999973" data-anim-duration="0.3"><span class="n">شامبو لوكس <small>500 مل</small></span><span class="p">15<small>ريال</small></span></div><div id="k10-r3" class="row" data-anim="fade-in" data-anim-at="4.34" data-anim-duration="0.3"><span class="n">شامبو هيربل <small>جميع الأنواع</small></span><span class="p">18<small>ريال</small></span></div></div></div>
+</div>
+</div>
+<div id="host-k11" class="card-host clip" data-card-id="k11" data-start="34.6667" data-duration="2.2667" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k11">
+<style>
+.card[data-card-id="k11"] .root {position:absolute;inset:0;direction:rtl;font-family:'Lalezar','Tajawal',sans-serif}
+.card[data-card-id="k11"] .pink {position:absolute;left:0;top:150px;width:0;height:400px;background:#ff2e88}
+.card[data-card-id="k11"] .blk {position:absolute;right:60px;top:110px;width:250px;height:90px;background:#0a0a0a}
+.card[data-card-id="k11"] .k {position:absolute;right:84px;top:122px;font-size:56px;line-height:1.2;color:#d4ff00}
+.card[data-card-id="k11"] .t {position:absolute;right:60px;top:220px;font-size:170px;line-height:1.1;color:#fff}
+.card[data-card-id="k11"] .n {position:absolute;left:60px;top:250px;font:700 200px/1 'Inter';color:#0a0a0a;direction:ltr}
+
+</style>
+<div class="root"><span id="k11-pink" class="pink" data-anim="grow-x" data-anim-at="0.0" data-anim-duration="0.35" data-anim-target-w="1080"></span><span id="k11-blk" class="blk" data-anim="slide-in" data-anim-at="0.1" data-anim-duration="0.3" data-anim-from="right" data-anim-distance="260"></span><div id="k11-k" class="k" data-anim="fade-in" data-anim-at="0.25" data-anim-duration="0.2">جميع منتجات</div><div id="k11-t" class="t" data-anim="scale-pop" data-anim-at="0.8800000000000026" data-anim-duration="0.3">استيرا</div><div class="n"><span id="k11-n" data-anim="count-up" data-anim-at="1.5" data-anim-duration="0.4" data-anim-from="0" data-anim-to="30" data-anim-format=".0f">0</span>%</div></div>
+</div>
+</div>
+<div id="host-k12" class="card-host clip" data-card-id="k12" data-start="36.9333" data-duration="3.7333" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k12">
+<style>
+.card[data-card-id="k12"] .root {position:absolute;inset:0;direction:rtl;font-family:'Marhey','Tajawal',sans-serif}
+.card[data-card-id="k12"] .box {position:absolute;left:50px;right:50px;top:1180px;padding:34px 40px 40px;background:#fff8f0;border-radius:44px;box-shadow:0 30px 70px -20px rgba(0,0,0,.45)}
+.card[data-card-id="k12"] .k {font-size:36px;color:#ff2e63}
+.card[data-card-id="k12"] .t {font-size:92px;line-height:1.2;color:#1b1b1b;font-weight:700}
+.card[data-card-id="k12"] .chips {display:flex;gap:18px;margin-top:20px}
+.card[data-card-id="k12"] .c {font-size:52px;color:#fff;background:#ff2e63;border-radius:999px;padding:8px 36px 16px}
+
+</style>
+<div class="root"><div id="k12-box" class="box" data-anim="slide-in" data-anim-at="0.0" data-anim-duration="0.35" data-anim-from="bottom" data-anim-distance="160"><div id="k12-k" class="k" data-anim="fade-in" data-anim-at="0.15" data-anim-duration="0.25">#خصمات_قوية</div><div id="k12-t" class="t" data-anim="kinetic-chars" data-anim-at="1.2999999999999972" data-anim-duration="0.3" data-anim-stagger="0.18" data-anim-pattern="pop"><span class="char">على</span> <span class="char">جميع</span> <span class="char">الفيتامينات</span></div><div class="chips"><span id="k12-c1" class="c" data-anim="scale-pop" data-anim-at="2.239999999999995" data-anim-duration="0.28">للنساء</span><span id="k12-c2" class="c" data-anim="scale-pop" data-anim-at="2.6799999999999997" data-anim-duration="0.28">للرجال</span><span id="k12-c3" class="c" data-anim="scale-pop" data-anim-at="3.219999999999999" data-anim-duration="0.28">للأطفال</span></div></div></div>
+</div>
+</div>
+<div id="host-k13" class="card-host clip" data-card-id="k13" data-start="40.6667" data-duration="2.0" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k13">
+<style>
+.card[data-card-id="k13"] .root {position:absolute;inset:0;direction:rtl;font-family:'Tajawal',sans-serif}
+.card[data-card-id="k13"] .band {position:absolute;left:0;right:0;top:150px;height:330px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 60px}
+.card[data-card-id="k13"] .txt .s {font:800 40px/1 'Tajawal';color:#777}
+.card[data-card-id="k13"] .txt .t {font:900 104px/1.15 'Tajawal';color:#000;margin-top:12px}
+.card[data-card-id="k13"] .logo {width:230px;height:auto}
+
+</style>
+<div class="root"><div id="k13-band" class="band" data-anim="mask-reveal" data-anim-at="0.0" data-anim-duration="0.3" data-anim-direction="left"><div class="txt"><div id="k13-s" class="s" data-anim="fade-in" data-anim-at="0.1" data-anim-duration="0.25">وعلى فكرة… العروض هذه</div><div id="k13-t" class="t" data-anim="mask-reveal" data-anim-at="1.3599999999999994" data-anim-duration="0.35" data-anim-direction="right">في جميع الفروع</div></div><img id="k13-logo" class="logo" data-anim="scale-pop" data-anim-at="0.3" data-anim-duration="0.35" src="img/logo.png" alt=""></div></div>
+</div>
+</div>
+<div id="host-k14" class="card-host clip" data-card-id="k14" data-start="42.6667" data-duration="2.0333" data-track-index="3" style="left:0px;top:0px;width:1080px;height:1920px;visibility:hidden;opacity:0;">
+<div class="card" data-card-id="k14">
+<style>
+.card[data-card-id="k14"] .root {position:absolute;inset:0;direction:rtl;background:radial-gradient(90% 70% at 50% 40%,#1a94d4 0%,#0b3d66 55%,#06182b 100%);font-family:'Tajawal',sans-serif}
+.card[data-card-id="k14"] .k {position:absolute;right:60px;left:380px;top:110px;font:800 44px/1 'Tajawal';color:#bfe6ff}
+.card[data-card-id="k14"] .t {position:absolute;right:60px;left:380px;top:170px;font:900 104px/1.15 'Tajawal';color:#fff;text-shadow:0 0 40px rgba(26,148,212,.9)}
+.card[data-card-id="k14"] .t b {color:#F26A21}
+
+</style>
+<div class="root"><div id="k14-k" class="k" data-anim="fade-in" data-anim-at="0.1" data-anim-duration="0.25">ولو تدخل الموقع</div><div id="k14-t" class="t" data-anim="kinetic-chars" data-anim-at="0.8799999999999955" data-anim-duration="0.25" data-anim-stagger="0.2" data-anim-pattern="pop"><span class="char">بتحصل</span> <span class="char">عروض</span> <span class="char"><b>أقوى</b></span></div></div>
+</div>
+</div>
+<div id="site1-wrap" class="site-phone" style="left:70px;top:640px;width:420px;height:805px;"><video id="site1" src="site.mp4" muted playsinline data-start="6.1" data-duration="2.9333" data-media-start="0.3" data-playback-rate="2" data-track-index="5"></video></div>
+<div id="site2-wrap" class="site-phone" style="left:280px;top:660px;width:520px;height:996px;"><video id="site2" src="site.mp4" muted playsinline data-start="43.0667" data-duration="1.6333" data-media-start="24.0" data-playback-rate="4" data-track-index="6"></video></div>
+<script src="vendor/gsap.min.js"></script>
+<script>
+(function () {
+  window.__fmt = function (v, fmt) {
+    if (typeof fmt === "string" && /^\.[0-9]+f$/.test(fmt)) return Number(v).toFixed(Number(fmt.slice(1, -1)));
+    if (fmt === ",d") return Math.round(v).toLocaleString();
+    return String(Math.round(v));
+  };
+  const tl = window.gsap.timeline({ paused: true });
+  // k01 · overlay · hook: discount up to 70%
+  tl.set(".card-host[data-card-id=\"k01\"]",{visibility:'visible'},0.0);
+  tl.fromTo(".card-host[data-card-id=\"k01\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},0.0);
+  tl.fromTo(".card[data-card-id=\"k01\"] #k01-slab",{width:0},{width:820,duration:0.35,ease:'power3.out'},0.0);
+  tl.fromTo(".card[data-card-id=\"k01\"] #k01-lime",{opacity:0,x:440},{opacity:1,x:0,duration:0.3,ease:'power3.out'},0.0667);
+  tl.fromTo(".card[data-card-id=\"k01\"] #k01-pink",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.35,ease:'back.out(1.6)'},0.3333);
+  tl.fromTo(".card[data-card-id=\"k01\"] #k01-kick",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},0.1);
+  (function(){const o={v:0};tl.to(o,{v:70,duration:0.6,ease:'power2.out',onUpdate:function(){const el=document.querySelector(".card[data-card-id=\"k01\"] #k01-num");if(el)el.textContent=__fmt(o.v,'.0f');}},0.1333);})();
+  tl.to(".card-host[data-card-id=\"k01\"]",{opacity:0,duration:0.2,ease:'power2.in'},1.3333);
+  tl.set(".card-host[data-card-id=\"k01\"]",{visibility:'hidden'},1.5333);
+  // k02 · overlay · free home delivery
+  tl.set(".card-host[data-card-id=\"k02\"]",{visibility:'visible'},1.5333);
+  tl.fromTo(".card-host[data-card-id=\"k02\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},1.5333);
+  tl.fromTo(".card[data-card-id=\"k02\"] #k02-tg1",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},1.6333);
+  tl.fromTo(".card[data-card-id=\"k02\"] #k02-tg2",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},1.7333);
+  tl.from(".card[data-card-id=\"k02\"] #k02-t .char",{opacity:0,y:18,scale:0.8,duration:0.3,ease:'back.out(1.7)',stagger:0.12},1.6667);
+  tl.fromTo(".card[data-card-id=\"k02\"] #k02-free",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.3,ease:'back.out(1.6)'},2.8667);
+  tl.fromTo(".card[data-card-id=\"k02\"] #k02-row",{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},2.4333);
+  tl.fromTo(".card[data-card-id=\"k02\"] #k02-box",{opacity:0,y:-120},{opacity:1,y:0,duration:0.35,ease:'power3.out'},1.5333);
+  tl.to(".card-host[data-card-id=\"k02\"]",{opacity:0,duration:0.2,ease:'power2.in'},3.2);
+  tl.set(".card-host[data-card-id=\"k02\"]",{visibility:'hidden'},3.4);
+  // k03 · overlay · instalments available
+  tl.set(".card-host[data-card-id=\"k03\"]",{visibility:'visible'},3.4);
+  tl.fromTo(".card-host[data-card-id=\"k03\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},3.4);
+  tl.fromTo(".card[data-card-id=\"k03\"] #k03-s",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},3.5333);
+  tl.fromTo(".card[data-card-id=\"k03\"] #k03-t",{opacity:0,filter:'blur(18px)'},{opacity:1,filter:'blur(0px)',duration:0.3,ease:'power2.out'},4.5333);
+  tl.fromTo(".card[data-card-id=\"k03\"] #k03-u",{width:0},{width:380,duration:0.35,ease:'power3.out'},4.6333);
+  tl.fromTo(".card[data-card-id=\"k03\"] #k03-band",{clipPath:'inset(0 0 0 100%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:0.3,ease:'power2.inOut'},3.4);
+  tl.to(".card-host[data-card-id=\"k03\"]",{opacity:0,duration:0.2,ease:'power2.in'},4.6667);
+  tl.set(".card-host[data-card-id=\"k03\"]",{visibility:'hidden'},4.8667);
+  // k04 · overlay · available on the new website + all branches
+  tl.set(".card-host[data-card-id=\"k04\"]",{visibility:'visible'},5.6);
+  tl.fromTo(".card-host[data-card-id=\"k04\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},5.6);
+  tl.fromTo(".card[data-card-id=\"k04\"] #k04-r1",{width:0},{width:492,duration:0.3,ease:'power3.out'},5.6);
+  tl.fromTo(".card[data-card-id=\"k04\"] #k04-r2",{width:0},{width:492,duration:0.3,ease:'power3.out'},5.6667);
+  tl.fromTo(".card[data-card-id=\"k04\"] #k04-k",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},5.8);
+  tl.from(".card[data-card-id=\"k04\"] #k04-t .char",{opacity:0,y:18,scale:0.8,duration:0.25,ease:'back.out(1.7)',stagger:0.22},6.2333);
+  tl.fromTo(".card[data-card-id=\"k04\"] #k04-d",{opacity:0,x:60},{opacity:1,x:0,duration:0.3,ease:'power3.out'},7.9667);
+  tl.fromTo(".card[data-card-id=\"k04\"] #k04-panel",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},5.6);
+  tl.to(".card-host[data-card-id=\"k04\"]",{opacity:0,duration:0.2,ease:'power2.in'},8.9);
+  tl.set(".card-host[data-card-id=\"k04\"]",{visibility:'hidden'},9.1);
+  // k05 · stack · buy two baby milk, third 60% off
+  tl.set('#video-wrap',{className:'video-wrapper',zIndex:1},9.1);
+  tl.to('#video-wrap',{x:0,y:-545,scale:1,clipPath:'inset(545px 0px 545px 0px round 0px)',duration:0.5,ease:'power3.inOut'},9.1);
+  tl.set(".card-host[data-card-id=\"k05\"]",{visibility:'visible'},9.1);
+  tl.fromTo(".card-host[data-card-id=\"k05\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},9.1);
+  tl.fromTo(".card[data-card-id=\"k05\"] #k05-block",{width:0},{width:150,duration:0.5,ease:'power3.out'},9.2);
+  tl.fromTo(".card[data-card-id=\"k05\"] #k05-k",{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},9.2333);
+  tl.fromTo(".card[data-card-id=\"k05\"] #k05-t",{clipPath:'inset(0 0 0 100%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:0.4,ease:'power2.inOut'},9.9333);
+  tl.fromTo(".card[data-card-id=\"k05\"] #k05-d",{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},9.3333);
+  tl.fromTo(".card[data-card-id=\"k05\"] #k05-w",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},10.7667);
+  (function(){const o={v:0};tl.to(o,{v:60,duration:0.45,ease:'power2.out',onUpdate:function(){const el=document.querySelector(".card[data-card-id=\"k05\"] #k05-n");if(el)el.textContent=__fmt(o.v,'.0f');}},11.5);})();
+  tl.to(".card-host[data-card-id=\"k05\"]",{opacity:0,duration:0.2,ease:'power2.in'},11.9);
+  tl.set(".card-host[data-card-id=\"k05\"]",{visibility:'hidden'},12.1);
+  // k06 · split · Baby Joy box 85, bag 75, Pampers carton 77
+  tl.set('#video-wrap',{className:'video-wrapper',zIndex:1},12.1);
+  tl.to('#video-wrap',{x:0,y:480,scale:1,clipPath:'inset(480px 0px 480px 0px round 0px)',duration:0.5,ease:'power3.inOut'},12.1);
+  tl.set(".card-host[data-card-id=\"k06\"]",{visibility:'visible'},12.1);
+  tl.fromTo(".card-host[data-card-id=\"k06\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},12.1);
+  tl.fromTo(".card[data-card-id=\"k06\"] #k06-r1",{opacity:0,x:80},{opacity:1,x:0,duration:0.3,ease:'power3.out'},12.1);
+  tl.fromTo(".card[data-card-id=\"k06\"] #k06-r2",{opacity:0,x:80},{opacity:1,x:0,duration:0.3,ease:'power3.out'},13.8667);
+  tl.fromTo(".card[data-card-id=\"k06\"] #k06-r3",{opacity:0,x:80},{opacity:1,x:0,duration:0.3,ease:'power3.out'},14.8667);
+  tl.fromTo(".card[data-card-id=\"k06\"] #k06-st",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.3,ease:'back.out(1.6)'},15.6);
+  tl.fromTo(".card[data-card-id=\"k06\"] #k06-paper",{opacity:0,y:-200},{opacity:1,y:0,duration:0.4,ease:'power3.out'},12.1);
+  tl.to(".card-host[data-card-id=\"k06\"]",{opacity:0,duration:0.2,ease:'power2.in'},16.3);
+  tl.set(".card-host[data-card-id=\"k06\"]",{visibility:'hidden'},16.5);
+  // k07 · overlay · all Johnson's products 25% off
+  tl.set('#video-wrap',{className:'video-wrapper',zIndex:1},16.5);
+  tl.to('#video-wrap',{x:0,y:0,scale:1,clipPath:'inset(0px 0px 0px 0px round 0px)',duration:0.5,ease:'power3.inOut'},16.5);
+  tl.set(".card-host[data-card-id=\"k07\"]",{visibility:'visible'},16.5);
+  tl.fromTo(".card-host[data-card-id=\"k07\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},16.5);
+  tl.fromTo(".card[data-card-id=\"k07\"] #k07-k",{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},16.6);
+  tl.fromTo(".card[data-card-id=\"k07\"] #k07-t",{opacity:0,filter:'blur(18px)'},{opacity:1,filter:'blur(0px)',duration:0.35,ease:'power2.out'},17.1333);
+  tl.fromTo(".card[data-card-id=\"k07\"] #k07-s",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},17.4667);
+  (function(){const o={v:0};tl.to(o,{v:25,duration:0.45,ease:'power2.out',onUpdate:function(){const el=document.querySelector(".card[data-card-id=\"k07\"] #k07-n");if(el)el.textContent=__fmt(o.v,'.0f');}},17.9);})();
+  tl.fromTo(".card[data-card-id=\"k07\"] #k07-g",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.35,ease:'back.out(1.6)'},16.5);
+  tl.to(".card-host[data-card-id=\"k07\"]",{opacity:0,duration:0.2,ease:'power2.in'},18.6333);
+  tl.set(".card-host[data-card-id=\"k07\"]",{visibility:'hidden'},18.8333);
+  // k08 · overlay · baby wipes: buy one, get the second free
+  tl.set(".card-host[data-card-id=\"k08\"]",{visibility:'visible'},18.8333);
+  tl.fromTo(".card-host[data-card-id=\"k08\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},18.8333);
+  tl.from(".card[data-card-id=\"k08\"] #k08-t .char",{opacity:0,y:18,scale:0.8,duration:0.3,ease:'back.out(1.7)',stagger:0.15},18.9333);
+  tl.fromTo(".card[data-card-id=\"k08\"] #k08-d",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},19.8);
+  tl.fromTo(".card[data-card-id=\"k08\"] #k08-f",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.3,ease:'back.out(1.6)'},20.7333);
+  tl.fromTo(".card[data-card-id=\"k08\"] #k08-big",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.3,ease:'back.out(1.6)'},20.4);
+  (function(){const el=document.querySelector(".card[data-card-id=\"k08\"] #k08-c");if(el){const L=el.getTotalLength();tl.set(".card[data-card-id=\"k08\"] #k08-c",{strokeDasharray:L,strokeDashoffset:L},0);tl.to(".card[data-card-id=\"k08\"] #k08-c",{strokeDashoffset:0,duration:0.5,ease:'power2.inOut'},20.5);}})();
+  tl.fromTo(".card[data-card-id=\"k08\"] #k08-p",{opacity:0,x:-140},{opacity:1,x:0,duration:0.35,ease:'power3.out'},18.8333);
+  tl.to(".card-host[data-card-id=\"k08\"]",{opacity:0,duration:0.2,ease:'power2.in'},21.0);
+  tl.set(".card-host[data-card-id=\"k08\"]",{visibility:'hidden'},21.2);
+  // k09 · pip · skincare prices: QV 55, Bioderma 59.95, Eucerin 59
+  tl.set('#video-wrap',{className:'video-wrapper pip-pill',zIndex:6},21.2);
+  tl.to('#video-wrap',{x:30,y:40,scale:0.2889,clipPath:'inset(0px 0px 0px 0px round 96px)',duration:0.5,ease:'power3.inOut'},21.2);
+  tl.set(".card-host[data-card-id=\"k09\"]",{visibility:'visible'},21.2);
+  tl.fromTo(".card-host[data-card-id=\"k09\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},21.2);
+  tl.fromTo(".card[data-card-id=\"k09\"] #k09-k",{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},21.5);
+  tl.fromTo(".card[data-card-id=\"k09\"] #k09-t",{clipPath:'inset(0 0 0 100%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:0.45,ease:'power2.inOut'},21.5667);
+  tl.fromTo(".card[data-card-id=\"k09\"] #k09-hl",{width:0},{width:600,duration:0.4,ease:'power3.out'},21.9);
+  tl.fromTo(".card[data-card-id=\"k09\"] #k09-r1",{opacity:0,x:120},{opacity:1,x:0,duration:0.35,ease:'power3.out'},21.4333);
+  tl.fromTo(".card[data-card-id=\"k09\"] #k09-r2",{opacity:0,x:120},{opacity:1,x:0,duration:0.35,ease:'power3.out'},22.7333);
+  tl.fromTo(".card[data-card-id=\"k09\"] #k09-r3",{opacity:0,x:120},{opacity:1,x:0,duration:0.35,ease:'power3.out'},25.5);
+  tl.to(".card-host[data-card-id=\"k09\"]",{opacity:0,duration:0.2,ease:'power2.in'},27.8);
+  tl.set(".card-host[data-card-id=\"k09\"]",{visibility:'hidden'},28.0);
+  // k10 · overlay · Lux 700ml 21, 500ml 15; Herbal all types 18
+  tl.set('#video-wrap',{className:'video-wrapper',zIndex:1},28.0);
+  tl.to('#video-wrap',{x:0,y:0,scale:1,clipPath:'inset(0px 0px 0px 0px round 0px)',duration:0.5,ease:'power3.inOut'},28.0);
+  tl.set(".card-host[data-card-id=\"k10\"]",{visibility:'visible'},28.0);
+  tl.fromTo(".card-host[data-card-id=\"k10\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},28.0);
+  tl.fromTo(".card[data-card-id=\"k10\"] #k10-cmd",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},28.1667);
+  tl.fromTo(".card[data-card-id=\"k10\"] #k10-r1",{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},28.5333);
+  tl.fromTo(".card[data-card-id=\"k10\"] #k10-r2",{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},30.4667);
+  tl.fromTo(".card[data-card-id=\"k10\"] #k10-r3",{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},32.3333);
+  tl.fromTo(".card[data-card-id=\"k10\"] #k10-term",{clipPath:'inset(0 0 100% 0)'},{clipPath:'inset(0% 0% 0% 0%)',duration:0.35,ease:'power2.inOut'},28.0);
+  tl.to(".card-host[data-card-id=\"k10\"]",{opacity:0,duration:0.2,ease:'power2.in'},34.4667);
+  tl.set(".card-host[data-card-id=\"k10\"]",{visibility:'hidden'},34.6667);
+  // k11 · overlay · all Astera products 30% off
+  tl.set(".card-host[data-card-id=\"k11\"]",{visibility:'visible'},34.6667);
+  tl.fromTo(".card-host[data-card-id=\"k11\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},34.6667);
+  tl.fromTo(".card[data-card-id=\"k11\"] #k11-pink",{width:0},{width:1080,duration:0.35,ease:'power3.out'},34.6667);
+  tl.fromTo(".card[data-card-id=\"k11\"] #k11-blk",{opacity:0,x:260},{opacity:1,x:0,duration:0.3,ease:'power3.out'},34.7333);
+  tl.fromTo(".card[data-card-id=\"k11\"] #k11-k",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},34.9);
+  tl.fromTo(".card[data-card-id=\"k11\"] #k11-t",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.3,ease:'back.out(1.6)'},35.5333);
+  (function(){const o={v:0};tl.to(o,{v:30,duration:0.4,ease:'power2.out',onUpdate:function(){const el=document.querySelector(".card[data-card-id=\"k11\"] #k11-n");if(el)el.textContent=__fmt(o.v,'.0f');}},36.1333);})();
+  tl.to(".card-host[data-card-id=\"k11\"]",{opacity:0,duration:0.2,ease:'power2.in'},36.7333);
+  tl.set(".card-host[data-card-id=\"k11\"]",{visibility:'hidden'},36.9333);
+  // k12 · overlay · strong discounts on vitamins for women, men, kids
+  tl.set(".card-host[data-card-id=\"k12\"]",{visibility:'visible'},36.9333);
+  tl.fromTo(".card-host[data-card-id=\"k12\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},36.9333);
+  tl.fromTo(".card[data-card-id=\"k12\"] #k12-k",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},37.1);
+  tl.from(".card[data-card-id=\"k12\"] #k12-t .char",{opacity:0,y:18,scale:0.8,duration:0.3,ease:'back.out(1.7)',stagger:0.18},38.2667);
+  tl.fromTo(".card[data-card-id=\"k12\"] #k12-c1",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.28,ease:'back.out(1.6)'},39.2);
+  tl.fromTo(".card[data-card-id=\"k12\"] #k12-c2",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.28,ease:'back.out(1.6)'},39.6333);
+  tl.fromTo(".card[data-card-id=\"k12\"] #k12-c3",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.28,ease:'back.out(1.6)'},40.1667);
+  tl.fromTo(".card[data-card-id=\"k12\"] #k12-box",{opacity:0,y:160},{opacity:1,y:0,duration:0.35,ease:'power3.out'},36.9333);
+  tl.to(".card-host[data-card-id=\"k12\"]",{opacity:0,duration:0.2,ease:'power2.in'},40.4667);
+  tl.set(".card-host[data-card-id=\"k12\"]",{visibility:'hidden'},40.6667);
+  // k13 · overlay · these offers are in all branches
+  tl.set(".card-host[data-card-id=\"k13\"]",{visibility:'visible'},40.6667);
+  tl.fromTo(".card-host[data-card-id=\"k13\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},40.6667);
+  tl.fromTo(".card[data-card-id=\"k13\"] #k13-s",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},40.7333);
+  tl.fromTo(".card[data-card-id=\"k13\"] #k13-t",{clipPath:'inset(0 0 0 100%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:0.35,ease:'power2.inOut'},42.0);
+  tl.fromTo(".card[data-card-id=\"k13\"] #k13-logo",{opacity:0,scale:0.6},{opacity:1,scale:1,duration:0.35,ease:'back.out(1.6)'},40.9333);
+  tl.fromTo(".card[data-card-id=\"k13\"] #k13-band",{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0% 0% 0% 0%)',duration:0.3,ease:'power2.inOut'},40.6667);
+  tl.to(".card-host[data-card-id=\"k13\"]",{opacity:0,duration:0.2,ease:'power2.in'},42.4667);
+  tl.set(".card-host[data-card-id=\"k13\"]",{visibility:'hidden'},42.6667);
+  // k14 · pip · go to the website for even stronger offers
+  tl.set('#video-wrap',{className:'video-wrapper pip-pill',zIndex:6},42.6667);
+  tl.to('#video-wrap',{x:30,y:40,scale:0.2889,clipPath:'inset(0px 0px 0px 0px round 96px)',duration:0.5,ease:'power3.inOut'},42.6667);
+  tl.set(".card-host[data-card-id=\"k14\"]",{visibility:'visible'},42.6667);
+  tl.fromTo(".card-host[data-card-id=\"k14\"]",{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},42.6667);
+  tl.fromTo(".card[data-card-id=\"k14\"] #k14-k",{opacity:0},{opacity:1,duration:0.25,ease:'power2.out'},42.7667);
+  tl.from(".card[data-card-id=\"k14\"] #k14-t .char",{opacity:0,y:18,scale:0.8,duration:0.25,ease:'back.out(1.7)',stagger:0.2},43.5333);
+  // site video #1 — quick pop on the mention
+  tl.fromTo('#site1-wrap',{opacity:0,scale:0.4,y:120},{opacity:1,scale:1,y:0,duration:0.32,ease:'back.out(1.8)'},6.1);
+  tl.to('#site1-wrap',{opacity:0,scale:0.85,y:60,duration:0.22,ease:'power2.in'},8.8);
+  // site video #2 — quick pop on the mention
+  tl.fromTo('#site2-wrap',{opacity:0,scale:0.4,y:120},{opacity:1,scale:1,y:0,duration:0.32,ease:'back.out(1.8)'},43.0667);
+  window.__timelines = window.__timelines || {};
+  window.__timelines["talking-head-recut"] = tl;
+})();
+</script>
+</div>
+</body>
+</html>
