@@ -9,5 +9,5 @@ CAPS = [
                T("أقوى!", 3.94, "o", 1.2), T("منها", 4.20)], out=5.2),
 ]
 KEY_COLOR = (243, 112, 33)   # Kunooz orange
-LOGOS = [("kunooz_logo_card.png", 2.44, 99, 520, 470)]
+LOGOS = [("kunooz_logo_card.png", 0.98, 2.60, 560, 470), ("kunooz_site_card.png", 2.74, 99, 640, 680)]
 Y_WORD = 1250
