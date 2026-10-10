@@ -25,5 +25,5 @@ BOX_HI_FG = (255, 255, 255)
 BOX_KEY = (198, 244, 50)        # prices / percentages: lime box, Green text
 BOX_KEY_FG = (11, 70, 44)
 SECTIONS = []
-LOGOS = [("green/logo_card.png", 0.88, 2.15, 600, 380), ("green/logo_card.png", 23.10, 99, 600, 380)]
+LOGOS = [("green/logo_card.png", 0.88, 2.15, 330, 320)]   # opening only, high up so it clears the face
 Y_WORD = 1250

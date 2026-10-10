@@ -19,5 +19,5 @@ CAPS = [
                T("مسجد الوالدين", 25.40, "o")], out=26.40),
 ]
 SECTIONS = []
-LOGOS = [("green/logo_card.png", 0.88, 2.15, 600, 380), ("green/logo_card.png", 23.10, 99, 600, 380)]
+LOGOS = [("green/logo_card.png", 0.88, 2.15, 330, 320)]   # opening only, high up so it clears the face
 Y_WORD = 1250
