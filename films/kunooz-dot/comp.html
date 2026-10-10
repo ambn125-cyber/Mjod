@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!-- built with onetake (PolyForm Noncommercial 1.0.0) · concept: the blue dot of the Kunooz logo is the film's one subject -->
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<title>Kunooz Alsaada · the blue dot</title>
+<style>
+@font-face{font-family:'KZ';src:url(fonts/Tajawal-ExtraBold.ttf);font-weight:800}
+@font-face{font-family:'KZ';src:url(fonts/Tajawal-Black.ttf);font-weight:900}
+/* Kunooz look: light clinic ground, the logo's blue and orange, navy ink */
+:root{ --ground:#f5f9fd; --deep:#e6f0f9; --card:#ffffff; --ink:#0f2c4a; --mute:#7d93a8; --blue:#1a94d4; --blue2:#0f6fb3; --orange:#f26a21; }
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--ground)}
+body{font-family:'KZ',system-ui,sans-serif;color:var(--ink)}
+#stage{position:absolute;inset:0;overflow:hidden;background:radial-gradient(1200px 900px at 50% 42%,#ffffff 0%,var(--ground) 60%,var(--deep) 100%)}
+#world{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;will-change:transform}
+.abs{position:absolute;left:0;top:0;will-change:transform,opacity}
+#logo{width:560px;transform-origin:0 0}
+#logo img{width:560px;display:block}
+.words{position:absolute;left:0;width:1080px;text-align:center;direction:rtl;white-space:nowrap;font-weight:900}
+.words span{display:inline-block;margin:0 .12em;will-change:transform,opacity}
+.or{color:var(--orange)} .bl{color:var(--blue)}
+#tag{top:1330px;font-size:70px}
+#browse{top:1486px;font-size:60px}
+#chip{position:absolute;left:0;top:0;height:96px;padding:0 44px;border-radius:48px;background:var(--orange);color:#fff;font-size:52px;font-weight:900;line-height:100px;white-space:nowrap;direction:rtl;
+  box-shadow:0 18px 40px -16px rgba(242,106,33,.55);transform-origin:50% 50%}
+#tamTxt{top:1480px;font-size:62px}
+#phone{position:absolute;left:0;top:0;overflow:hidden;background:var(--blue);will-change:transform,width,height,border-radius;
+  box-shadow:0 0 0 14px #0f2235,0 60px 120px -40px rgba(15,44,74,.45)}
+#phone .lay{position:absolute;left:0;top:0;width:600px;transform-origin:0 0}
+#home{opacity:0}
+#prodWrap{position:absolute;overflow:hidden;left:0;top:0}
+#prodWrap img{position:absolute;left:0;top:0;width:600px;transform-origin:0 0}
+#tamWrap{position:absolute;left:0;top:0;width:600px;height:1016px;overflow:hidden}
+#tamWrap img{position:absolute;left:0;top:0;width:600px}
+.dot{position:absolute;left:0;top:0;border-radius:50%;box-sizing:border-box;background:radial-gradient(circle at 36% 30%,#5cc4f2 0%,var(--blue) 45%,var(--blue2) 100%);will-change:transform}
+#ring{position:absolute;left:0;top:0;border-radius:50%;border:5px solid var(--blue);opacity:0}
+#badge{position:absolute;left:0;top:0;width:44px;height:44px;border-radius:50%;background:var(--orange);color:#fff;font-size:28px;line-height:48px;text-align:center;font-weight:900;opacity:0}
+.pay{position:absolute;left:0;top:0;width:160px;text-align:center;font-size:40px;font-weight:900;color:var(--ink);opacity:0;direction:rtl}
+.pay small{display:block;font-size:26px;color:var(--mute);font-weight:800}
+#stac{position:absolute;inset:0;background:var(--blue);display:none;align-items:center;justify-content:center;direction:rtl;color:#fff;font-size:104px;font-weight:900;text-align:center;line-height:1.25}
+#stac b{color:#ffd9c2}
+#url{position:absolute;left:0;width:1080px;top:1440px;text-align:center;font-family:'KZ',sans-serif;font-weight:800;font-size:54px;color:var(--blue2);direction:ltr;white-space:pre}
+#hud{position:absolute;right:14px;bottom:10px;font:20px monospace;color:#c00;display:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world">
+    <div id="logo" class="abs"><img src="img/logo.png" alt=""></div>
+    <div id="tag" class="words"><span>كل احتياجات طفلك</span><span class="or">بضغطة</span><span class="or">زر</span></div>
+    <div id="phone">
+      <img id="home" class="lay" src="img/home.jpg" alt="">
+      <div id="prodWrap"><img id="prod" src="img/product.jpg" alt=""></div>
+      <div id="tamWrap"><img src="img/tamara.jpg" alt=""></div>
+      <div id="badge">1</div>
+    </div>
+    <div id="browse" class="words"><span>تصفّح</span><span class="bl">العروض</span></div>
+    <div id="chip">بامبرز · 51.99 ريال</div>
+    <div id="tamTxt" class="words"><span>قسّطها</span><span>مع</span><span class="or">تمارا</span></div>
+    <div id="pays"></div>
+    <div id="end1" class="words" style="top:1320px;font-size:64px"><span>اطلب</span><span>من</span><span class="bl">الموقع</span></div>
+    <div id="url"></div>
+    <div id="ring"></div>
+    <div id="dot" class="dot"></div>
+    <div id="dots"></div>
+  </div>
+  <div id="stac"></div>
+  <div id="hud"></div>
+</div>
+<script src="motion.js"></script>
+<script>
+// ═════════ timeline (seconds) ═════════
+const W=1080, H=1920, DUR=16;
+const DROP0=0.15, LAND=0.55, TAG=[1.35,1.62,1.86], HOLD1=[2.1,2.75];
+const LIFT=2.8, HOP1=[2.8,3.22], MORPH=[3.18,3.75], CONTENT=[3.45,3.75];
+const BROWSE=3.85, TOUCH_OUT=[3.95,4.4], TAP1=4.45, GROW=[4.55,5.1], CHIP=5.35;
+const TO_BTN=[5.45,6.0], TAP2=6.1, CART=[6.18,6.72], HOLD2=[6.95,7.6];
+const TO_MID=[7.6,7.95], IRIS=[7.95,8.5], TAMTXT=8.55, DOWN=[8.6,9.0], SPLIT=[9.05,9.45], PAY0=9.35;
+const STAC=[[10.6,'توصيل <b>مجاني</b>'],[11.0,'للطلبات فوق<br><b>100 ريال</b>'],[11.4,'خصومات حتى<br><b>60%</b>'],[11.8,'وقسّطها مع<br><b>تمارا</b>']], STAC_END=12.2;
+const GATHER=[12.25,12.85], LAND2=12.9, END_TXT=13.25, URL0=13.55, URL='kunooz-alsaada.com';
+window.__meta={dur:DUR,fps:30,w:W,h:H,cuts:STAC.map(s=>s[0]).concat([STAC_END]),inFrame:{dot:[0.6,10.55]}};
+
+const {clamp,lerp,sstep,ssstep,seg,ease}=OM;
+const $=id=>document.getElementById(id);
+
+// ═════════ layout (world px) ═════════
+const LOGO={x:260,y:700,w:560,s:560/975}; const BALL={x:LOGO.x+691*LOGO.s, y:LOGO.y+97*LOGO.s, r:74*LOGO.s};
+const LOGO_TOP={cx:540,y:120,s:0.30};
+const PH={x:240,y:340,w:600,h:1016,r:46}; const SC=600/704;                 // phone screen; images are 704 wide
+const CARD={x:PH.x+305*SC,y:PH.y+606*SC,w:383*SC,h:520*SC};                // the Pampers card on the home page
+const PROD_OFF=-140;                                                       // product page scrolled to show the add button
+const BTN={x:PH.x+346*SC,y:PH.y+1256*SC+PROD_OFF}, CARTI={x:PH.x+136*SC,y:PH.y+264*SC+PROD_OFF};
+const MID={x:PH.x+PH.w/2,y:PH.y+PH.h/2};
+const PAYS=[0,1,2,3].map(i=>({x:780-i*160,y:1660}));            // RTL: payment 1 on the right
+const TD=26;                                                               // touch-dot radius
+
+// ═════════ camera: keyed, with shakes on the three landings ═════════
+const KEYS=[{t:0,x:540,y:960,zoom:1},{t:3.9,x:540,y:960,zoom:1},
+  {t:4.5,x:600,y:1000,zoom:1.07,curve:ease.sineInOut},{t:5.4,x:540,y:960,zoom:1.0,curve:ease.cubicInOut},
+  {t:6.05,x:520,y:980,zoom:1.05,curve:ease.sineInOut},{t:6.8,x:470,y:860,zoom:1.08,curve:ease.expoInOut},
+  {t:7.6,x:470,y:860,zoom:1.08},{t:8.4,x:540,y:960,zoom:1.0,curve:ease.cubicInOut}];
+const HITS=[[LAND,14,9],[CART[1],9,10],[LAND2,14,9]];
+function camAt(t){ const c=OM.camera(t,KEYS,{W,H}); let x=c.x,y=c.y,rot=c.rot;
+  for(const [th,amp,dec] of HITS){ const s=OM.shake(t,th,{amp,decay:dec,seed:Math.round(th*100)}); x+=s.x/c.zoom; y+=s.y/c.zoom; rot+=s.rot; }
+  return {x,y,zoom:c.zoom,rot}; }
+
+// ═════════ geometry — a pure function of t, used by seek, __track and __motion ═════════
+function geom(t){
+  const g={};
+  // the dot: drop → logo ball → hop to the middle → becomes the phone (morph) ; a touch-dot later
+  let d={x:BALL.x,y:-120,r:BALL.r,sx:1,sy:1,op:0};
+  if(t>=DROP0){ const u=seg(t,DROP0,LAND); d.y=lerp(-120,BALL.y,u*u); d.op=1;
+    if(t>=LAND){ const im=OM.impact(t,LAND,{sqx:.22,sqy:.26}); d.y=BALL.y; d.sx=im.sx; d.sy=im.sy; } }
+  if(t>=HOP1[0]){ const h=OM.hop(t,HOP1[0],HOP1[1],BALL,MID,{height:180}); d.x=h.x; d.y=h.y; d.sx=d.sy=1; }
+  g.phone=null;
+  if(t>=MORPH[0]){ const m=OM.morphRect(t,MORPH[0],MORPH[1],{x:MID.x-BALL.r,y:MID.y-BALL.r,w:2*BALL.r,h:2*BALL.r,r:BALL.r},PH,{spring:{zeta:.72,omega:13}});
+    g.phone=m; d.op=0; }
+  if(t>=TAMTXT+0.4 && t<STAC[0][0]) g.phone=g.phone; // phone stays until the burst
+  if(t>=STAC[0][0]) g.phone=null;
+  // touch-dot: leaves the header logo's ball, taps the card, the add button, rides into the cart, opens Tamara, splits into four
+  const LB={x:LOGO_TOP.cx-280*LOGO_TOP.s+691*LOGO.s*LOGO_TOP.s, y:LOGO_TOP.y+97*LOGO.s*LOGO_TOP.s};
+  let td=null;
+  if(t>=TOUCH_OUT[0] && t<SPLIT[0]){
+    td={x:0,y:0,r:TD,s:1};
+    if(t<TOUCH_OUT[1]){ const h=OM.hop(t,TOUCH_OUT[0],TOUCH_OUT[1],LB,{x:CARD.x+CARD.w*.5,y:CARD.y+CARD.h*.42},{height:-120}); td.x=h.x; td.y=h.y; td.s=lerp(.4,1,sstep(TOUCH_OUT[0],TOUCH_OUT[0]+.15,t)); }
+    else if(t<TO_BTN[0]){ const c=OM.press(t,TAP1,{depth:.3}); const m=GROW_rect(t); td.x=m.x+m.w*.5; td.y=m.y+m.h*.42; td.s=c.s; }
+    else if(t<CART[0]){ const k=ease.expoInOut(seg(t,TO_BTN[0],TO_BTN[1])); const a=GROW_rect(t); td.x=lerp(a.x+a.w*.5,BTN.x,k); td.y=lerp(a.y+a.h*.42,BTN.y,k); td.s=OM.press(t,TAP2,{depth:.3}).s; }
+    else if(t<TO_MID[0]){ const h=OM.hop(t,CART[0],CART[1],BTN,CARTI,{height:260}); td.x=h.x; td.y=h.y; if(t>=CART[1]){ const im=OM.impact(t,CART[1],{sqx:.25,sqy:.3}); td.s=im.sx; } }
+    else if(t<DOWN[0]){ const h=OM.hop(t,TO_MID[0],TO_MID[1],CARTI,MID,{height:-80}); td.x=h.x; td.y=h.y;
+      if(t>=IRIS[0]) td.s=1+0*seg(t,IRIS[0],IRIS[1]); }
+    else { const h=OM.hop(t,DOWN[0],DOWN[1],MID,{x:540,y:PAYS[0].y},{height:-60}); td.x=h.x; td.y=h.y; }
+  }
+  g.td=td; g.dot=d; g.LB=LB;
+  // four payment dots
+  g.pays=null;
+  if(t>=SPLIT[0] && t<STAC[0][0]) g.pays=PAYS.map((p,i)=>{ const k=ease.expoOut(seg(t,SPLIT[0]+i*.04,SPLIT[1]+i*.04)); return {x:lerp(540,p.x,k),y:p.y-Math.sin(k*Math.PI)*70,r:TD}; });
+  if(t>=STAC_END){ const from=[0,1,2,3].map(i=>({x:300+i*160,y:960})); g.pays=from.map((p,i)=>{ const q=OM.gather(t,GATHER[0],GATHER[1],i,4,p,BALL,{stagger:.05,arc:160,spin:0}); return {x:q.x,y:q.y,r:lerp(TD,BALL.r,q.k)}; });
+    if(t>=LAND2){ const im=OM.impact(t,LAND2,{sqx:.22,sqy:.26}); g.pays=null; g.dot={x:BALL.x,y:BALL.y,r:BALL.r,sx:im.sx,sy:im.sy,op:1}; } }
+  return g;
+}
+function GROW_rect(t){ return OM.morphRect(t,GROW[0],GROW[1],CARD,{x:PH.x,y:PH.y,w:PH.w,h:PH.h},{curve:ease.expoInOut}); }
+
+// ═════════ DOM ═════════
+const payEls=PAYS.map((p,i)=>{ const e=document.createElement('div'); e.className='pay'; e.innerHTML=`12.99<small>دفعة ${['١','٢','٣','٤'][i]}</small>`; $('pays').appendChild(e); return e; });
+const dotEls=[0,1,2,3].map(()=>{ const e=document.createElement('div'); e.className='dot'; e.style.border='6px solid #fff'; e.style.boxShadow='0 8px 22px -6px rgba(15,44,74,.45)'; $('dots').appendChild(e); return e; });
+const wordsOf=id=>[...$(id).children];
+function circ(el,x,y,r,s=1,op=1,sx=1,sy=1){ el.style.width=el.style.height=(2*r)+'px'; el.style.opacity=op; el.style.transform=`translate(${(x-r).toFixed(1)}px,${(y-r).toFixed(1)}px) scale(${(s*sx).toFixed(4)},${(s*sy).toFixed(4)})`; }
+function rise(id,t,times,out,{dist=30}={}){ wordsOf(id).forEach((s,i)=>{ const w=OM.wordRise(t,times[i]??times[0],{dist}); const o=out?OM.liftOut(t,out):{op:1,dy:0,blur:0};
+  s.style.opacity=(t<(times[i]??times[0])?0:w.op)*o.op; s.style.transform=`translateY(${(w.y+o.dy).toFixed(1)}px) scale(${w.s.toFixed(4)})`; s.style.filter=o.blur>.3?`blur(${o.blur.toFixed(1)}px)`:'none'; }); }
+
+let CAM=null;
+function seek(t){
+  CAM=camAt(t); const V=OM.view(CAM,{W,H}); $('world').style.transform=`matrix(${V.map(v=>v.toFixed(5)).join(',')})`;
+  const g=geom(t);
+  // logo: grows out of the ball at the first landing; moves to the header; rhymes at the end
+  { const el=$('logo'); let s=0, x=LOGO.x, y=LOGO.y, op=0;
+    if(t>=LAND && t<STAC[0][0]){ const p=OM.popIn(t,LAND,{zeta:.58,omega:15,s0:0,ds:1,rise:0}); s=Math.max(0,p.s); op=p.op;
+      const up=ease.expoInOut(seg(t,LIFT,LIFT+.6)); const sT=lerp(1,LOGO_TOP.s,up);
+      // scale about the ball, then glide to the header
+      x=lerp(BALL.x-(BALL.x-LOGO.x)*s, LOGO_TOP.cx-280*LOGO_TOP.s, up); y=lerp(BALL.y-(BALL.y-LOGO.y)*s, LOGO_TOP.y, up); s=s*sT; }
+    if(t>=LAND2){ const p=OM.popIn(t,LAND2,{zeta:.58,omega:15,s0:0,ds:1,rise:0}); s=Math.max(0,p.s); op=p.op; x=BALL.x-(BALL.x-LOGO.x)*s; y=BALL.y-(BALL.y-LOGO.y)*s; }
+    el.style.opacity=op; el.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${s.toFixed(4)})`; }
+  rise('tag',t,TAG,LIFT,{dist:34}); if(t>=STAC[0][0]) wordsOf('tag').forEach(s=>s.style.opacity=0);
+  // the dot
+  { const d=g.dot; circ($('dot'),d.x,d.y,d.r,1,d.op,d.sx,d.sy); }
+  // the phone grows out of the dot
+  { const el=$('phone'), m=g.phone; if(!m){ el.style.display='none'; } else { el.style.display='block';
+      el.style.width=m.w.toFixed(1)+'px'; el.style.height=m.h.toFixed(1)+'px'; el.style.borderRadius=m.r.toFixed(1)+'px'; el.style.transform=`translate(${m.x.toFixed(1)}px,${m.y.toFixed(1)}px)`;
+      el.style.boxShadow=`0 0 0 ${(14*sstep(MORPH[0]+.2,MORPH[1],t)).toFixed(1)}px #0f2235,0 60px 120px -40px rgba(15,44,74,.45)`;
+      $('home').style.opacity=sstep(CONTENT[0],CONTENT[1],t);
+      // the card grows into the product page
+      const pw=$('prodWrap'); if(t>=GROW[0]){ const r=GROW_rect(t); const s=r.w/PH.w; pw.style.display='block';
+        pw.style.width=r.w.toFixed(1)+'px'; pw.style.height=r.h.toFixed(1)+'px'; pw.style.borderRadius=lerp(18,0,r.k).toFixed(1)+'px';
+        pw.style.transform=`translate(${(r.x-PH.x).toFixed(1)}px,${(r.y-PH.y).toFixed(1)}px)`;
+        $('prod').style.transform=`translateY(${(PROD_OFF*s*sstep(GROW[0],GROW[1],t)).toFixed(1)}px) scale(${s.toFixed(4)})`; } else pw.style.display='none';
+      // Tamara opens as an iris from the dot in the middle of the screen
+      const tw=$('tamWrap'); if(t>=IRIS[0]){ const ir=OM.iris(t,IRIS[0],IRIS[1],PH.w/2,PH.h/2,{W:PH.w,H:PH.h,r0:TD}); tw.style.display='block'; tw.style.clipPath=`circle(${ir.r.toFixed(1)}px at ${PH.w/2}px ${PH.h/2}px)`; } else tw.style.display='none';
+      // cart badge
+      const b=$('badge'); const bi=OM.impact(t,CART[1]+.02,{sqx:.3,sqy:.3}); b.style.opacity=t>=CART[1]&&t<IRIS[0]+.1?1:0;
+      b.style.transform=`translate(${(CARTI.x-PH.x+14).toFixed(1)}px,${(CARTI.y-PH.y-40).toFixed(1)}px) scale(${(t>=CART[1]?bi.sx:0).toFixed(3)})`; } }
+  rise('browse',t,[BROWSE,BROWSE+.22],GROW[0]+.05); if(t<BROWSE) wordsOf('browse').forEach(s=>s.style.opacity=0);
+  { const el=$('chip'); const p=OM.popIn(t,CHIP,{rise:30}), o=OM.liftOut(t,TO_MID[0]); const vis=t>=CHIP&&t<TO_MID[0]+.3;
+    el.style.opacity=vis?p.op*o.op:0; const w=el.offsetWidth||520; el.style.transform=`translate(${(540-w/2).toFixed(1)}px,${(1470+p.dy+o.dy).toFixed(1)}px) scale(${(p.s*o.s).toFixed(4)})`; }
+  rise('tamTxt',t,[TAMTXT,TAMTXT+.2,TAMTXT+.4],STAC[0][0]-0.01); if(t<TAMTXT||t>=STAC[0][0]) wordsOf('tamTxt').forEach(s=>s.style.opacity=0);
+  // touch-dot + its tap rings
+  { const td=g.td; const el=$('dots').children; // reuse dotEls[0] as the touch dot when not splitting
+    dotEls.forEach(e=>e.style.opacity=0);
+    if(td) circ(dotEls[0],td.x,td.y,td.r,td.s);
+    if(g.pays) g.pays.forEach((p,i)=>circ(dotEls[i],p.x,p.y,p.r));
+    const rg=$('ring'); let shown=false;
+    for(const [tc,x,y] of [[TAP1,CARD.x+CARD.w*.5,CARD.y+CARD.h*.42],[TAP2,BTN.x,BTN.y]]){ const u=seg(t,tc,tc+.45); if(t>=tc&&u<1){ const r=lerp(TD,TD*3.2,ease.expoOut(u)); circ(rg,x,y,r,1,(1-u)*.9); shown=true; } }
+    if(!shown) rg.style.opacity=0; }
+  // payments
+  payEls.forEach((e,i)=>{ const p=OM.popIn(t,PAY0+i*.12,{rise:24}); const vis=t>=PAY0+i*.12&&t<STAC[0][0]; e.style.opacity=vis?p.op:0; e.style.transform=`translate(${(PAYS[i].x-80).toFixed(1)}px,${(PAYS[i].y+44+p.dy).toFixed(1)}px)`; });
+  // staccato burst — the one place a bare cut is right
+  { const s=$('stac'); const on=t>=STAC[0][0]&&t<STAC_END; s.style.display=on?'flex':'none'; if(on) s.innerHTML=OM.staccato(t,STAC).word; }
+  // end: line + url types on
+  rise('end1',t,[END_TXT,END_TXT+.18,END_TXT+.36],null); if(t<END_TXT) wordsOf('end1').forEach(s=>s.style.opacity=0);
+  { const ty=OM.typeOn(t,URL0,URL,{cps:30}); $('url').textContent=t>=URL0?ty.str+(ty.done?'':'|'):''; }
+  $('hud').textContent='t='+t.toFixed(3);
+  return Promise.resolve();
+}
+
+// ═════════ probe / render hooks ═════════
+function boxesAt(t){ const g=geom(t), V=OM.view(camAt(t),{W,H}); const B={};
+  const c=(o)=>({x:o.x-o.r,y:o.y-o.r,w:2*o.r,h:2*o.r,op:1});
+  if(g.dot.op>0) B.dot=OM.projectBox(V,c(g.dot)); else if(g.td) B.dot=OM.projectBox(V,c(g.td)); else if(g.pays) B.dot=OM.projectBox(V,c(g.pays[0]));
+  if(g.phone) B.phone=OM.projectBox(V,{...g.phone,op:1});
+  if(g.pays) g.pays.forEach((p,i)=>B['pay'+i]=OM.projectBox(V,c(p)));
+  return B; }
+window.__track=t=>boxesAt(t);
+window.__motion=(t0,t1)=>{ const a=boxesAt(t0), b=boxesAt(t1); let m=OM.screenTravel(camAt(t0),camAt(t1),camAt((t0+t1)/2),{W,H});
+  for(const k in a){ if(!b[k]) continue; const A=a[k],Bb=b[k]; m=Math.max(m,Math.abs(A.x-Bb.x),Math.abs(A.y-Bb.y),Math.abs(A.x+A.w-Bb.x-Bb.w),Math.abs(A.y+A.h-Bb.y-Bb.h)); } return m; };
+window.__seek=async t=>{ await seek(t); return true; };
+const imgs=[...document.images].map(i=>i.decode().catch(()=>{}));
+window.__ready=Promise.all([document.fonts.load('900 60px KZ'),document.fonts.load('800 60px KZ'),...imgs]).then(()=>document.fonts.ready).then(()=>seek(0));
+const q=new URLSearchParams(location.search);
+if(q.has('t')) __ready.then(()=>seek(parseFloat(q.get('t'))));
+if(q.has('hud')) $('hud').style.display='block';
+if(q.has('play')) __ready.then(()=>{const t0=performance.now();(function loop(){seek(((performance.now()-t0)/1000)%DUR);requestAnimationFrame(loop);})();});
+</script>
+</body>
+</html>
