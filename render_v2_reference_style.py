@@ -106,7 +106,7 @@ for cap in CAPS:
             pending, pend_t = txt, t0
             continue
         pending, pend_t = "", None
-        words.append(dict(text=txt, t0=t0, t1=min(max(nxt, t + 0.35), t + 1.3, out + 0.05),
+        words.append(dict(text=txt, t0=t0, t1=min(nxt, t + 1.3, out + 0.05),
                           color=KEY if c in ("o", "p") else WHITE, big=c == "p"))
         if c == "p":
             events.append(("pop", t0))
