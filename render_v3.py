@@ -36,7 +36,9 @@ F_LABEL = font("Tajawal-ExtraBold.ttf", 78)
 
 F_BOX = font("Tajawal-Black.ttf", 92)
 F_SEC = font("Tajawal-Black.ttf", 84)
-YELLOW, ORANGE, INK = (255, 210, 63), tuple(spec.get("BOX_KEY", (242, 106, 33))), (17, 17, 17)
+YELLOW, ORANGE, INK = tuple(spec.get("BOX_BG", (255, 210, 63))), tuple(spec.get("BOX_KEY", (242, 106, 33))), tuple(spec.get("BOX_FG", (17, 17, 17)))
+KEY_FG = tuple(spec.get("BOX_KEY_FG", (255, 255, 255)))
+HI_BG, HI_FG = spec.get("BOX_HI"), spec.get("BOX_HI_FG")  # optional colours for keyword ('o') boxes
 
 
 def box(text, f, bg, fg, pad=(30, 14, 30, 30), r=22):
@@ -124,9 +126,14 @@ MAXW = 960
 for cap in CAPS:
     toks = [t for t in cap["toks"] if t[0] != "\n"]
     out = cap["out"]
-    items = [dict(text=text, t=t, key=(c == "p" and is_price(text))) for text, t, c, s_, j in toks if c != "x"]
+    items = [dict(text=text, t=t, key=(c == "p" and is_price(text)), hi=c in ("o", "p")) for text, t, c, s_, j in toks if c != "x"]
     for it in items:
-        it["sp"] = box(it["text"], F_BOX, ORANGE if it["key"] else YELLOW, (255, 255, 255) if it["key"] else INK)
+        if it["key"]:
+            it["sp"] = box(it["text"], F_BOX, ORANGE, KEY_FG)
+        elif it["hi"] and HI_BG:
+            it["sp"] = box(it["text"], F_BOX, tuple(HI_BG), tuple(HI_FG))
+        else:
+            it["sp"] = box(it["text"], F_BOX, YELLOW, INK)
     # a chunk is one or two rows: up to three words per row; a price joins the current row
     # when it fits, otherwise sits on a second row under it, and always closes the chunk
     W_ = lambda row: sum(x["sp"].width - 40 for x in row)
