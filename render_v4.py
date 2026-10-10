@@ -38,7 +38,9 @@ F_LABEL = font("Tajawal-ExtraBold.ttf", 78)
 F_SMALL = font("ElMessiri.ttf", 88, "SemiBold")
 F_BIG = font("ElMessiri.ttf", 150, "Bold")
 F_SEC = font("ElMessiri.ttf", 92, "Bold")
-YELLOW, ORANGE, INK = (255, 210, 63), tuple(spec.get("BOX_KEY", (242, 106, 33))), (17, 17, 17)
+F_KEYW = font("ElMessiri.ttf", 124, "Bold")
+BIG_KEYS = spec.get("BIG_KEYS", False)   # keywords ('o') land big on the second line, like a price
+YELLOW, ORANGE, INK = tuple(spec.get("V4_KEY", (255, 210, 63))), tuple(spec.get("BOX_KEY", (242, 106, 33))), (17, 17, 17)
 
 
 def box(text, f, bg, fg, pad=(30, 14, 30, 30), r=22):
@@ -126,30 +128,38 @@ MAXW = 900
 for cap in CAPS:
     toks = [t for t in cap["toks"] if t[0] != "\n"]
     out = cap["out"]
-    items = [dict(text=text, t=t, key=(c == "p" and is_price(text))) for text, t, c, s_, j in toks if c != "x"]
+    items = [dict(text=text, t=t, key=(c == "p" and is_price(text)) or (BIG_KEYS and c in ("o", "p")))
+             for text, t, c, s_, j in toks if c != "x"]
     KEYS = {text for text, t, c, s_, j in toks if c in ("o", "p")}
     for it in items:
-        if it["key"]:
+        if it["key"] and is_price(it["text"]):
             num = re.search(r"\d+(?:\.\d+)?%?", it["text"]).group()
             rest = it["text"].replace(num, "").strip()
-            it["num"] = sprite(num, F_BIG, YELLOW)
-            it["unit"] = sprite(rest, F_SMALL if False else F_BIG, WHITE) if rest else None
-            it["sp"] = it["num"]
+            it["parts"] = [sprite(num, F_BIG, YELLOW)] + ([sprite(rest, F_BIG, WHITE)] if rest else [])
+            it["sp"] = it["parts"][0]
+        elif it["key"]:
+            it["parts"] = [sprite(it["text"], F_KEYW, YELLOW)]
+            it["sp"] = it["parts"][0]
         else:
             it["sp"] = sprite(it["text"], F_SMALL, YELLOW if it["text"] in KEYS else WHITE)
     # a chunk is one or two rows: up to three words per row; a price joins the current row
     # when it fits, otherwise sits on a second row under it, and always closes the chunk
     W_ = lambda row: sum(x["sp"].width - 40 for x in row)
+    BW = lambda row: sum(sum(p.width - 50 for p in x["parts"]) for x in row)
     groups, rows = [], [[]]
     for it in items:
         row = rows[-1]
         if it["key"]:
-            if row:
+            if row and row[0]["key"] and len(row) < 2 and BW(row) + BW([it]) <= MAXW:
+                row.append(it)             # consecutive keywords share the big line
+            elif row:
                 rows.append([it])
             else:
                 row.append(it)
-            groups.append(rows); rows = [[]]
             continue
+        if row and row[0]["key"]:          # a word after the big line starts a new chunk
+            groups.append(rows); rows = [[]]
+            row = rows[-1]
         if row and (len(row) == 3 or W_(row) + it["sp"].width - 40 > MAXW):
             groups.append(rows); rows = [[]]
         rows[-1].append(it)
@@ -186,22 +196,25 @@ def draw_words(c, t):
         for row, h in zip(rows, hs):
             cy = y + h / 2
             if row[0]["key"]:
-                it = row[0]
-                if it["t"] <= t:
-                    p = (t - it["t"]) / 0.16
-                    sc, al = 0.75 + 0.25 * back(p), min(1.0, p * 3)
-                    gap = -50
-                    parts = [it["num"]] + ([it["unit"]] if it["unit"] else [])
-                    total = sum(x.width for x in parts) + gap * (len(parts) - 1)
-                    x = W / 2 + total / 2      # number on the right, "ريال" to its left
-                    for sp in parts:
-                        place(c, sp, x - sp.width / 2, cy, sc, al)
-                        x -= sp.width + gap
-                    q = ease((t - it["t"] - 0.1) / 0.3)
-                    if q > 0:
-                        bw = (total - 60) * q
-                        ImageDraw.Draw(c).rounded_rectangle((W / 2 - bw / 2, cy + 78, W / 2 + bw / 2, cy + 90), 6,
-                                                            fill=ORANGE + (255,))
+                gap, igap = -50, -50 + 30
+                widths = [sum(p.width for p in i["parts"]) + gap * (len(i["parts"]) - 1) for i in row]
+                total = sum(widths) + igap * (len(row) - 1)
+                x = W / 2 + total / 2      # right to left; a price's number sits right of "ريال"
+                for it, wd in zip(row, widths):
+                    if it["t"] <= t:
+                        p = (t - it["t"]) / 0.16
+                        sc, al = 0.75 + 0.25 * back(p), min(1.0, p * 3)
+                        xx = x
+                        for sp in it["parts"]:
+                            place(c, sp, xx - sp.width / 2, cy, sc, al)
+                            xx -= sp.width + gap
+                    x -= wd + igap
+                q = ease((t - row[0]["t"] - 0.1) / 0.3)
+                if q > 0:
+                    bw = (total - 60) * q
+                    by = cy + (78 if is_price(row[0]["text"]) else 70)
+                    ImageDraw.Draw(c).rounded_rectangle((W / 2 - bw / 2, by, W / 2 + bw / 2, by + 12), 6,
+                                                        fill=ORANGE + (255,))
             else:
                 gap = -80 + 26
                 total = sum(i["sp"].width for i in row) + gap * (len(row) - 1)
