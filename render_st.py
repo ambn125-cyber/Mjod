@@ -101,6 +101,50 @@ def gap_center(text, f):
     return lp + run / 2, full
 
 
+_hd = {}
+
+
+def plain_white(text):
+    if ("pw", text) not in _hd:
+        f = ImageFont.truetype(f"{FONTS}/Tajawal-ExtraBold.ttf", 60)
+        bb = f.getbbox(text, direction="rtl"); pad = 30
+        w, h = bb[2] - bb[0] + 2 * pad, bb[3] - bb[1] + 2 * pad
+        m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).text((pad - bb[0], pad - bb[1]), text, font=f, fill=255, direction="rtl")
+        im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        sh = Image.new("L", (w, h), 0); sh.paste(m, (0, 4)); im.putalpha(sh.filter(ImageFilter.GaussianBlur(7)).point(lambda v: int(v * .8)))
+        wf = Image.new("RGBA", (w, h), (255, 255, 255, 255)); wf.putalpha(m); im.alpha_composite(wf)
+        _hd[("pw", text)] = im
+    return _hd[("pw", text)]
+
+
+def hgrad(w, h, stops=((255, 209, 102), (240, 127, 30), (255, 77, 26))):
+    x = np.linspace(0, 1, max(w, 1))[None, :, None]
+    c0, c1, c2 = (np.array(c, np.float32) for c in stops)
+    col = np.where(x < .6, c0 + (c1 - c0) * (x / .6), c1 + (c2 - c1) * ((x - .6) / .4))
+    return Image.fromarray(np.repeat(col, h, 0).astype(np.uint8)).convert("RGBA")
+
+
+def gradient_word(text):
+    if ("gw", text) not in _hd:
+        f = ImageFont.truetype(f"{FONTS}/Lalezar-Regular.ttf", 132)
+        bb = f.getbbox(text, direction="rtl"); pad = 40
+        w, h = bb[2] - bb[0] + 2 * pad, bb[3] - bb[1] + 2 * pad
+        m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).text((pad - bb[0], pad - bb[1]), text, font=f, fill=255, direction="rtl")
+        im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        sh = Image.new("L", (w, h), 0); sh.paste(m, (0, 7)); im.putalpha(sh.filter(ImageFilter.GaussianBlur(9)).point(lambda v: int(v * .65)))
+        g = hgrad(w, h); g.putalpha(m); im.alpha_composite(g)
+        _hd[("gw", text)] = im
+    return _hd[("gw", text)]
+
+
+def gradient_bar(w, h):
+    w = max(w, 2)
+    im = hgrad(w, h, ((255, 77, 26), (240, 127, 30), (255, 209, 102)))
+    m = Image.new("L", (w, h), 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, w - 1, h - 1), h // 2, fill=255)
+    im.putalpha(m)
+    return im
+
+
 _rb = {}
 
 
@@ -181,9 +225,23 @@ def draw_chunk(c, ch, t):
         y = ch.get("top", 1080)
         ht, th = ch["header"]
         if t >= th:
-            p = (t - th) / 0.22
-            place(c, ribbon(ht, t - th), W / 2, y - 10, 0.6 + 0.4 * back(p, 2.2), min(1.0, p * 3) * out * fade)
-        y += 120
+            small, big = ht.split(" ", 2)[:2], ht.split(" ", 2)[2:]
+            small, big = " ".join(small), " ".join(big)
+            p = (t - th) / 0.2
+            a = min(1.0, p * 3) * out * fade
+            place(c, plain_white(small), W / 2, y - 70, 1.0, a)
+            q = (t - th - 0.15) / 0.22
+            if q > 0:
+                gs = gradient_word(big)
+                place(c, gs, W / 2, y + 20, 0.7 + 0.3 * back(q, 2.2), min(1.0, q * 3) * out * fade)
+                u = ease((t - th - 0.35) / 0.35)                 # underline draws in from the right
+                if u > 0:
+                    uw = int(min(gs.width - 120, 520) * u)
+                    bar = gradient_bar(uw, 14)
+                    bx = W / 2 + min(gs.width - 120, 520) / 2 - uw
+                    c.alpha_composite(bar.copy() if a >= 1 else Image.blend(Image.new("RGBA", bar.size, (0, 0, 0, 0)), bar, a),
+                                      (int(bx), int(y + 85)))
+        y += 200
         for i, (txt, tt) in enumerate(ch["items"]):
             row, col = divmod(i, 2)
             x = W / 2 + (230 if col == 0 else -230)      # first item of a pair on the right (RTL)

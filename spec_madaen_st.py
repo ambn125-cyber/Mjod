@@ -33,7 +33,7 @@ B(w("من الساعة", 43.18), g("11:30", 43.56), w("إلى الساعة", 44.
 B(g("خصـــم", 45.86, num="20%"), w("على جميع", 46.62), w("المنتجات", 47.06), end=47.56)
 # second offer (manager)
 # the items build up one by one in two columns and stay; the price lands big at the end
-CH.append(dict(kind="grid", t0=47.58, end=57.14, header=("ولا يفوتكم العرض الثاني", 47.58),
+CH.append(dict(kind="grid", t0=47.58, end=57.14, header=("ولا يفوتكم العرض اليومي", 47.58),
                items=[("حبة فحم", 48.36), ("نفر رز", 49.66), ("سلطة عربي", 50.38), ("سلطة تركي", 51.40),
                       ("حمص", 52.64), ("واحد إيدام", 53.74)],
                price=("ريال", "42", 56.34), top=1080))
