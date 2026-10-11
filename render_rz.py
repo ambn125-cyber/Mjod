@@ -95,6 +95,115 @@ def place(c, im, x, y, sc=1.0, a=1.0):
     c.alpha_composite(im.crop((cx, cy, im.width, im.height)), (x0 + cx, y0 + cy))
 
 
+# ---------------- hook (opening) ----------------
+HOOK = spec.get("HOOK")
+F_HS = ImageFont.truetype(f"{FONTS}/Lalezar-Regular.ttf", 112)
+F_HB = ImageFont.truetype(f"{FONTS}/Lalezar-Regular.ttf", 300)
+F_HF = ImageFont.truetype(f"{FONTS}/Lalezar-Regular.ttf", 330)
+_h = {}
+
+
+def _mask(text, f, sw=0):
+    bb = f.getbbox(text, direction="rtl", stroke_width=sw)
+    pad = 60
+    w, h = bb[2] - bb[0] + 2 * pad, bb[3] - bb[1] + 2 * pad
+    m = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(m).text((pad - bb[0], pad - bb[1]), text, font=f, fill=255, direction="rtl", stroke_width=sw, stroke_fill=255)
+    return m, (pad - bb[0], pad - bb[1]), bb
+
+
+def white_text(text):
+    if ("w", text) not in _h:
+        m, org, bb = _mask(text, F_HS)
+        im = Image.new("RGBA", m.size, (0, 0, 0, 0))
+        sh = Image.new("L", m.size, 0); sh.paste(m, (0, 8)); im.putalpha(sh.filter(ImageFilter.GaussianBlur(10)).point(lambda v: int(v * .7)))
+        wf = Image.new("RGBA", m.size, WHITE + (255,)); wf.putalpha(m); im.alpha_composite(wf)
+        _h[("w", text)] = im
+    return _h[("w", text)]
+
+
+def sticker_text(text):
+    if ("s", text) not in _h:
+        edge, org, bb = _mask(text, F_HB, 26)
+        ink = Image.new("L", edge.size, 0); ImageDraw.Draw(ink).text(org, text, font=F_HB, fill=255, direction="rtl")
+        im = Image.new("RGBA", edge.size, (0, 0, 0, 0))
+        sh = Image.new("L", edge.size, 0); sh.paste(edge, (0, 14)); im.putalpha(sh.filter(ImageFilter.GaussianBlur(14)).point(lambda v: int(v * .55)))
+        wl = Image.new("RGBA", edge.size, WHITE + (255,)); wl.putalpha(edge); im.alpha_composite(wl)
+        rl = Image.new("RGBA", edge.size, RED + (255,)); rl.putalpha(ink); im.alpha_composite(rl)
+        _h[("s", text)] = im
+    return _h[("s", text)]
+
+
+def fire_text(text):
+    if ("f", text) not in _h:
+        m, org, bb = _mask(text, F_HF)
+        w, h = m.size
+        y = np.linspace(0, 1, h)[:, None]
+        top, mid, bot = np.array((255, 212, 0), np.float32), np.array((255, 122, 0), np.float32), np.array((255, 42, 0), np.float32)
+        col = np.where(y < .5, top + (mid - top) * (y / .5), mid + (bot - mid) * ((y - .5) / .5))
+        grad = Image.fromarray(np.repeat(col[:, None, :], w, 1).astype(np.uint8)).convert("RGBA")
+        glow = Image.new("RGBA", (w, h), (255, 90, 0, 255)); glow.putalpha(m.filter(ImageFilter.GaussianBlur(22)))
+        sh = Image.new("RGBA", (w, h), (0, 0, 0, 255)); sh.putalpha(m.filter(ImageFilter.GaussianBlur(10)).point(lambda v: int(v * .6)))
+        grad.putalpha(m)
+        _h[("f", text)] = (glow, sh, grad)
+    return _h[("f", text)]
+
+
+def green_bar(text):
+    return box(text, "p")
+
+
+def shake(t):
+    if not HOOK:
+        return 0, 0
+    d = t - HOOK["brand"][1]
+    if 0 <= d < 0.22:
+        a = 14 * (1 - d / 0.22)
+        return int(a * np.sin(d * 90)), int(a * np.cos(d * 70))
+    return 0, 0
+
+
+def draw_hook(c, t):
+    H1, H2 = HOOK["line1"], HOOK["line2"]
+    if t < HOOK["t1"]:                                     # part A
+        z = 1.0
+        out = 1.0
+        if t > HOOK["t1"] - 0.25:                          # zoom-out exit
+            q = ease((t - (HOOK["t1"] - 0.25)) / 0.25); z = 1 + 0.5 * q; out = 1 - q
+        y0 = 1050
+        tx, tt0 = H1
+        if t >= tt0:
+            p = ease((t - tt0) / 0.3)
+            place(c, white_text(tx), W / 2, y0 - 300 * z + 40 * (1 - p), z, p * out)
+        bx, bt = HOOK["brand"]
+        if t >= bt:
+            p = (t - bt) / 0.22
+            sc = 2.4 - 1.4 * ease(p)
+            place(c, sticker_text(bx), W / 2, y0, sc * z, min(1.0, p * 4) * out)
+        gx, gt = HOOK["green"]
+        if t >= gt:
+            q = ease((t - gt) / 0.3)
+            g = green_bar(gx)
+            cw = max(1, int(g.width * q))
+            g2 = g.crop((g.width - cw, 0, g.width, g.height))
+            gw = g.width * z
+            place(c, g2, W / 2 + gw / 2 - cw * z / 2, y0 + 240 * z, z, out)
+    else:                                                  # part B
+        out = 1 - ease((t - (HOOK["t2"] - 0.2)) / 0.2) if t > HOOK["t2"] - 0.2 else 1.0
+        tx, tt0 = H2
+        p = ease((t - tt0) / 0.3)
+        place(c, white_text(tx), W / 2, 760 + 40 * (1 - p), 1.0, p * out)
+        for i, (fx, ft) in enumerate(HOOK["fire"]):
+            if t >= ft:
+                p = ease((t - ft) / 0.35)
+                glow, sh, grad = fire_text(fx)
+                fl = 0.75 + 0.25 * np.sin((t - ft) * 23) * np.sin((t - ft) * 9 + 1)   # flicker
+                y = 1010 + i * 300 + 160 * (1 - p)
+                place(c, sh, W / 2, y + 10, 1.0, p * out)
+                place(c, glow, W / 2, y, 1.0, p * out * fl)
+                place(c, grad, W / 2, y, 1.0, p * out)
+
+
 # layout: wrap items into rows (max width), prices/old prices share their own row
 for ch in CH:
     rows, row, wsum = [], [], 0
@@ -142,7 +251,12 @@ def draw(c, ch, t):
 
 
 def composite(frame, t):
+    dx, dy = shake(t)
+    if dx or dy:
+        frame = np.roll(np.roll(frame, dx, axis=1), dy, axis=0)
     img = Image.fromarray(frame).convert("RGBA")
+    if HOOK and t < HOOK["t2"]:
+        draw_hook(img, t)
     for ch in CH:
         if ch["t0"] <= t < ch["t1"]:
             draw(img, ch, t)
