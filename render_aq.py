@@ -97,16 +97,16 @@ def draw_card(c, t, cd, frame_img):
     if cd.get("k"): lines.append(("k", cd["k"], t0))
     lines.append(("t", cd["t"][0], cd["t"][1]))
     if cd.get("s"): lines.append(("s", cd["s"][0], cd["s"][1]))
-    sprites = [(kind, text(s, {"k": FE(40), "t": FL(92), "s": FE(46)}[kind], {"k": "e", "t": "w", "s": "s"}[kind]), ts) for kind, s, ts in lines]
-    cw = max(620, max(sp.width for _, sp, _ in sprites) + 40)
-    ch = sum(sp.height - 40 for _, sp, _ in sprites) + 60
-    x1 = W - 56; x0 = x1 - cw; y0 = 1160 - ch // 2 + int(30 * (1 - a)); y1 = y0 + ch
-    region = frame_img.crop((x0, y0, x1, y1)).filter(ImageFilter.GaussianBlur(18))
-    tint = Image.new("RGBA", region.size, (15, 12, 8, 120)); region = region.convert("RGBA"); region.alpha_composite(tint)
-    mask = Image.new("L", region.size, 0); ImageDraw.Draw(mask).rounded_rectangle((0, 0, cw - 1, ch - 1), 34, fill=int(255 * a))
+    sprites = [(kind, text(s, {"k": FE(32), "t": FL(70), "s": FE(36)}[kind], {"k": "e", "t": "w", "s": "s"}[kind]), ts) for kind, s, ts in lines]
+    cw = max(460, max(sp.width for _, sp, _ in sprites) + 30)
+    ch = sum(sp.height - 40 for _, sp, _ in sprites) + 44
+    x1 = W - 56; x0 = x1 - cw; y0 = 1500 - ch // 2 + int(30 * (1 - a)); y1 = y0 + ch
+    region = frame_img.crop((x0, y0, x1, y1)).filter(ImageFilter.GaussianBlur(6))
+    tint = Image.new("RGBA", region.size, (15, 12, 8, 55)); region = region.convert("RGBA"); region.alpha_composite(tint)
+    mask = Image.new("L", region.size, 0); ImageDraw.Draw(mask).rounded_rectangle((0, 0, cw - 1, ch - 1), 28, fill=int(150 * a))
     c.paste(region, (x0, y0), mask)
-    ImageDraw.Draw(c).rounded_rectangle((x0, y0, x1, y1), 34, outline=EDGE + (int(200 * a),), width=3)
-    y = y0 + 30
+    ImageDraw.Draw(c).rounded_rectangle((x0, y0, x1, y1), 28, outline=EDGE + (int(180 * a),), width=2)
+    y = y0 + 22
     for kind, sp, ts in sprites:
         h = sp.height - 40
         la = a * ease((t - ts) / 0.4) if t >= ts else 0
