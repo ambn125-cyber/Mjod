@@ -142,6 +142,21 @@ for cap in CAPS:
             it["sp"] = it["parts"][0]
         else:
             it["sp"] = sprite(it["text"], F_SMALL, YELLOW if it["text"] in KEYS else WHITE)
+    # never let one phrase run past the frame: shrink any sprite wider than the safe width
+    def _fit(im, maxw=940):
+        if im.width <= maxw:
+            return im
+        k = maxw / im.width
+        return im.resize((maxw, max(1, int(im.height * k))), Image.LANCZOS)
+    for it in items:
+        if "parts" in it:
+            tot = sum(p.width - 50 for p in it["parts"]) + 50
+            if tot > 940:
+                k = 940 / tot
+                it["parts"] = [p.resize((max(1, int(p.width * k)), max(1, int(p.height * k))), Image.LANCZOS) for p in it["parts"]]
+            it["sp"] = it["parts"][0]
+        else:
+            it["sp"] = _fit(it["sp"])
     # a chunk is one or two rows: up to three words per row; a price joins the current row
     # when it fits, otherwise sits on a second row under it, and always closes the chunk
     W_ = lambda row: sum(x["sp"].width - 40 for x in row)
