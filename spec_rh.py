@@ -40,4 +40,4 @@ V4_KEY = (233, 196, 106)        # gold keywords / prices
 BOX_KEY = (214, 160, 70)        # gold underline
 BIG_KEYS = True
 Y_WORD = 1380
-LOGOS = [("v9/logo_card.png", 95.10, 97.60, 560, 720)]
+LOGOS = [("v9/logo_card.png", 95.10, 97.60, 380, 720)]

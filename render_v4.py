@@ -10,6 +10,8 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 SRC, OUT, FONTS, SPEC = sys.argv[1:5]
 PREVIEW = sys.argv[5] if len(sys.argv) > 5 else None
 W, H, FPS = 1080, 1920, 30
+import os
+T0 = float(os.environ.get("T0", "0"))
 
 spec = {}
 exec(open(SPEC, encoding="utf-8").read(), spec)
@@ -360,6 +362,6 @@ enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_f
                         "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-c:a", "copy", "-shortest", OUT],
                        stdin=subprocess.PIPE)
 for fi, f in enumerate(run_frames()):
-    enc.stdin.write(composite(f, fi / FPS).tobytes())
+    enc.stdin.write(composite(f, fi / FPS + T0).tobytes())
 enc.stdin.close(); enc.wait()
 print("done", len(chunks), "lines", len(sections), "sections", file=sys.stderr)
