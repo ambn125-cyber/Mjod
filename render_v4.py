@@ -227,7 +227,7 @@ def draw_words(c, t):
                             xx -= sp.width + gap
                     x -= wd + igap
                 q = ease((t - row[0]["t"] - 0.1) / 0.3)
-                if q > 0:
+                if q > 0 and not spec.get("NO_BAR"):
                     bw = (total - 60) * q
                     by = cy + (78 if is_price(row[0]["text"]) else 70)
                     ImageDraw.Draw(c).rounded_rectangle((W / 2 - bw / 2, by, W / 2 + bw / 2, by + 12), 6,
