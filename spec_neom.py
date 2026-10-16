@@ -26,3 +26,4 @@ BOX_HI = (64, 190, 240); BOX_HI_FG = (12, 30, 70)
 BOX_KEY = (12, 30, 70); BOX_KEY_FG = (255, 255, 255)
 LOGOS = [("neom/logo_card.png", 0.68, 2.40, 330, 260), ("neom/logo_card.png", 23.10, 25.20, 330, 300)]
 Y_WORD = 1250
+BOX_FONT = ("Changa.ttf", 92, "ExtraBold")

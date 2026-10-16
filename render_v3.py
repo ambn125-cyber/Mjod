@@ -34,7 +34,7 @@ F_NUM = font("NotoSerif.ttf", 230, "Black")
 F_LABEL = font("Tajawal-ExtraBold.ttf", 78)
 
 
-F_BOX = font("Tajawal-Black.ttf", 92)
+F_BOX = font(*spec.get("BOX_FONT", ("Tajawal-Black.ttf", 92)))
 F_SEC = font("Tajawal-Black.ttf", 84)
 YELLOW, ORANGE, INK = tuple(spec.get("BOX_BG", (255, 210, 63))), tuple(spec.get("BOX_KEY", (242, 106, 33))), tuple(spec.get("BOX_FG", (17, 17, 17)))
 KEY_FG = tuple(spec.get("BOX_KEY_FG", (255, 255, 255)))
