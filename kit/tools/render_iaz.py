@@ -20,9 +20,9 @@ def duo(t0, t1, ar, en, y=None): return dict(k="duo", t0=t0, t1=t1, ar=ar, en=en
 def neon(t0, t1, num, t, label=None, y=None, color=None): return dict(k="neon", t0=t0, t1=t1, num=num, t=t, label=label, y=y, color=color)
 def plain(t0, t1, text, type=False, y=None): return dict(k="plain", t0=t0, t1=t1, text=text, type=type, y=y)
 def serif(t0, t1, text, y=None): return dict(k="serif", t0=t0, t1=t1, text=text, y=y)
-def kin(t0, t1, *rows, y=1200, gap=26):
+def kin(t0, t1, *rows, y=1200, gap=26, nudge=0):
     """12: kinetic brand words. rows = [("word", t, size), ...] per row; laid out right-to-left, rows stacked from y,
-    each row nudged sideways a little for a hand-placed feel."""
+    rows centred (nudge=40 staggers them sideways for a hand-placed look)."""
     words, cy = [], y
     for ri, row in enumerate(rows):
         ws = [(txt, tt, sz, mask(txt, F_AR(sz)).width - 80) for txt, tt, sz in row]
@@ -31,7 +31,7 @@ def kin(t0, t1, *rows, y=1200, gap=26):
             k = 900 / total
             ws = [(txt, tt, int(sz * k), mask(txt, F_AR(int(sz * k))).width - 80) for txt, tt, sz, _ in ws]
             total = sum(w for *_, w in ws) + gap * (len(ws) - 1)
-        x = W / 2 + total / 2 + (40 if ri % 2 else -40) * (len(rows) > 1)
+        x = W / 2 + total / 2 + (nudge if ri % 2 else -nudge) * (len(rows) > 1)
         for txt, tt, sz, w in ws:
             words.append((txt, tt, x - w / 2, cy, sz)); x -= w + gap
         cy += max(sz for *_, sz, _ in ws) * 1.15
