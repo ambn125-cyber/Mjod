@@ -57,7 +57,16 @@ def font(name, size, axes=None):
 
 
 F_AR = lambda s: font("Tajawal-Black.ttf", s)
-F_PLAIN = font("Tajawal-ExtraBold.ttf", 66)
+_pf = {}
+
+
+def F_PLAIN_FOR(text, size=66, maxw=940):
+    """one font size per caption so typed-in text keeps its size; shrinks long lines to stay inside the frame"""
+    if text not in _pf:
+        while size > 34 and mask(text, font("Tajawal-ExtraBold.ttf", size)).width - 80 > maxw:
+            size -= 4
+        _pf[text] = font("Tajawal-ExtraBold.ttf", size)
+    return _pf[text]
 F_SERIF = lambda s: font("Fraunces.ttf", s, [144, 900, 60, 1])
 F_NUM = lambda s: font("LilitaOne.ttf", s)
 
@@ -203,10 +212,11 @@ def draw(c, t, e):
         y = e["y"] or Y_PLAIN
         if e["type"]:
             s = typed(e["text"], (t - e["t0"]) / max(0.25, 0.045 * len(e["text"])))
-            sp = sprite(("pl", s), lambda: shadowed(mask(s, F_PLAIN), (255, 255, 255), sh=170, blur=8, dy=4))
+            fp = F_PLAIN_FOR(e["text"])
+            sp = sprite(("pl", s, id(fp)), lambda: shadowed(mask(s, fp), (255, 255, 255), sh=170, blur=8, dy=4))
             put(c, sp, W / 2, y, fa)
         else:
-            sp = sprite(("pl", e["text"]), lambda: shadowed(mask(e["text"], F_PLAIN), (255, 255, 255), sh=170, blur=8, dy=4))
+            sp = sprite(("pl", e["text"]), lambda: shadowed(mask(e["text"], F_PLAIN_FOR(e["text"])), (255, 255, 255), sh=170, blur=8, dy=4))
             put(c, sp, W / 2, y + 12 * (1 - ease((t - e["t0"]) / 0.25)), ease((t - e["t0"]) / 0.2) * fa)
     elif k == "kin":
         for text, tw, cx, cy, size in e["words"]:

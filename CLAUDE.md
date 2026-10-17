@@ -85,7 +85,7 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | المدائن Madaen grills | flame orange (240,127,30) | sticker | logo only at the very end |
 | NCT | — | 4/7 | |
 | كنوز السعادة pharmacy, ريحانة perfumes, دخوني, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
-| إلوفي élevée (Zood Real Estate, Riyadh) | gold | 6 فخم | Arabic name on the sign is «إلوفي» |
+| إلوفي élevée (زود العقارية Zood, Riyadh) | gold (233,190,95) | 6 فخم; short cut in 9/10/11 (`spec_elevee2.py`) | Arabic name on the sign is «إلوفي»; company confirmed by the Zood end logo |
 
 ## Quick fixes (keep render time short)
 - Segment re-render: renderers honour env `T0` (start offset); render only the changed window and splice with
