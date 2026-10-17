@@ -60,6 +60,14 @@ python3 -I kit/tools/render_v3.py src.mov out.mp4 kit/fonts spec.py             
 | 6 | فخم | `render_aq.py` | `HOOK` + `card()` + `BIGS` · `spec_aqar.py`, `spec_elevee.py` | real estate, luxury |
 | 7 | ختم خصم | `stamp.py` (edit T0/T1/text) | overlay pass on a captioned video | a big "خصم 50%" moment |
 | 8 | أيقونات أسعار | `price_icons.py` (edit boxes/times) | overlay pass, crops price boxes from the client's poster | price list + B-roll |
+| 9 | عنوان مزدوج | `render_iaz.py` | `duo(t0,t1,("عربي",t),("English",t))` · `spec_meshraq_iaz.py` | events, upscale food, brands |
+| 10 | أسعار نيون | `render_iaz.py` | `neon(t0,t1,"15",t,label=("ريال",t))` | supermarket / price offers |
+| 11 | بسيط | `render_iaz.py` | `plain(t0,t1,"كلمة",type=True)` + `serif()` sign-off | good footage, minimal text |
+
+Styles 9–11 come from the creator the user admires (TikTok @iaz.199): few words per caption, white text with soft
+shadow, bilingual titles (white Arabic + huge mustard serif English, Fraunces font), glowing neon numbers (Lilita One)
+over the product, typed-in text, elegant serif date/place sign-off. 9/10/11 mix freely in one spec.
+`COLOR` = English word colour, `NEON` = number glow colour, `Y_DUO/Y_NEON/Y_PLAIN` = vertical positions.
 
 Style 1 colours: `BOX_BG/BOX_FG` normal word, `BOX_HI/BOX_HI_FG` keyword (`"o"`), `BOX_KEY/BOX_KEY_FG` price (`"p"`),
 font `BOX_FONT=("Changa.ttf",92,"ExtraBold")`. Style 5 colours: `BRAND`, `INK`. Always use the **client's brand colours**.
