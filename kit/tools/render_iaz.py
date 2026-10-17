@@ -27,6 +27,10 @@ def kin(t0, t1, *rows, y=1200, gap=26):
     for ri, row in enumerate(rows):
         ws = [(txt, tt, sz, mask(txt, F_AR(sz)).width - 80) for txt, tt, sz in row]
         total = sum(w for *_, w in ws) + gap * (len(ws) - 1)
+        if total > 900:   # keep the row inside the frame
+            k = 900 / total
+            ws = [(txt, tt, int(sz * k), mask(txt, F_AR(int(sz * k))).width - 80) for txt, tt, sz, _ in ws]
+            total = sum(w for *_, w in ws) + gap * (len(ws) - 1)
         x = W / 2 + total / 2 + (40 if ri % 2 else -40) * (len(rows) > 1)
         for txt, tt, sz, w in ws:
             words.append((txt, tt, x - w / 2, cy, sz)); x -= w + gap

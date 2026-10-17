@@ -85,6 +85,7 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | المدائن Madaen grills | flame orange (240,127,30) | sticker | logo only at the very end |
 | NCT | — | 4/7 | |
 | كنوز السعادة pharmacy, ريحانة perfumes, دخوني, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
+| مكتب فهد للسداد وتحصيل الديون (حي العليا, Tabuk) | white + blue (40,90,255) like the sign | 12 كلمات حركية | phone 058 140 2370; Tabby/Emkan logos in `kit/brands/payments/`; landmark after «مقابل» unconfirmed |
 | إلوفي élevée (زود العقارية Zood, Riyadh) | gold (233,190,95) | 6 فخم; short cut in 9/10/11 (`spec_elevee2.py`) | Arabic name on the sign is «إلوفي»; company confirmed by the Zood end logo |
 
 ## Quick fixes (keep render time short)
