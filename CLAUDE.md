@@ -63,6 +63,7 @@ python3 -I kit/tools/render_v3.py src.mov out.mp4 kit/fonts spec.py             
 | 9 | عنوان مزدوج | `render_iaz.py` | `duo(t0,t1,("عربي",t),("English",t))` · `spec_meshraq_iaz.py` | events, upscale food, brands |
 | 10 | أسعار نيون | `render_iaz.py` | `neon(t0,t1,"15",t,label=("ريال",t))` | supermarket / price offers |
 | 11 | بسيط | `render_iaz.py` | `plain(t0,t1,"كلمة",type=True)` + `serif()` sign-off | good footage, minimal text |
+| 12 | كلمات حركية | `render_iaz.py` | `kin(t0,t1,[("كلمة",t,size),..],[..],y=)` rows auto-laid RTL + `card()` for logo/app screenshots · `spec_meshraq_kin.py` | apps, offers, brand-coloured ads (`KIN`/`KIN2` colours) |
 
 Styles 9–11 come from the creator the user admires (TikTok @iaz.199): few words per caption, white text with soft
 shadow, bilingual titles (white Arabic + huge mustard serif English, Fraunces font), glowing neon numbers (Lilita One)

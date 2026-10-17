@@ -20,16 +20,31 @@ def duo(t0, t1, ar, en, y=None): return dict(k="duo", t0=t0, t1=t1, ar=ar, en=en
 def neon(t0, t1, num, t, label=None, y=None, color=None): return dict(k="neon", t0=t0, t1=t1, num=num, t=t, label=label, y=y, color=color)
 def plain(t0, t1, text, type=False, y=None): return dict(k="plain", t0=t0, t1=t1, text=text, type=type, y=y)
 def serif(t0, t1, text, y=None): return dict(k="serif", t0=t0, t1=t1, text=text, y=y)
+def kin(t0, t1, *rows, y=1200, gap=26):
+    """12: kinetic brand words. rows = [("word", t, size), ...] per row; laid out right-to-left, rows stacked from y,
+    each row nudged sideways a little for a hand-placed feel."""
+    words, cy = [], y
+    for ri, row in enumerate(rows):
+        ws = [(txt, tt, sz, mask(txt, F_AR(sz)).width - 80) for txt, tt, sz in row]
+        total = sum(w for *_, w in ws) + gap * (len(ws) - 1)
+        x = W / 2 + total / 2 + (40 if ri % 2 else -40) * (len(rows) > 1)
+        for txt, tt, sz, w in ws:
+            words.append((txt, tt, x - w / 2, cy, sz)); x -= w + gap
+        cy += max(sz for *_, sz, _ in ws) * 1.15
+    return dict(k="kin", t0=t0, t1=t1, words=words)
+def card(t0, t1, path, t, cx=540, cy=560, w=760, r=36): return dict(k="card", t0=t0, t1=t1, path=path, t=t, cx=cx, cy=cy, w=w, r=r)
 
 
-spec = dict(duo=duo, neon=neon, plain=plain, serif=serif)
-exec(open(SPEC, encoding="utf-8").read(), spec)
-EV = spec["EV"]
+spec = dict(duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card)
+_src = open(SPEC, encoding="utf-8").read()
+exec("\n".join(l for l in _src.splitlines() if re.match(r"^[A-Z_0-9]+ *=", l) and not l.startswith("EV")), spec)
 COLOR = tuple(spec.get("COLOR", (245, 170, 20)))      # duo English word
 NEON = tuple(spec.get("NEON", (90, 255, 60)))         # neon numbers
 Y_PLAIN = spec.get("Y_PLAIN", 1150)
 Y_DUO = spec.get("Y_DUO", 470)
 Y_NEON = spec.get("Y_NEON", 1220)
+KIN = tuple(spec.get("KIN", (64, 225, 235)))           # kinetic word colour (brand)
+KIN2 = tuple(spec.get("KIN2", (140, 70, 255)))         # its offset shadow colour
 LRM = "‎"
 NONJOIN = set("اأإآدذرزوؤةىء ")
 
@@ -45,6 +60,9 @@ F_AR = lambda s: font("Tajawal-Black.ttf", s)
 F_PLAIN = font("Tajawal-ExtraBold.ttf", 66)
 F_SERIF = lambda s: font("Fraunces.ttf", s, [144, 900, 60, 1])
 F_NUM = lambda s: font("LilitaOne.ttf", s)
+
+
+EV = None  # filled after the drawing helpers exist (see bottom of setup)
 
 
 def fix(t):
@@ -90,7 +108,39 @@ def glow(m, color, core_mix=0.35):
     return out
 
 
+def duotone(m, a, b, off=9):
+    out = Image.new("RGBA", (m.width + off, m.height + off), (0, 0, 0, 0))
+    sh = Image.new("RGBA", m.size, (0, 0, 0, 255)); sh.putalpha(m.filter(ImageFilter.GaussianBlur(12)).point(lambda v: v * 120 // 255))
+    out.alpha_composite(sh, (off, off + 6))
+    s2 = Image.new("RGBA", m.size, b + (255,)); s2.putalpha(m); out.alpha_composite(s2, (off, off))
+    s1 = Image.new("RGBA", m.size, a + (255,)); s1.putalpha(m); out.alpha_composite(s1, (0, 0))
+    return out
+
+
+def smear(sp, n):
+    if n <= 1:
+        return sp
+    acc = np.zeros((sp.height, sp.width + n, 4), np.float32); a = np.asarray(sp, np.float32)
+    for i in range(0, n, max(1, n // 8)):
+        acc[:, i:i + sp.width] += a
+    acc /= len(range(0, n, max(1, n // 8)))
+    return Image.fromarray(acc.clip(0, 255).astype(np.uint8))
+
+
+def card_img(path, w, r):
+    im = Image.open(path).convert("RGBA"); im = im.resize((w, int(im.height * w / im.width)), Image.LANCZOS)
+    m = Image.new("L", im.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, im.width - 1, im.height - 1), r, fill=255)
+    im.putalpha(Image.fromarray(np.minimum(np.asarray(m), np.asarray(im.split()[3]))))
+    pad = 40; out = Image.new("RGBA", (im.width + 2 * pad, im.height + 2 * pad), (0, 0, 0, 0))
+    sh = Image.new("RGBA", im.size, (0, 0, 0, 255)); sh.putalpha(im.split()[3].point(lambda v: v * 140 // 255))
+    tmp = Image.new("RGBA", out.size, (0, 0, 0, 0)); tmp.alpha_composite(sh, (pad, pad + 14))
+    out.alpha_composite(tmp.filter(ImageFilter.GaussianBlur(16))); out.alpha_composite(im, (pad, pad))
+    return out
+
+
 _cache = {}
+exec(_src, spec)
+EV = spec["EV"]
 
 
 def sprite(key, make):
@@ -158,6 +208,22 @@ def draw(c, t, e):
         else:
             sp = sprite(("pl", e["text"]), lambda: shadowed(mask(e["text"], F_PLAIN), (255, 255, 255), sh=170, blur=8, dy=4))
             put(c, sp, W / 2, y + 12 * (1 - ease((t - e["t0"]) / 0.25)), ease((t - e["t0"]) / 0.2) * fa)
+    elif k == "kin":
+        for text, tw, cx, cy, size in e["words"]:
+            if t < tw:
+                continue
+            sp = sprite(("kin", text, size), lambda: duotone(mask(text, F_AR(size)), KIN, KIN2))
+            p = (t - tw) / 0.16
+            if p < 1:   # fast pop-in with horizontal smear
+                sm = smear(sp, int(40 * (1 - p)))
+                put(c, sm, cx, cy, min(1, p * 1.6) * fa, 1.25 - 0.25 * ease(p))
+            else:
+                put(c, sp, cx, cy, fa, 1 + 0.06 * np.exp(-(t - tw - 0.16) * 8) * np.sin((t - tw) * 20))
+    elif k == "card":
+        sp = sprite(("card", e["path"], e["w"]), lambda: card_img(e["path"], e["w"], e["r"]))
+        p = ease((t - e["t"]) / 0.3)
+        if t >= e["t"]:
+            put(c, sp, e["cx"], e["cy"] + 140 * (1 - p), p * fa, 0.9 + 0.1 * p)
     elif k == "serif":
         y = e["y"] or 1480
         sp = sprite(("sf", e["text"]), lambda: shadowed(fitted(e["text"], F_SERIF, 120), (255, 255, 255), sh=140))
