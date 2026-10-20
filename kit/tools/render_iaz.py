@@ -21,21 +21,18 @@ def neon(t0, t1, num, t, label=None, y=None, color=None): return dict(k="neon", 
 def plain(t0, t1, text, type=False, y=None): return dict(k="plain", t0=t0, t1=t1, text=text, type=type, y=y)
 def serif(t0, t1, text, y=None): return dict(k="serif", t0=t0, t1=t1, text=text, y=y)
 def kin(t0, t1, *rows, y=1200, gap=26, nudge=0):
-    """12: kinetic brand words. rows = [("word", t, size), ...] per row; laid out right-to-left, rows stacked from y,
-    rows centred (nudge=40 staggers them sideways for a hand-placed look)."""
-    words, cy = [], y
+    """12: kinetic brand words. rows = [("word", t, size), ...] per row; each row is laid out right-to-left and
+    re-centred on the words already shown, so a half-spoken row stays balanced. nudge=40 staggers rows sideways."""
+    out, cy = [], y
     for ri, row in enumerate(rows):
         ws = [(txt, tt, sz, mask(txt, F_AR(sz)).width - 80) for txt, tt, sz in row]
         total = sum(w for *_, w in ws) + gap * (len(ws) - 1)
         if total > 900:   # keep the row inside the frame
             k = 900 / total
             ws = [(txt, tt, int(sz * k), mask(txt, F_AR(int(sz * k))).width - 80) for txt, tt, sz, _ in ws]
-            total = sum(w for *_, w in ws) + gap * (len(ws) - 1)
-        x = W / 2 + total / 2 + (nudge if ri % 2 else -nudge) * (len(rows) > 1)
-        for txt, tt, sz, w in ws:
-            words.append((txt, tt, x - w / 2, cy, sz)); x -= w + gap
-        cy += max(sz for *_, sz, _ in ws) * 1.15
-    return dict(k="kin", t0=t0, t1=t1, words=words)
+        out.append(dict(ws=ws, cy=cy, dx=(nudge if ri % 2 else -nudge) * (len(rows) > 1), gap=gap))
+        cy += max(sz for _, _, sz, _ in ws) * 1.15
+    return dict(k="kin", t0=t0, t1=t1, rows=out)
 def card(t0, t1, path, t, cx=540, cy=560, w=760, r=36): return dict(k="card", t0=t0, t1=t1, path=path, t=t, cx=cx, cy=cy, w=w, r=r)
 
 
@@ -223,16 +220,20 @@ def draw(c, t, e):
             sp = sprite(("pl", e["text"]), lambda: shadowed(mask(e["text"], F_PLAIN_FOR(e["text"])), (255, 255, 255), sh=170, blur=8, dy=4))
             put(c, sp, W / 2, y + 12 * (1 - ease((t - e["t0"]) / 0.25)), ease((t - e["t0"]) / 0.2) * fa)
     elif k == "kin":
-        for text, tw, cx, cy, size in e["words"]:
-            if t < tw:
+        for row in e["rows"]:
+            vis = [w for w in row["ws"] if t >= w[1]]
+            if not vis:
                 continue
-            sp = sprite(("kin", text, size), lambda: duotone(mask(text, F_AR(size)), KIN, KIN2))
-            p = (t - tw) / 0.16
-            if p < 1:   # fast pop-in with horizontal smear
-                sm = smear(sp, int(40 * (1 - p)))
-                put(c, sm, cx, cy, min(1, p * 1.6) * fa, 1.25 - 0.25 * ease(p))
-            else:
-                put(c, sp, cx, cy, fa, 1 + 0.06 * np.exp(-(t - tw - 0.16) * 8) * np.sin((t - tw) * 20))
+            total = sum(w[3] for w in vis) + row["gap"] * (len(vis) - 1)
+            x = W / 2 + total / 2 + row["dx"]
+            for text, tw, size, wd in vis:
+                cx, cy = x - wd / 2, row["cy"]; x -= wd + row["gap"]
+                sp = sprite(("kin", text, size), lambda: duotone(mask(text, F_AR(size)), KIN, KIN2))
+                p = (t - tw) / 0.16
+                if p < 1:   # fast pop-in with horizontal smear
+                    put(c, smear(sp, int(40 * (1 - p))), cx, cy, min(1, p * 1.6) * fa, 1.25 - 0.25 * ease(p))
+                else:
+                    put(c, sp, cx, cy, fa, 1 + 0.06 * np.exp(-(t - tw - 0.16) * 8) * np.sin((t - tw) * 20))
     elif k == "card":
         sp = sprite(("card", e["path"], e["w"]), lambda: card_img(e["path"], e["w"], e["r"]))
         p = ease((t - e["t"]) / 0.3)
