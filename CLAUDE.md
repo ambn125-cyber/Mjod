@@ -85,7 +85,8 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | جرين كال Green Cal | green | 1 صناديق | logo only at start, high (it covered the face) |
 | المدائن Madaen grills | flame orange (240,127,30) | sticker | logo only at the very end |
 | NCT | — | 4/7 | |
-| كنوز السعادة pharmacy, ريحانة perfumes, دخوني, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
+| دخوني DKHONI (incense/musk, online store) | copper (232,112,40), gold neon; black logo card `kit/brands/dkhoni/logo_card.png` | 9 عنوان مزدوج (+10/11) | product «مسك الرمان» Roman Musk; logo at start + end (user asked) |
+| كنوز السعادة pharmacy, ريحانة perfumes, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
 | مكتب فهد للسداد وتحصيل الديون (حي العليا, Tabuk) | white + blue (40,90,255) like the sign | 12 كلمات حركية | phone 058 140 2370; Tabby/Emkan logos in `kit/brands/payments/`; landmark after «مقابل» unconfirmed |
 | تبوك ماسترز Tabuk Masters (billiards, opposite Madinah Rd bridge) | white + red (225,30,45) like the sign | 5 ستيكر (`spec_masters_st.py`) — user disliked 12 here | pro table brand is Rasson «راسون» |
 | ميركاتو Mercato (global brands, حي الفيصلية · شارع المطار القديم) | magenta (225,45,140), blue (60,140,235) | 9 عنوان مزدوج (+10/11) | brand names as the English word; "نايس"→Nike? and "رينوفا" unconfirmed |
