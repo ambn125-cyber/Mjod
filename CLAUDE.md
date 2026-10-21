@@ -29,6 +29,7 @@ captioned and edited. Everything below was learned over many deliveries — foll
 ## Delivery checklist
 1. Render final → `<name>_HQ.mp4` (`-crf 20 -maxrate 6000k -bufsize 12000k`) and `<name>_share.mp4`
    (`-b:v 2600k -maxrate 3200k`; ~1300k for videos > 2 min) in the repo root.
+   GitHub rejects files > 100MB: for videos > 2 min encode HQ at `-b:v 3000k -maxrate 3600k`.
 2. Commit + push to the working branch (`git push -u origin <branch>`; GitHub warns >50MB but accepts).
 3. Send `<name>_share.mp4` with SendUserFile (display=render).
 4. Give the HQ link: `https://github.com/ambn125-cyber/Mjod/raw/<branch>/<name>_HQ.mp4`
