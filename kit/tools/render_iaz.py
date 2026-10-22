@@ -69,6 +69,7 @@ def F_PLAIN_FOR(text, size=66, maxw=940):
         _pf[text] = font("Tajawal-ExtraBold.ttf", size)
     return _pf[text]
 F_SERIF = lambda s: font("Fraunces.ttf", s, [144, 900, 60, 1])
+F_BIG_AR = lambda s: font("Lalezar-Regular.ttf", s)   # duo big word when it is Arabic (user wants Arabic-only)
 F_NUM = lambda s: font("LilitaOne.ttf", s)
 
 
@@ -191,7 +192,8 @@ def draw(c, t, e):
         (ar, ta), (en, te) = e["ar"], e["en"]
         y = e["y"] or Y_DUO
         sa = sprite(("ar", ar), lambda: shadowed(fitted(ar, F_AR, 104), (255, 255, 255)))
-        se = sprite(("en", en), lambda: shadowed(fitted(en, F_SERIF, 250), COLOR, sh=120))
+        se = sprite(("en", en), lambda: shadowed(fitted(en, F_BIG_AR if re.search(r"[\u0600-\u06ff]", en) else F_SERIF,
+                                                           210 if re.search(r"[\u0600-\u06ff]", en) else 250), COLOR, sh=120))
         pa, pe = ease((t - ta) / 0.3), ease((t - te) / 0.35)
         put(c, sa, W / 2, y - se.height * 0.32 - sa.height / 2 + 30 + 20 * (1 - pa), pa * fa)
         if t >= te:

@@ -69,7 +69,7 @@ python3 -I kit/tools/render_v3.py src.mov out.mp4 kit/fonts spec.py             
 Styles 9–11 come from the creator the user admires (TikTok @iaz.199): few words per caption, white text with soft
 shadow, bilingual titles (white Arabic + huge mustard serif English, Fraunces font), glowing neon numbers (Lilita One)
 over the product, typed-in text, elegant serif date/place sign-off. 9/10/11 mix freely in one spec.
-`COLOR` = English word colour, `NEON` = number glow colour, `Y_DUO/Y_NEON/Y_PLAIN` = vertical positions.
+`COLOR` = big-word colour (an Arabic big word renders in Lalezar automatically — use it when the user wants Arabic only), `NEON` = number glow colour, `Y_DUO/Y_NEON/Y_PLAIN` = vertical positions.
 
 Style 1 colours: `BOX_BG/BOX_FG` normal word, `BOX_HI/BOX_HI_FG` keyword (`"o"`), `BOX_KEY/BOX_KEY_FG` price (`"p"`),
 font `BOX_FONT=("Changa.ttf",92,"ExtraBold")`. Style 5 colours: `BRAND`, `INK`. Always use the **client's brand colours**.
@@ -87,6 +87,7 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | NCT | — | 4/7 | |
 | دخوني DKHONI (incense/musk, online store) | copper (232,112,40), gold neon; black logo card `kit/brands/dkhoni/logo_card.png` | 9 عنوان مزدوج (+10/11) | product «مسك الرمان» Roman Musk; logo at start + end (user asked) |
 | مطعم أكه ACA (burgers; red ♠ logo) | red + warm yellow (255,205,60) | 9 عنوان مزدوج on the beat cuts | music-only clip; «وجبة برتزل بوكس» Pretzel Box; `spec_burgerbox.py`; price/location not given |
+| محض Mahd café (coffee & bakery) | green (120,200,140) | 9 عنوان مزدوج **Arabic-only** (Lalezar big word) | user asked «اكتبه بالعربي» — no English words; `spec_mahd.py` |
 | كنوز السعادة pharmacy, ريحانة perfumes, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
 | مكتب فهد للسداد وتحصيل الديون (حي العليا, Tabuk) | white + blue (40,90,255) like the sign | 12 كلمات حركية | phone 058 140 2370; Tabby/Emkan logos in `kit/brands/payments/`; landmark after «مقابل» unconfirmed |
 | تبوك ماسترز Tabuk Masters (billiards, opposite Madinah Rd bridge) | white + red (225,30,45) like the sign | 5 ستيكر (`spec_masters_st.py`) — user disliked 12 here | pro table brand is Rasson «راسون» |
