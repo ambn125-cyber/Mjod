@@ -88,6 +88,7 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | دخوني DKHONI (incense/musk, online store) | copper (232,112,40), gold neon; black logo card `kit/brands/dkhoni/logo_card.png` | 9 عنوان مزدوج (+10/11) | product «مسك الرمان» Roman Musk; logo at start + end (user asked) |
 | مطعم أكه ACA (burgers; red ♠ logo) | red + warm yellow (255,205,60) | 9 عنوان مزدوج on the beat cuts | music-only clip; «وجبة برتزل بوكس» Pretzel Box; `spec_burgerbox.py`; price/location not given |
 | محض Mahd café (coffee & bakery) | green (120,200,140) | 9 عنوان مزدوج **Arabic-only** (Lalezar big word) | user asked «اكتبه بالعربي» — no English words; `spec_mahd.py` |
+| عالم أرووش Aroosh (kids play centre, حي العليا) | purple (85,45,165) + orange (255,140,20) | 5 ستيكر + poster pieces as `card()`s (2nd pass with render_iaz) | offers 29 (hour+free hour) / 45 open time; school trips 0543847979; mall name «ميلاقر?» unconfirmed |
 | كنوز السعادة pharmacy, ريحانة perfumes, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
 | مكتب فهد للسداد وتحصيل الديون (حي العليا, Tabuk) | white + blue (40,90,255) like the sign | 12 كلمات حركية | phone 058 140 2370; Tabby/Emkan logos in `kit/brands/payments/`; landmark after «مقابل» unconfirmed |
 | تبوك ماسترز Tabuk Masters (billiards, opposite Madinah Rd bridge) | white + red (225,30,45) like the sign | 5 ستيكر (`spec_masters_st.py`) — user disliked 12 here | pro table brand is Rasson «راسون» |
