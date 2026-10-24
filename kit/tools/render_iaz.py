@@ -276,11 +276,29 @@ def draw(c, t, e):
         if e["top"] and t >= e["top"][1]:
             txt, tt, col = e["top"]
             sp = bigspr(txt, tuple(col)); p = (t - tt) / 0.14
-            put(c, sp, W / 2, y - 205, min(1, p * 2) * fa, 1.3 - 0.3 * ease(p))
+            put(c, sp, W / 2, y - (205 if not e["big"] or len(e["big"]) < 5 else 205 + (e["big"][4] - 200) * 0.75), min(1, p * 2) * fa, 1.3 - 0.3 * ease(p))
         if e["big"] and t >= e["big"][1]:
-            txt, tt, col = e["big"]
-            sp = bigspr(txt, tuple(col)); p = (t - tt) / 0.14
-            put(c, sp, W / 2, y, min(1, p * 2) * fa, 1.3 - 0.3 * ease(p))
+            txt, tt, col = e["big"][:3]
+            times = e["big"][3] if len(e["big"]) > 3 and e["big"][3] else None
+            size = e["big"][4] if len(e["big"]) > 4 else 200
+            col = tuple(col)
+            if times:   # word-by-word: final RTL layout fixed, each word pops at its own time
+                words = txt.split()
+                sps = [sprite(("popw", w_, col, size), lambda w_=w_: outlined(mask(w_, F_BIG_AR(size)), col)) for w_ in words]
+                gap = -40
+                total = sum(sp.width for sp in sps) + gap * (len(sps) - 1)
+                k = min(1.0, 980 / total)
+                x = W / 2 + total * k / 2
+                for sp, tw in zip(sps, times):
+                    cx = x - sp.width * k / 2; x -= (sp.width + gap) * k
+                    if t >= tw:
+                        p = (t - tw) / 0.14
+                        put(c, sp, cx, y, min(1, p * 2) * fa, k * (1.3 - 0.3 * ease(p)))
+            else:
+                sp = sprite(("popb", txt, col, size), lambda: outlined(fitted(txt, F_BIG_AR, size, 940), col))
+                p = (t - tt) / 0.14
+                beat = 0.07 * np.exp(-(t - tt - 0.14) * 5) * np.sin((t - tt) * 18) if p > 1 and size > 200 else 0
+                put(c, sp, W / 2, y, min(1, p * 2) * fa, 1.3 - 0.3 * ease(p) + beat)
         if e["tag"] and t >= e["tag"][1]:
             txt, tt = e["tag"]
             sp = sprite(("popt", txt), lambda: marker_tag(txt))
