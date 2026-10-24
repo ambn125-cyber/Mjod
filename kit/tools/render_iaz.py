@@ -300,7 +300,7 @@ def draw(c, t, e):
                 beat = 0.07 * np.exp(-(t - tt - 0.14) * 5) * np.sin((t - tt) * 18) if p > 1 and size > 200 else 0
                 put(c, sp, W / 2, y, min(1, p * 2) * fa, 1.3 - 0.3 * ease(p) + beat)
         if e["tag"] and t >= e["tag"][1]:
-            txt, tt = e["tag"]
+            txt, tt = e["tag"][:2]
             sp = sprite(("popt", txt), lambda: marker_tag(txt))
             p = ease((t - tt) / 0.2)
             ty = e["tag"][2] if len(e["tag"]) > 2 else y + ((e["big"][4] if len(e["big"]) > 4 else 200) * 0.85 if e["big"] else 0)
