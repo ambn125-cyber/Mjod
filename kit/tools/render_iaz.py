@@ -36,7 +36,13 @@ def kin(t0, t1, *rows, y=1200, gap=26, nudge=0):
 def card(t0, t1, path, t, cx=540, cy=560, w=760, r=36): return dict(k="card", t0=t0, t1=t1, path=path, t=t, cx=cx, cy=cy, w=w, r=r)
 
 
-spec = dict(duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card)
+def pop(t0, t1, big=None, tag=None, y=None, top=None):
+    """13 (Abu Zaid style): one huge outlined word (big=("كلمة", t, colour)) + a small black-on-yellow marker tag
+    under it (tag=("نص", t)); optional top=("خصم", t, colour) stacked above the big word. Sits above the head."""
+    return dict(k="pop", t0=t0, t1=t1, big=big, tag=tag, top=top, y=y)
+
+
+spec = dict(duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card, pop=pop)
 _src = open(SPEC, encoding="utf-8").read()
 exec("\n".join(l for l in _src.splitlines() if re.match(r"^[A-Z_0-9]+ *=", l) and not l.startswith("EV")), spec)
 COLOR = tuple(spec.get("COLOR", (245, 170, 20)))      # duo English word
@@ -44,6 +50,8 @@ NEON = tuple(spec.get("NEON", (90, 255, 60)))         # neon numbers
 Y_PLAIN = spec.get("Y_PLAIN", 1150)
 Y_DUO = spec.get("Y_DUO", 470)
 Y_NEON = spec.get("Y_NEON", 1220)
+Y_POP = spec.get("Y_POP", 520)
+TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (style 13)
 KIN = tuple(spec.get("KIN", (64, 225, 235)))           # kinetic word colour (brand)
 KIN2 = tuple(spec.get("KIN2", (140, 70, 255)))         # its offset shadow colour
 LRM = "‎"
@@ -149,6 +157,31 @@ def card_img(path, w, r):
     return out
 
 
+def outlined(m, col, stroke=10):
+    """fill colour with a thick dark outline + soft drop shadow (bold TikTok caption look)"""
+    pad = stroke + 20
+    big = Image.new("L", (m.width + 2 * pad, m.height + 2 * pad), 0); big.paste(m, (pad, pad))
+    out = Image.new("RGBA", big.size, (0, 0, 0, 0))
+    sh = Image.new("RGBA", big.size, (0, 0, 0, 255)); sh.putalpha(big.filter(ImageFilter.MaxFilter(stroke * 2 + 1)).filter(ImageFilter.GaussianBlur(10)).point(lambda v: v * 150 // 255))
+    out.alpha_composite(sh, (0, 8))
+    ol = Image.new("RGBA", big.size, (25, 20, 20, 255)); ol.putalpha(big.filter(ImageFilter.MaxFilter(stroke * 2 + 1)))
+    out.alpha_composite(ol)
+    f = Image.new("RGBA", big.size, col + (255,)); f.putalpha(big); out.alpha_composite(f)
+    return out
+
+
+def marker_tag(txt, size=58):
+    m = mask(txt, font("Tajawal-Black.ttf", size), pad=18)
+    w, h = m.width + 30, m.height - 6
+    out = Image.new("RGBA", (w + 20, h + 26), (0, 0, 0, 0))
+    sh = Image.new("RGBA", out.size, (0, 0, 0, 0)); ImageDraw.Draw(sh).rectangle((14, 16, w + 6, h + 18), fill=(0, 0, 0, 110))
+    out.alpha_composite(sh.filter(ImageFilter.GaussianBlur(6)))
+    ImageDraw.Draw(out).rectangle((10, 8, w, h + 8), fill=TAG + (255,))
+    ink = Image.new("RGBA", m.size, (15, 15, 15, 255)); ink.putalpha(m)
+    out.alpha_composite(ink, (10 + (w - 10 - m.width) // 2, 8 + (h - m.height) // 2))
+    return out
+
+
 _cache = {}
 exec(_src, spec)
 EV = spec["EV"]
@@ -236,6 +269,23 @@ def draw(c, t, e):
                     put(c, smear(sp, int(40 * (1 - p))), cx, cy, min(1, p * 1.6) * fa, 1.25 - 0.25 * ease(p))
                 else:
                     put(c, sp, cx, cy, fa, 1 + 0.06 * np.exp(-(t - tw - 0.16) * 8) * np.sin((t - tw) * 20))
+    elif k == "pop":
+        y = e["y"] or Y_POP
+        def bigspr(txt, col):
+            return sprite(("popb", txt, col), lambda: outlined(fitted(txt, F_BIG_AR, 200, 940), col))
+        if e["top"] and t >= e["top"][1]:
+            txt, tt, col = e["top"]
+            sp = bigspr(txt, tuple(col)); p = (t - tt) / 0.14
+            put(c, sp, W / 2, y - 205, min(1, p * 2) * fa, 1.3 - 0.3 * ease(p))
+        if e["big"] and t >= e["big"][1]:
+            txt, tt, col = e["big"]
+            sp = bigspr(txt, tuple(col)); p = (t - tt) / 0.14
+            put(c, sp, W / 2, y, min(1, p * 2) * fa, 1.3 - 0.3 * ease(p))
+        if e["tag"] and t >= e["tag"][1]:
+            txt, tt = e["tag"]
+            sp = sprite(("popt", txt), lambda: marker_tag(txt))
+            p = ease((t - tt) / 0.2)
+            put(c, sp, W / 2, y + (115 if e["big"] else 0) + 12 * (1 - p), p * fa)
     elif k == "card":
         sp = sprite(("card", e["path"], e["w"]), lambda: card_img(e["path"], e["w"], e["r"]))
         p = ease((t - e["t"]) / 0.3)
