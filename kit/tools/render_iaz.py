@@ -303,7 +303,8 @@ def draw(c, t, e):
             txt, tt = e["tag"]
             sp = sprite(("popt", txt), lambda: marker_tag(txt))
             p = ease((t - tt) / 0.2)
-            put(c, sp, W / 2, y + ((e["big"][4] if len(e["big"]) > 4 else 200) * 0.85 if e["big"] else 0) + 12 * (1 - p), p * fa)
+            ty = e["tag"][2] if len(e["tag"]) > 2 else y + ((e["big"][4] if len(e["big"]) > 4 else 200) * 0.85 if e["big"] else 0)
+            put(c, sp, W / 2, ty + 12 * (1 - p), p * fa)
     elif k == "card":
         sp = sprite(("card", e["path"], e["w"]), lambda: card_img(e["path"], e["w"], e["r"]))
         p = ease((t - e["t"]) / 0.3)
