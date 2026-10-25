@@ -93,6 +93,7 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | دار الحذاء Dar Al-Hithaa (bags & shoes, العليا · المجمع اللي فيه زاكي) | gold (232,185,90) | 9/10/11 mix — neon prices per shelf | `spec_daralhitha.py` |
 | سيركل ساندوتش Circle Sandwich (البوادي + القادسية) | blue/white sign; style 13 white/yellow/red | 13 أبو زيد (user asked to copy Abu Zaid TikTok) | military discount 25% from 25 Oct; `spec_circle.py`; in close-ups raise pops (`y=400`) to clear the face |
 | الهرم بلازا Haram Plaza (clothes dept. store) | navy + orange (240,95,40); orange tag | 13 أبو زيد, brand colours | `spec_haram.py`; first 0–25 s audio was unclear (music); 4-min video → HQ 3000k |
+| بوشيو مارت Posheo Mart (bags, shoes, watches, accessories; مقابل الأهلي) | orange (245,110,30) | 13 أبو زيد | `spec_posheo.py`; logo card cropped from the shop sign |
 | كنوز السعادة pharmacy, ريحانة perfumes, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
 | مكتب فهد للسداد وتحصيل الديون (حي العليا, Tabuk) | white + blue (40,90,255) like the sign | 12 كلمات حركية | phone 058 140 2370; Tabby/Emkan logos in `kit/brands/payments/`; landmark after «مقابل» unconfirmed |
 | تبوك ماسترز Tabuk Masters (billiards, opposite Madinah Rd bridge) | white + red (225,30,45) like the sign | 5 ستيكر (`spec_masters_st.py`) — user disliked 12 here | pro table brand is Rasson «راسون» |
