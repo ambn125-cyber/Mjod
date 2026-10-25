@@ -158,13 +158,17 @@ def card_img(path, w, r):
 
 
 def outlined(m, col, stroke=10):
-    """fill colour with a thick dark outline + soft drop shadow (bold TikTok caption look)"""
+    """fill colour with a thick dark outline + soft drop shadow (bold TikTok caption look).
+    col may be ((fill), (outline)) for a coloured word with a light outline, e.g. brand blue on white."""
+    oc = (25, 20, 20)
+    if isinstance(col[0], (tuple, list)):
+        col, oc = tuple(col[0]), tuple(col[1])
     pad = stroke + 20
     big = Image.new("L", (m.width + 2 * pad, m.height + 2 * pad), 0); big.paste(m, (pad, pad))
     out = Image.new("RGBA", big.size, (0, 0, 0, 0))
     sh = Image.new("RGBA", big.size, (0, 0, 0, 255)); sh.putalpha(big.filter(ImageFilter.MaxFilter(stroke * 2 + 1)).filter(ImageFilter.GaussianBlur(10)).point(lambda v: v * 150 // 255))
     out.alpha_composite(sh, (0, 8))
-    ol = Image.new("RGBA", big.size, (25, 20, 20, 255)); ol.putalpha(big.filter(ImageFilter.MaxFilter(stroke * 2 + 1)))
+    ol = Image.new("RGBA", big.size, oc + (255,)); ol.putalpha(big.filter(ImageFilter.MaxFilter(stroke * 2 + 1)))
     out.alpha_composite(ol)
     f = Image.new("RGBA", big.size, col + (255,)); f.putalpha(big); out.alpha_composite(f)
     return out
@@ -281,7 +285,7 @@ def draw(c, t, e):
             txt, tt, col = e["big"][:3]
             times = e["big"][3] if len(e["big"]) > 3 and e["big"][3] else None
             size = e["big"][4] if len(e["big"]) > 4 else 200
-            col = tuple(col)
+            col = tuple(tuple(c_) for c_ in col) if isinstance(col[0], (tuple, list)) else tuple(col)
             if times:   # word-by-word: final RTL layout fixed, each word pops at its own time
                 words = txt.split()
                 sps = [sprite(("popw", w_, col, size), lambda w_=w_: outlined(mask(w_, F_BIG_AR(size)), col)) for w_ in words]
