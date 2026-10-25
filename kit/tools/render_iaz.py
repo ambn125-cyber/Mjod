@@ -14,6 +14,8 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 SRC, OUT, FONTS, SPEC = sys.argv[1:5]
 PREVIEW = [float(x) for x in sys.argv[5].split(",")] if len(sys.argv) > 5 else None
 W, H, FPS = 1080, 1920, 30
+import os
+T0 = float(os.environ.get("T0", "0"))   # time offset when rendering a cut-out segment
 
 
 def duo(t0, t1, ar, en, y=None): return dict(k="duo", t0=t0, t1=t1, ar=ar, en=en, y=y)
@@ -349,6 +351,6 @@ while True:
     b = dec.stdout.read(N)
     if len(b) < N:
         break
-    enc.stdin.write(composite(b, i / FPS).tobytes()); i += 1
+    enc.stdin.write(composite(b, i / FPS + T0).tobytes()); i += 1
 enc.stdin.close(); enc.wait()
 print("done", i, "frames", file=sys.stderr)
