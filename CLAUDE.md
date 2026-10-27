@@ -97,6 +97,7 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | شبرا Shubra (clothes, winter) | sign blue (20,95,225) + red prices (230,30,40) | 13 أبو زيد | opening «شبرا» big in sign blue with white outline (user asked); `spec_shubra.py` |
 | مطعم مظبيكم Mathbiekum (مظبي/rice, 30+ branches; Tabuk: المروج + الحمراء) | orange (245,140,20) + white | 13 أبو زيد | `spec_mathbiekum.py`; delivery 0546379295 |
 | مجمع المطلق لصيانة السيارات (Auto Oil Express; الصالحية · شارع المطار القديم · مقابل فندق العادل) | white + orange (250,120,20) | 13 أبو زيد (tried 14 صدى الملاعب — user disliked) | `spec_mutlaq.py`; tyre prices partly garbled in audio (499/1099/379 unconfirmed) |
+| العين الثالثة للبصريات 3rd Eye Optics (الشارع الفاصل بين السليمانية والورود) | gold (240,190,60) + white | 13 أبو زيد | 3 glasses 199 + 4th free, 27 Oct–10 Nov; `spec_third_eye.py` |
 | كنوز السعادة pharmacy, ريحانة perfumes, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
 | مكتب فهد للسداد وتحصيل الديون (حي العليا, Tabuk) | white + blue (40,90,255) like the sign | 12 كلمات حركية | phone 058 140 2370; Tabby/Emkan logos in `kit/brands/payments/`; landmark after «مقابل» unconfirmed |
 | تبوك ماسترز Tabuk Masters (billiards, opposite Madinah Rd bridge) | white + red (225,30,45) like the sign | 5 ستيكر (`spec_masters_st.py`) — user disliked 12 here | pro table brand is Rasson «راسون» |
