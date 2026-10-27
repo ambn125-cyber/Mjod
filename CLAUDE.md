@@ -101,6 +101,7 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | البريق للسفر والسياحة Al-Bareeq Travel (حي الروضة; branches Tabuk/Abha/Jeddah) | sign blue (25,95,215) + white outline | 13 أبو زيد | `spec_bareeq.py`; Turkey group 1500/1700, honeymoon 4500, int'l licence 90 (was 150); «جيميادو» place unclear |
 | هابي للمرح Happy Lelmarh (kids play centre; lion logo) | yellow (255,205,40) + red (225,35,45) | 13 أبو زيد + logo `kit/brands/happy/logo.png` | `spec_happy.py`; 2nd child 1 SAR (3–5 pm), Wed ladies 39, pizza + open time 39 (Sun–Tue) |
 | نادي باور دوز Power Dose gym (حي المروج) | mint green (90,225,170) like the shirts | 13 أبو زيد | `spec_powerdose.py`; 299/550/850 monthly, boxing kids 199 / adults 299; «عرض الشتاء»? unconfirmed |
+| صيدلية منتج العناية Care Product (beauty/baby/care; حي المروج · شارع البازعي) | pink (235,70,150) + white outline; light-pink tag | 13 أبو زيد | `spec_care.py`; many 4.90 items, free delivery all Tabuk; 55–68 s audio garbled (Baby Joy 81.90, soaps) |
 | كنوز السعادة pharmacy, ريحانة perfumes, ثمد | see logos | — | Rayhana: no underline under text; logo raised |
 | مكتب فهد للسداد وتحصيل الديون (حي العليا, Tabuk) | white + blue (40,90,255) like the sign | 12 كلمات حركية | phone 058 140 2370; Tabby/Emkan logos in `kit/brands/payments/`; landmark after «مقابل» unconfirmed |
 | تبوك ماسترز Tabuk Masters (billiards, opposite Madinah Rd bridge) | white + red (225,30,45) like the sign | 5 ستيكر (`spec_masters_st.py`) — user disliked 12 here | pro table brand is Rasson «راسون» |
