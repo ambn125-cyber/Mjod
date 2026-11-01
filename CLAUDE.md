@@ -82,7 +82,7 @@ Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
 | مشراق Meshraq (sandwiches, Qadisiyah) | sky blue (51,166,213), navy (14,52,96), white | 1 صناديق + 7 ختم | `spec_meshraq.py` |
 | نيوم NEOM S.C. | navy (12,30,70), cyan (64,190,240) | 5 ستيكر + poster end card | `match_endcard.png` |
 | دنتال كير Dental Care Alliance | green keys (90,225,120); poster red price boxes | 3 أنيق + 8 أيقونات | doctor: د. رغد عمار |
-| رامز Ramez market (هايبر ماركت) | red/white | 2 صناديق رامز (+ sticker/fire HOOK, user asked again Nov; `spec_ramez_nov.py`) | they sell **baby diapers (حفايظ)**, not shoes; boxes appear when the price is said, original size |
+| رامز Ramez market (هايبر ماركت) | red/white | 2 صناديق رامز (+ sticker/fire HOOK + cash-register «ka-ching» on every price via `sfx_rz.py` — Ramez videos always get it; `spec_ramez_nov.py`) | they sell **baby diapers (حفايظ)**, not shoes; boxes appear when the price is said, original size |
 | جرين كال Green Cal | green | 1 صناديق | logo only at start, high (it covered the face) |
 | المدائن Madaen grills | flame orange (240,127,30) | sticker | logo only at the very end |
 | NCT | — | 4/7 | |
