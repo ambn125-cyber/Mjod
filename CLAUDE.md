@@ -72,6 +72,8 @@ shadow, bilingual titles (white Arabic + huge mustard serif English, Fraunces fo
 over the product, typed-in text, elegant serif date/place sign-off. 9/10/11 mix freely in one spec.
 `COLOR` = big-word colour (an Arabic big word renders in Lalezar automatically — use it when the user wants Arabic only), `NEON` = number glow colour, `Y_DUO/Y_NEON/Y_PLAIN` = vertical positions.
 
+Style 13 gotcha: `big=(text,t,col,word_times)` needs **one time per word** — a shorter list silently drops the last word (happened on «خبز من الفرن», «جاي من جدة»).
+
 Style 1 colours: `BOX_BG/BOX_FG` normal word, `BOX_HI/BOX_HI_FG` keyword (`"o"`), `BOX_KEY/BOX_KEY_FG` price (`"p"`),
 font `BOX_FONT=("Changa.ttf",92,"ExtraBold")`. Style 5 colours: `BRAND`, `INK`. Always use the **client's brand colours**.
 Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
