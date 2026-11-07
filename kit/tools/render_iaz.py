@@ -71,8 +71,12 @@ F_AR = lambda s: font("Tajawal-Black.ttf", s)
 _pf = {}
 
 
-def F_PLAIN_FOR(text, size=66, maxw=940):
+PLAIN_SIZE = spec.get("PLAIN_SIZE", 66)
+
+
+def F_PLAIN_FOR(text, size=None, maxw=940):
     """one font size per caption so typed-in text keeps its size; shrinks long lines to stay inside the frame"""
+    size = size or PLAIN_SIZE
     if text not in _pf:
         while size > 34 and mask(text, font("Tajawal-ExtraBold.ttf", size)).width - 80 > maxw:
             size -= 4
