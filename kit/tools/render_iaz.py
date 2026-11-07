@@ -72,6 +72,9 @@ _pf = {}
 
 
 PLAIN_SIZE = spec.get("PLAIN_SIZE", 66)
+GRADE = spec.get("GRADE", "")                         # optional ffmpeg colour filter on the footage, e.g. "eq=saturation=1.3"
+DUO_BIG = spec.get("DUO_BIG", 210)                     # size of an Arabic big word in duo()
+DUO_POP = spec.get("DUO_POP", False)                   # bouncy pop-in for the duo big word
 
 
 def F_PLAIN_FOR(text, size=None, maxw=940):
@@ -236,11 +239,16 @@ def draw(c, t, e):
         y = e["y"] or Y_DUO
         sa = sprite(("ar", ar), lambda: shadowed(fitted(ar, F_AR, 104), (255, 255, 255)))
         se = sprite(("en", en), lambda: shadowed(fitted(en, F_BIG_AR if re.search(r"[\u0600-\u06ff]", en) else F_SERIF,
-                                                           210 if re.search(r"[\u0600-\u06ff]", en) else 250), COLOR, sh=120))
+                                                           DUO_BIG if re.search(r"[\u0600-\u06ff]", en) else 250), COLOR, sh=120))
         pa, pe = ease((t - ta) / 0.3), ease((t - te) / 0.35)
         put(c, sa, W / 2, y - se.height * 0.32 - sa.height / 2 + 30 + 20 * (1 - pa), pa * fa)
         if t >= te:
-            put(c, se, W / 2, y + 10, pe * fa, 1.12 - 0.12 * pe)
+            if DUO_POP:   # fast scale-in with a damped bounce
+                q = (t - te) / 0.16
+                sc = 1.45 - 0.45 * ease(min(1, q)) + (0.08 * np.sin((t - te - 0.16) * 22) * np.exp(-(t - te - 0.16) * 6) if q > 1 else 0)
+                put(c, se, W / 2, y + 10, min(1, q * 2) * fa, sc)
+            else:
+                put(c, se, W / 2, y + 10, pe * fa, 1.12 - 0.12 * pe)
     elif k == "neon":
         col = tuple(e["color"] or NEON); y = e["y"] or Y_NEON
         sn = sprite(("num", e["num"], col), lambda: glow(fitted(e["num"], F_NUM, 380, 900), col))
@@ -334,7 +342,7 @@ def composite(raw, t):
     return c.convert("RGB")
 
 
-dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", SRC, "-vf", f"scale={W}:{H},fps={FPS}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
+dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", SRC, "-vf", (GRADE + "," if GRADE else "") + f"scale={W}:{H},fps={FPS}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
 N = W * H * 3
 if PREVIEW:
     want = {int(round(x * FPS)): x for x in PREVIEW}

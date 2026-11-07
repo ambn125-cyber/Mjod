@@ -1,9 +1,12 @@
 # منتجع مدين Madyan Resort (البدع) — v2 cut, styles 9/10/11 (iaz): white Arabic + sand-gold serif English, typed plains; source times
-COLOR = (235, 190, 105)
-NEON = (245, 200, 110)
+COLOR = (255, 200, 35)
+NEON = (255, 200, 35)
 Y_PLAIN = 1400
 Y_DUO = 470
 PLAIN_SIZE = 96
+DUO_BIG = 240
+DUO_POP = True
+GRADE = "eq=contrast=1.10:saturation=1.35:gamma=0.97,unsharp=5:5:0.6"
 EV = [
     plain(0.00, 2.82, "اليوم ويكند", type=True),
     plain(3.60, 7.18, "وين تروح؟", type=True),
