@@ -54,6 +54,7 @@ Y_DUO = spec.get("Y_DUO", 470)
 Y_NEON = spec.get("Y_NEON", 1220)
 Y_POP = spec.get("Y_POP", 520)
 TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (style 13)
+STRIKE = tuple(spec.get("STRIKE", (235, 30, 40)))     # strike-through colour for an old price in pop(top=(..., strike_t))
 KIN = tuple(spec.get("KIN", (64, 225, 235)))           # kinetic word colour (brand)
 KIN2 = tuple(spec.get("KIN2", (140, 70, 255)))         # its offset shadow colour
 LRM = "‎"
@@ -292,8 +293,15 @@ def draw(c, t, e):
         def bigspr(txt, col):
             return sprite(("popb", txt, col), lambda: outlined(fitted(txt, F_BIG_AR, 200, 940), col))
         if e["top"] and t >= e["top"][1]:
-            txt, tt, col = e["top"]
+            txt, tt, col = e["top"][:3]
             sp = bigspr(txt, tuple(col)); p = (t - tt) / 0.14
+            st = e["top"][3] if len(e["top"]) > 3 else None   # old price: red strike line swiped right→left from time st
+            if st is not None and t >= st:
+                q = ease((t - st) / 0.22)
+                sp = sp.copy(); d = ImageDraw.Draw(sp)
+                x1 = sp.width - 26; x0 = x1 - (sp.width - 52) * q; yy = sp.height * 0.52
+                d.line((x0, yy + 4, x1, yy + 4), fill=(25, 20, 20, 255), width=24)
+                d.line((x0, yy, x1, yy), fill=STRIKE + (255,), width=14)
             put(c, sp, W / 2, y - (205 if not e["big"] or len(e["big"]) < 5 else 205 + (e["big"][4] - 200) * 0.75), min(1, p * 2) * fa, 1.3 - 0.3 * ease(p))
         if e["big"] and t >= e["big"][1]:
             txt, tt, col = e["big"][:3]
