@@ -22,6 +22,10 @@ def duo(t0, t1, ar, en, y=None): return dict(k="duo", t0=t0, t1=t1, ar=ar, en=en
 def neon(t0, t1, num, t, label=None, y=None, color=None): return dict(k="neon", t0=t0, t1=t1, num=num, t=t, label=label, y=y, color=color)
 def plain(t0, t1, text, type=False, y=None): return dict(k="plain", t0=t0, t1=t1, text=text, type=type, y=y)
 def serif(t0, t1, text, y=None): return dict(k="serif", t0=t0, t1=t1, text=text, y=y)
+def word(t0, t1, text, col=None, size=None, x=540, y=None):
+    """15 (كلمة كلمة): one spoken word at a time. col=None → small plain white Naskh word with a soft shadow;
+    col=(r,g,b) → big glowing neon keyword (Amiri Bold). Place keywords in empty space with x/y."""
+    return dict(k="word", t0=t0, t1=t1, text=text, col=col, size=size, x=x, y=y)
 def kin(t0, t1, *rows, y=1200, gap=26, nudge=0):
     """12: kinetic brand words. rows = [("word", t, size), ...] per row; each row is laid out right-to-left and
     re-centred on the words already shown, so a half-spoken row stays balanced. nudge=40 staggers rows sideways."""
@@ -44,7 +48,7 @@ def pop(t0, t1, big=None, tag=None, y=None, top=None):
     return dict(k="pop", t0=t0, t1=t1, big=big, tag=tag, top=top, y=y)
 
 
-spec = dict(duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card, pop=pop)
+spec = dict(duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card, pop=pop, word=word)
 _src = open(SPEC, encoding="utf-8").read()
 exec("\n".join(l for l in _src.splitlines() if re.match(r"^[A-Z_0-9]+ *=", l) and not l.startswith("EV")), spec)
 COLOR = tuple(spec.get("COLOR", (245, 170, 20)))      # duo English word
@@ -73,6 +77,8 @@ _pf = {}
 
 
 PLAIN_SIZE = spec.get("PLAIN_SIZE", 66)
+WORD_SIZE = spec.get("WORD_SIZE", 74); WORD_Y = spec.get("WORD_Y", 380)          # style 15 plain word
+WORD_BIG = spec.get("WORD_BIG", 170); WORD_BIG_Y = spec.get("WORD_BIG_Y", 600)   # style 15 neon keyword
 GRADE = spec.get("GRADE", "")                         # optional ffmpeg colour filter on the footage, e.g. "eq=saturation=1.3"
 DUO_BIG = spec.get("DUO_BIG", 210)                     # size of an Arabic big word in duo()
 DUO_POP = spec.get("DUO_POP", False)                   # bouncy pop-in for the duo big word
@@ -87,7 +93,9 @@ def F_PLAIN_FOR(text, size=None, maxw=940):
         _pf[text] = font("Tajawal-ExtraBold.ttf", size)
     return _pf[text]
 F_SERIF = lambda s: font("Fraunces.ttf", s, [144, 900, 60, 1])
-F_BIG_AR = lambda s: font("Lalezar-Regular.ttf", s)   # duo big word when it is Arabic (user wants Arabic-only)
+F_BIG_AR = lambda s: font("Lalezar-Regular.ttf", s)
+F_NASKH = lambda s: font("NotoNaskh.ttf", s, [650])   # style 15 plain word
+F_AMIRI = lambda s: font("Amiri-Bold.ttf", s)          # style 15 neon keyword   # duo big word when it is Arabic (user wants Arabic-only)
 F_NUM = lambda s: font("LilitaOne.ttf", s)
 
 
@@ -112,6 +120,19 @@ def fitted(text, ff, size, maxw=980):
     while m.width - 80 > maxw and size > 30:
         size = int(size * 0.92); m = mask(text, ff(size))
     return m
+
+
+def neon_soft(m, color):
+    """style 15: soft neon — wide colour bloom + light core, no dark outline"""
+    pad = 70
+    big = Image.new("L", (m.width + 2 * pad, m.height + 2 * pad), 0); big.paste(m, (pad, pad))
+    out = Image.new("RGBA", big.size, (0, 0, 0, 0))
+    for r, a in ((40, 0.7), (16, 0.9), (5, 1.0)):
+        g = Image.new("RGBA", big.size, color + (255,)); g.putalpha(big.filter(ImageFilter.GaussianBlur(r)).point(lambda v: min(255, int(v * a * 1.8))))
+        out.alpha_composite(g)
+    core = tuple(int(c + (255 - c) * 0.45) for c in color)
+    c = Image.new("RGBA", big.size, core + (255,)); c.putalpha(big); out.alpha_composite(c)
+    return out
 
 
 def shadowed(m, color, sh=150, blur=10, dy=6):
@@ -336,6 +357,17 @@ def draw(c, t, e):
         p = ease((t - e["t"]) / 0.3)
         if t >= e["t"]:
             put(c, sp, e["cx"], e["cy"] + 140 * (1 - p), p * fa, 0.9 + 0.1 * p)
+    elif k == "word":
+        if e["col"]:
+            sz = e["size"] or WORD_BIG
+            sp = sprite(("wd", e["text"], tuple(e["col"]), sz), lambda: neon_soft(fitted(e["text"], F_AMIRI, sz, 900), tuple(e["col"])))
+            y = e["y"] or WORD_BIG_Y
+        else:
+            sz = e["size"] or WORD_SIZE
+            sp = sprite(("wd", e["text"], None, sz), lambda: shadowed(fitted(e["text"], F_NASKH, sz, 900), (255, 255, 255), sh=170, blur=9, dy=4))
+            y = e["y"] or WORD_Y
+        p = ease((t - e["t0"]) / 0.12)
+        put(c, sp, e["x"], y + 10 * (1 - p), p * fa, 1.06 - 0.06 * p)
     elif k == "serif":
         y = e["y"] or 1480
         sp = sprite(("sf", e["text"]), lambda: shadowed(fitted(e["text"], F_SERIF, 120), (255, 255, 255), sh=140))

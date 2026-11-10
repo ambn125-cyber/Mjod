@@ -66,6 +66,7 @@ python3 -I kit/tools/render_v3.py src.mov out.mp4 kit/fonts spec.py             
 | 11 | بسيط | `render_iaz.py` | `plain(t0,t1,"كلمة",type=True)` + `serif()` sign-off | good footage, minimal text |
 | 12 | كلمات حركية | `render_iaz.py` | `kin(t0,t1,[("كلمة",t,size),..],[..],y=)` rows auto-laid RTL + `card()` for logo/app screenshots · `spec_meshraq_kin.py` | apps, offers, brand-coloured ads (`KIN`/`KIN2` colours) |
 | 13 | أبو زيد | `render_iaz.py` | `pop(t0,t1,top=("خصم",t,col),big=("50%",t,col),tag=("على قائمة الفطور",t))` · `spec_pop_demo.py` | offers/ads like Abu Zaid restaurant TikTok: huge outlined word above the head (yellow/white/red numbers) + black-on-yellow marker tag (`TAG`, `Y_POP`) |
+| 15 | كلمة كلمة نيون | `render_iaz.py` | `word(t0,t1,"كلمة")` small white Naskh word (`WORD_Y`, `WORD_SIZE`) one spoken word at a time; `word(t0,t1,"البلاك",col=(255,50,60),x=,y=)` big soft-neon Amiri keyword placed in empty space (`WORD_BIG`, `WORD_BIG_Y`) | copied from a TikTok the user sent (vt.tiktok.com/ZSpPWDuTw — red-lit room, PS5 «البلاك فرايدي» promo): cinematic, minimal |
 
 Styles 9–11 come from the creator the user admires (TikTok @iaz.199): few words per caption, white text with soft
 shadow, bilingual titles (white Arabic + huge mustard serif English, Fraunces font), glowing neon numbers (Lilita One)
