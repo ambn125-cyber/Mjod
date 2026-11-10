@@ -77,7 +77,7 @@ Style 13 gotcha: `big=(text,t,col,word_times)` needs **one time per word** — a
 
 Style 1 colours: `BOX_BG/BOX_FG` normal word, `BOX_HI/BOX_HI_FG` keyword (`"o"`), `BOX_KEY/BOX_KEY_FG` price (`"p"`),
 font `BOX_FONT=("Changa.ttf",92,"ExtraBold")`. Style 5 colours: `BRAND`, `INK`. Always use the **client's brand colours**.
-Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again.
+Disliked: the kashida "Zinco" style (`render_zn.py`) — don't offer it again. Also disliked: style 15 «كلمة كلمة» small word-by-word captions (user: «كلمة كلمة ما عجبني مرة») — don't use or offer it; the neon/white big keywords alone are fine inside a style-13 mix.
 
 ## Client brand kits (`kit/brands/`)
 | Client | Colours | Style used | Notes |
