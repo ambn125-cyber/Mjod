@@ -127,7 +127,10 @@ def neon_soft(m, color):
     pad = 70
     big = Image.new("L", (m.width + 2 * pad, m.height + 2 * pad), 0); big.paste(m, (pad, pad))
     out = Image.new("RGBA", big.size, (0, 0, 0, 0))
-    for r, a in ((40, 0.7), (16, 0.9), (5, 1.0)):
+    if min(color) > 220:   # white glow: dark soft shadow first so it reads on bright ceilings/walls
+        sh = Image.new("RGBA", big.size, (0, 0, 0, 255)); sh.putalpha(big.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(16)).point(lambda v: min(255, int(v * 1.5))))
+        out.alpha_composite(sh)
+    for r, a in (((40, 0.7), (16, 0.9), (5, 1.0)) if min(color) <= 220 else ((22, 0.45), (6, 0.8))):
         g = Image.new("RGBA", big.size, color + (255,)); g.putalpha(big.filter(ImageFilter.GaussianBlur(r)).point(lambda v: min(255, int(v * a * 1.8))))
         out.alpha_composite(g)
     core = tuple(int(c + (255 - c) * 0.45) for c in color)

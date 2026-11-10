@@ -22,6 +22,7 @@ for t0, t1, w in words:
     out.append([t0, t1, w])
 NEON_WORDS = set(json.loads(open(sys.argv[4], encoding="utf-8").read())) if len(sys.argv) > 4 else set()
 COLS = ["R_", "C_"]
+WHITE_WORDS = len(sys.argv) > 5 and sys.argv[5] == "white"   # word keywords as big white glow (reference «ايش هوا»)
 ev, ci = [], 0
 i = 0
 while i < len(out):
@@ -30,12 +31,14 @@ while i < len(out):
     # two-word neon phrases
     if i + 1 < len(out) and f"{w} {out[i+1][2]}" in NEON_WORDS:
         w2 = f"{w} {out[i+1][2]}"; nxt = out[i + 2][0] if i + 2 < len(out) else out[i+1][1] + 0.6
-        end = min(nxt, t0 + 1.6); ev.append(f'    word({t0:.2f}, {end:.2f}, "{w2}", col={COLS[ci%2]}),'); ci += 1; i += 2; continue
-    neon = w in NEON_WORDS or bool(re.fullmatch(r"\d[\d.,%]*", w))
+        end = min(nxt, t0 + 1.6); ev.append(f'    word({t0:.2f}, {end:.2f}, "{w2}", col={"W_" if WHITE_WORDS else COLS[ci%2]}),'); i += 2; continue
+    isnum = bool(re.fullmatch(r"\d[\d.,%]*", w))
+    neon = w in NEON_WORDS or isnum
     end = min(nxt, t0 + (1.4 if neon else 0.9))
     if end - t0 < 0.12: end = t0 + 0.12
     if neon:
-        ev.append(f'    word({t0:.2f}, {end:.2f}, "{w}", col={COLS[ci%2]}),'); ci += 1
+        col = COLS[ci % 2] if isnum or not WHITE_WORDS else "W_"   # numbers red/cyan, keyword words white glow
+        ev.append(f'    word({t0:.2f}, {end:.2f}, "{w}", col={col}),'); ci += isnum or not WHITE_WORDS
     else:
         ev.append(f'    word({t0:.2f}, {end:.2f}, "{w}"),')
     i += 1
