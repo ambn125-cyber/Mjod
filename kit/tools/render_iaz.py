@@ -58,6 +58,8 @@ Y_DUO = spec.get("Y_DUO", 470)
 Y_NEON = spec.get("Y_NEON", 1220)
 Y_POP = spec.get("Y_POP", 520)
 TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (style 13)
+TAG_STYLE = spec.get("TAG_STYLE", "box")                # tag look: box (default) | pill | ribbon | outline
+TAG_FG = tuple(spec.get("TAG_FG", (15, 15, 15)))         # tag text colour for pill/ribbon/outline
 STRIKE = tuple(spec.get("STRIKE", (235, 30, 40)))     # strike-through colour for an old price in pop(top=(..., strike_t))
 KIN = tuple(spec.get("KIN", (64, 225, 235)))           # kinetic word colour (brand)
 KIN2 = tuple(spec.get("KIN2", (140, 70, 255)))         # its offset shadow colour
@@ -209,6 +211,20 @@ def outlined(m, col, stroke=10):
 
 
 def marker_tag(txt, size=58):
+    if TAG_STYLE == "outline":   # no box: white text with dark outline, like the big words but smaller
+        return outlined(mask(txt, font("Tajawal-Black.ttf", 66), pad=18), TAG_FG, stroke=7)
+    if TAG_STYLE in ("pill", "ribbon"):   # rounded brand-colour pill (ribbon = pill + light inner line)
+        m = mask(txt, font("Tajawal-Black.ttf", size), pad=18)
+        w, h = m.width + 50, m.height + 4
+        out = Image.new("RGBA", (w + 24, h + 28), (0, 0, 0, 0))
+        sh = Image.new("RGBA", out.size, (0, 0, 0, 0)); ImageDraw.Draw(sh).rounded_rectangle((14, 18, w + 8, h + 20), h // 2, fill=(0, 0, 0, 120))
+        out.alpha_composite(sh.filter(ImageFilter.GaussianBlur(7)))
+        d = ImageDraw.Draw(out); d.rounded_rectangle((10, 8, w, h + 8), h // 2, fill=TAG + (255,))
+        if TAG_STYLE == "ribbon":
+            d.rounded_rectangle((18, 16, w - 8, h), (h - 16) // 2, outline=(255, 255, 255, 200), width=3)
+        ink = Image.new("RGBA", m.size, TAG_FG + (255,)); ink.putalpha(m)
+        out.alpha_composite(ink, (10 + (w - 10 - m.width) // 2, 8 + (h - m.height) // 2))
+        return out
     m = mask(txt, font("Tajawal-Black.ttf", size), pad=18)
     w, h = m.width + 30, m.height - 6
     out = Image.new("RGBA", (w + 20, h + 26), (0, 0, 0, 0))
