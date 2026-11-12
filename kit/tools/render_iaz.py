@@ -79,6 +79,7 @@ _pf = {}
 
 
 PLAIN_SIZE = spec.get("PLAIN_SIZE", 66)
+NEON_SHADOW = spec.get("NEON_SHADOW", False)   # dark shadow behind coloured word() neon too (bright stores)
 WORD_SIZE = spec.get("WORD_SIZE", 74); WORD_Y = spec.get("WORD_Y", 380)          # style 15 plain word
 WORD_BIG = spec.get("WORD_BIG", 170); WORD_BIG_Y = spec.get("WORD_BIG_Y", 600)   # style 15 neon keyword
 GRADE = spec.get("GRADE", "")                         # optional ffmpeg colour filter on the footage, e.g. "eq=saturation=1.3"
@@ -129,7 +130,7 @@ def neon_soft(m, color):
     pad = 70
     big = Image.new("L", (m.width + 2 * pad, m.height + 2 * pad), 0); big.paste(m, (pad, pad))
     out = Image.new("RGBA", big.size, (0, 0, 0, 0))
-    if min(color) > 220:   # white glow: dark soft shadow first so it reads on bright ceilings/walls
+    if min(color) > 220 or NEON_SHADOW:   # dark soft shadow first so it reads on bright ceilings/walls
         sh = Image.new("RGBA", big.size, (0, 0, 0, 255)); sh.putalpha(big.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(16)).point(lambda v: min(255, int(v * 1.5))))
         out.alpha_composite(sh)
     for r, a in (((40, 0.7), (16, 0.9), (5, 1.0)) if min(color) <= 220 else ((22, 0.45), (6, 0.8))):
