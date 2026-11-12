@@ -1,53 +1,94 @@
-"""Ad-rate poster for عبدالمجيد (1080x1920 story size). usage: python3 -I make_poster.py photo.png out.png fonts_dir"""
+"""Ad-rate poster for عبدالمجيد تبوك (1080x1920 story size), several themes.
+usage: python3 -I make_poster.py THEME out.png fonts_dir     (THEME: navy | black | white)"""
 import sys
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
-PH, OUT, FD = sys.argv[1:4]
+THEME, OUT, FD = sys.argv[1:4]
 W, H = 1080, 1920
-NAVY, NAVY2, GOLD, WHITE = (12, 22, 48), (24, 40, 82), (245, 190, 40), (255, 255, 255)
-F = lambda n, s: ImageFont.truetype(f"{FD}/{n}", s)
-c = Image.new("RGB", (W, H), NAVY)
-# vertical gradient + soft gold glow
-g = Image.new("RGB", (1, H)); [g.putpixel((0, y), tuple(int(NAVY[i] + (NAVY2[i] - NAVY[i]) * (1 - abs(y - 700) / 1300)) for i in range(3))) for y in range(H)]
+T = {
+    # bg top/bottom, accent, text, soft text, name font, body font, photo
+    "navy":  dict(bg=((14, 26, 58), (8, 14, 34)), acc=(245, 190, 40), txt=(255, 255, 255), soft=(190, 202, 228),
+                  name=("ElMessiri.ttf", "Bold", 132), body=("Cairo.ttf", "Black"), sub=("Cairo.ttf", "Bold"), photo="poster/photo_yellow.png"),
+    "black": dict(bg=((22, 20, 18), (6, 6, 6)), acc=(212, 172, 92), txt=(250, 244, 230), soft=(190, 178, 150),
+                  name=("Amiri-Bold.ttf", None, 140), body=("Changa.ttf", "ExtraBold"), sub=("Changa.ttf", "SemiBold"), photo="poster/photo_yellow.png"),
+    "white": dict(bg=((250, 250, 252), (228, 234, 242)), acc=(20, 60, 140), txt=(16, 28, 60), soft=(80, 95, 125),
+                  name=("Lalezar-Regular.ttf", None, 140), body=("Tajawal-Black.ttf", None), sub=("Tajawal-ExtraBold.ttf", None), photo="poster/photo_light.png",
+                  acc2=(245, 180, 30)),
+}[THEME]
+ACC, TXT, SOFT = T["acc"], T["txt"], T["soft"]
+ACC2 = T.get("acc2", ACC)
+ON_ACC = (255, 255, 255) if THEME == "white" else (14, 16, 24)
+
+
+def F(spec, size):
+    name, var = spec[0], spec[1]
+    f = ImageFont.truetype(f"{FD}/{name}", size)
+    if var:
+        f.set_variation_by_name(var)
+    return f
+
+
+# background: vertical gradient + soft glow behind the photo
+top, bot = T["bg"]
+g = Image.new("RGB", (1, H))
+for y in range(H):
+    k = y / H
+    g.putpixel((0, y), tuple(int(top[i] + (bot[i] - top[i]) * k) for i in range(3)))
 c = g.resize((W, H))
-glow = Image.new("L", (W, H), 0); ImageDraw.Draw(glow).ellipse((140, 150, 940, 900), fill=120); glow = glow.filter(ImageFilter.GaussianBlur(120))
-c.paste(Image.new("RGB", (W, H), GOLD), (0, 0), glow)
+glow = Image.new("L", (W, H), 0); ImageDraw.Draw(glow).ellipse((140, 120, 940, 920), fill=110 if THEME != "white" else 70)
+c.paste(Image.new("RGB", (W, H), ACC2), (0, 0), glow.filter(ImageFilter.GaussianBlur(130)))
 d = ImageDraw.Draw(c)
-def text(xy, s, f, fill=WHITE, anchor="mm", stroke=0, sfill=None):
-    d.text(xy, s, font=f, fill=fill, anchor=anchor, direction="rtl" if any("؀" <= ch <= "ۿ" for ch in s) else "ltr",
-           stroke_width=stroke, stroke_fill=sfill)
-# photo: brighten a touch, circle with gold ring
-p = Image.open(PH).convert("RGB")
-p = ImageEnhance.Contrast(ImageEnhance.Brightness(p).enhance(1.04)).enhance(1.06)
-p = ImageEnhance.Sharpness(p).enhance(1.3)
-D = 600; p = p.resize((D, D), Image.LANCZOS)
+
+
+def text(xy, s, f, fill, anchor="mm"):
+    rtl = any("؀" <= ch <= "ۿ" for ch in s)
+    d.text(xy, s, font=f, fill=fill, anchor=anchor, direction="rtl" if rtl else "ltr")
+
+
+# thin frame
+d.rounded_rectangle((36, 36, W - 36, H - 36), 40, outline=ACC + (0,), width=3)
+
+# photo in a ringed circle
+p = Image.open(T["photo"]).convert("RGB")
+p = ImageEnhance.Sharpness(ImageEnhance.Contrast(ImageEnhance.Brightness(p).enhance(1.04)).enhance(1.06)).enhance(1.3)
+D = 560; p = p.resize((D, D), Image.LANCZOS)
 m = Image.new("L", (D, D), 0); ImageDraw.Draw(m).ellipse((0, 0, D - 1, D - 1), fill=255)
-cx, cy = W // 2, 520
-sh = Image.new("L", (W, H), 0); ImageDraw.Draw(sh).ellipse((cx - D // 2 - 10, cy - D // 2 + 20, cx + D // 2 + 10, cy + D // 2 + 40), fill=160)
-c.paste((0, 0, 0), (0, 0), sh.filter(ImageFilter.GaussianBlur(25)))
+cx, cy = W // 2, 470
+sh = Image.new("L", (W, H), 0); ImageDraw.Draw(sh).ellipse((cx - D // 2, cy - D // 2 + 30, cx + D // 2, cy + D // 2 + 50), fill=150 if THEME != "white" else 70)
+c.paste((0, 0, 0), (0, 0), sh.filter(ImageFilter.GaussianBlur(28)))
 d = ImageDraw.Draw(c)
-d.ellipse((cx - D // 2 - 16, cy - D // 2 - 16, cx + D // 2 + 16, cy + D // 2 + 16), fill=GOLD)
-d.ellipse((cx - D // 2 - 6, cy - D // 2 - 6, cx + D // 2 + 6, cy + D // 2 + 6), fill=NAVY)
+d.ellipse((cx - D // 2 - 16, cy - D // 2 - 16, cx + D // 2 + 16, cy + D // 2 + 16), fill=ACC)
+d.ellipse((cx - D // 2 - 6, cy - D // 2 - 6, cx + D // 2 + 6, cy + D // 2 + 6), fill=top)
 c.paste(p, (cx - D // 2, cy - D // 2), m)
-# badge
-d.rounded_rectangle((cx - 210, cy + D // 2 - 20, cx + 210, cy + D // 2 + 52), 36, fill=GOLD)
-text((cx, cy + D // 2 + 16), "معلن معتمد · موثوق", F("Tajawal-Black.ttf", 44), NAVY)
+
+# badge, sitting just below the circle (not over the face/chin)
+by = cy + D // 2 + 40
+fb = F(T["body"], 40)
+bw = d.textlength("معلن معتمد · موثوق", font=fb, direction="rtl") + 80
+d.rounded_rectangle((cx - bw / 2, by - 36, cx + bw / 2, by + 36), 36, fill=ACC)
+text((cx, by + 2), "معلن معتمد · موثوق", fb, ON_ACC)
+
 # name + title
-text((cx, 1010), "عبدالمجيد تبوك", F("Lalezar-Regular.ttf", 130), WHITE)
-text((cx, 1115), "صانع محتوى", F("Tajawal-ExtraBold.ttf", 54), GOLD)
-text((cx, 1180), "رقم توثيق موثوق 341448", F("Tajawal-ExtraBold.ttf", 38), (200, 210, 230))
+text((cx, 975), "عبدالمجيد تبوك", F(T["name"], T["name"][2]), TXT)
+text((cx, 1085), "صانع محتوى", F(T["sub"], 56), ACC2 if THEME == "white" else ACC)
+d.line((300, 1150, 780, 1150), fill=ACC, width=3)
+
 # services
-d.line((140, 1240, 940, 1240), fill=(255, 255, 255, 60), width=2)
-text((cx, 1310), "متاح لاستقبال طلبات الإعلانات", F("Tajawal-Black.ttf", 56), WHITE)
-text((cx, 1380), "والتغطيات الميدانية", F("Tajawal-Black.ttf", 56), WHITE)
+text((cx, 1215), "متاح لاستقبال طلبات الإعلانات", F(T["body"], 54), TXT)
+text((cx, 1285), "والتغطيات الميدانية", F(T["body"], 54), TXT)
 chips = ["المطاعم", "الكافيهات", "البراندات التجارية"]
-fc = F("Tajawal-Black.ttf", 42); x = W - 90
-ws = [d.textlength(s, font=fc, direction="rtl") + 60 for s in chips]; gap = 24
+fc = F(T["body"], 40)
+ws = [d.textlength(s, font=fc, direction="rtl") + 60 for s in chips]; gap = 22
 x = cx + (sum(ws) + gap * (len(ws) - 1)) / 2
 for s, w in zip(chips, ws):
-    d.rounded_rectangle((x - w, 1450, x, 1526), 38, outline=GOLD, width=4)
-    text((x - w / 2, 1488), s, fc, GOLD); x -= w + gap
+    d.rounded_rectangle((x - w, 1350, x, 1424), 37, outline=ACC, width=4)
+    text((x - w / 2, 1387), s, fc, ACC); x -= w + gap
+
 # phone bar
-d.rounded_rectangle((90, 1660, 990, 1770), 55, fill=GOLD)
-text((cx + 170, 1715), "للتنسيق والحجز", F("Tajawal-Black.ttf", 44), NAVY)
-text((cx - 170, 1717), "0510972773", F("Tajawal-Black.ttf", 60), NAVY)
+d.rounded_rectangle((90, 1500, 990, 1620), 60, fill=ACC)
+text((cx + 175, 1560), "للتنسيق والحجز", F(T["body"], 44), ON_ACC)
+text((cx - 165, 1562), "0510972773", F(T["body"], 62), ON_ACC)
+
+# footer: verification number + city
+text((cx, 1700), "رقم توثيق موثوق: 341448", F(T["sub"], 40), SOFT)
+text((cx, 1765), "تبوك · المملكة العربية السعودية", F(T["sub"], 34), SOFT)
 c.save(OUT)
