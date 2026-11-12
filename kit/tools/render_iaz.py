@@ -153,6 +153,9 @@ def glow(m, color, core_mix=0.35):
     pad = 60
     big = Image.new("L", (m.width + 2 * pad, m.height + 2 * pad), 0); big.paste(m, (pad, pad))
     out = Image.new("RGBA", big.size, (0, 0, 0, 0))
+    if NEON_SHADOW:   # dark backing so gold/yellow neon reads on gold or white shelves
+        sh = Image.new("RGBA", big.size, (0, 0, 0, 255)); sh.putalpha(big.filter(ImageFilter.MaxFilter(15)).filter(ImageFilter.GaussianBlur(22)).point(lambda v: min(255, int(v * 1.6))))
+        out.alpha_composite(sh)
     edge = big.filter(ImageFilter.MaxFilter(13))
     dark = Image.new("RGBA", big.size, tuple(int(c * 0.18) for c in color) + (255,)); dark.putalpha(edge.filter(ImageFilter.GaussianBlur(2)))
     for r, a in ((34, 0.9), (14, 1.0)):
@@ -281,7 +284,7 @@ def draw(c, t, e):
         y = e["y"] or Y_DUO
         sa = sprite(("ar", ar), lambda: shadowed(fitted(ar, F_AR, 104), (255, 255, 255)))
         se = sprite(("en", en), lambda: shadowed(fitted(en, F_BIG_AR if re.search(r"[\u0600-\u06ff]", en) else F_SERIF,
-                                                           DUO_BIG if re.search(r"[\u0600-\u06ff]", en) else 250), COLOR, sh=120))
+                                                           DUO_BIG if re.search(r"[\u0600-\u06ff]", en) else 250), COLOR, sh=235 if NEON_SHADOW else 120, blur=16 if NEON_SHADOW else 10))
         pa, pe = ease((t - ta) / 0.3), ease((t - te) / 0.35)
         put(c, sa, W / 2, y - se.height * 0.32 - sa.height / 2 + 30 + 20 * (1 - pa), pa * fa)
         if t >= te:
