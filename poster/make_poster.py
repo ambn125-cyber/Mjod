@@ -1,6 +1,6 @@
 """Ad-rate poster for عبدالمجيد تبوك (1080x1920 story size), several themes.
 usage: python3 -I make_poster.py THEME out.png fonts_dir     (THEME: navy | black | white)"""
-import sys
+import sys, qrcode
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 THEME, OUT, FD = sys.argv[1:4]
 W, H = 1080, 1920
@@ -83,12 +83,20 @@ for s, w in zip(chips, ws):
     d.rounded_rectangle((x - w, 1350, x, 1424), 37, outline=ACC, width=4)
     text((x - w / 2, 1387), s, fc, ACC); x -= w + gap
 
-# phone bar
-d.rounded_rectangle((90, 1500, 990, 1620), 60, fill=ACC)
-text((cx + 175, 1560), "للتنسيق والحجز", F(T["body"], 44), ON_ACC)
-text((cx - 165, 1562), "0510972773", F(T["body"], 62), ON_ACC)
+# QR codes (TikTok / Snapchat)
+def qr(url, size=170):
+    q = qrcode.QRCode(border=1, box_size=10); q.add_data(url); q.make(fit=True)
+    return q.make_image(fill_color="black", back_color="white").convert("RGB").resize((size, size), Image.NEAREST)
+for url, lbl, qx in (("https://snapchat.com/t/CDMKZQ8l", "سناب شات", 640), ("https://www.tiktok.com/@zzs_1", "تيك توك", 270)):
+    d.rounded_rectangle((qx - 10, 1455, qx + 180, 1645), 20, fill=(255, 255, 255), outline=ACC, width=3)
+    c.paste(qr(url), (qx, 1465))
+    text((qx + 85, 1675), lbl, F(T["sub"], 34), TXT)
+text((cx, 1530), "امسح", F(T["body"], 38), ACC)
+text((cx, 1578), "وتابعني", F(T["body"], 38), ACC)
 
-# footer: verification number + city
-text((cx, 1700), "رقم توثيق موثوق: 341448", F(T["sub"], 40), SOFT)
-text((cx, 1765), "تبوك · المملكة العربية السعودية", F(T["sub"], 34), SOFT)
+# phone bar
+d.rounded_rectangle((90, 1720, 990, 1830), 55, fill=ACC)
+text((cx + 175, 1775), "للتنسيق والحجز", F(T["body"], 44), ON_ACC)
+text((cx - 165, 1777), "0510972773", F(T["body"], 62), ON_ACC)
+text((cx, 1862), "رقم توثيق موثوق: 341448", F(T["sub"], 28), SOFT)
 c.save(OUT)
