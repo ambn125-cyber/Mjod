@@ -66,7 +66,7 @@ Y_POP = spec.get("Y_POP", 520)
 TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (style 13)
 TAG_STYLE = spec.get("TAG_STYLE", "box")                # tag look: box (default) | pill | ribbon | outline
 TAG_FG = tuple(spec.get("TAG_FG", (15, 15, 15)))         # tag text colour for pill/ribbon/outline
-IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 118); IZ_Y = spec.get("IZ_Y", 1000)
+IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000)
 STRIKE = tuple(spec.get("STRIKE", (235, 30, 40)))     # strike-through colour for an old price in pop(top=(..., strike_t))
 KIN = tuple(spec.get("KIN", (64, 225, 235)))           # kinetic word colour (brand)
 KIN2 = tuple(spec.get("KIN2", (140, 70, 255)))         # its offset shadow colour
@@ -383,33 +383,37 @@ def draw(c, t, e):
             ty = e["tag"][2] if len(e["tag"]) > 2 else y + ((e["big"][4] if len(e["big"]) > 4 else 200) * 0.85 if e["big"] else 0)
             put(c, sp, W / 2, ty + 12 * (1 - p), p * fa)
     elif k == "iz":
-        fnt = F_AR(IZ_SIZE)
+        P = 40; gap = int(IZ_SIZE * 0.26)
+        def wid(sz):
+            f = F_AR(sz); return max(sum(mask(w[0], f).width - 2 * P for w in row) + gap * (len(row) - 1) for row in e["rows"])
+        sz = IZ_SIZE; w0 = wid(sz)
+        if w0 > 900: sz = int(sz * 900 / w0)
+        fnt = F_AR(sz); gap = int(sz * 0.26)
         rows = []
         for row in e["rows"]:
             ws = []
             for txt, tw, cc in row:
                 col = IZ_GOLD if cc == "g" else (255, 255, 255)
-                sp = sprite(("iz", txt, col, IZ_SIZE), lambda txt=txt, col=col: shadowed(mask(txt, fnt), col, sh=200, blur=12, dy=6))
+                sp = sprite(("iz", txt, col, sz), lambda txt=txt, col=col: shadowed(mask(txt, fnt), col, sh=200, blur=12, dy=6))
                 ws.append((sp, tw))
             rows.append(ws)
-        gap = int(IZ_SIZE * 0.05); lh = int(IZ_SIZE * 1.12)
+        lh = int(sz * 1.25)
         y0 = (e["y"] or IZ_Y) - lh * (len(rows) - 1) / 2
+        widths = [sum(sp.width - 2 * P for sp, _ in r) + gap * (len(r) - 1) for r in rows]
         if e["glass"]:
-            tot = max(sum(sp.width for sp, _ in r) + gap * (len(r) - 1) for r in rows) - 40
-            gh = lh * len(rows) + 30; gx0 = W / 2 - tot / 2; gy0 = y0 - lh / 2 - 15
-            box = c.crop((int(gx0), int(gy0), int(gx0 + tot), int(gy0 + gh))).filter(ImageFilter.GaussianBlur(18))
-            wash = Image.new("RGBA", box.size, (255, 255, 255, 70)); box = box.convert("RGBA"); box.alpha_composite(wash)
-            m = Image.new("L", box.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 34, fill=int(255 * fa))
+            tot = max(widths) + 70; gh = lh * len(rows) + 20; gx0 = W / 2 - tot / 2; gy0 = y0 - lh / 2 - 6
+            box = c.crop((int(gx0), int(gy0), int(gx0 + tot), int(gy0 + gh))).filter(ImageFilter.GaussianBlur(22)).convert("RGBA")
+            box.alpha_composite(Image.new("RGBA", box.size, (255, 255, 255, 60)))
+            m = Image.new("L", box.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 30, fill=int(255 * fa))
             c.paste(box, (int(gx0), int(gy0)), m)
         for ri, ws in enumerate(rows):
-            tot = sum(sp.width for sp, _ in ws) + gap * (len(ws) - 1)
-            x = W / 2 + tot / 2; cy = y0 + ri * lh
+            x = W / 2 + widths[ri] / 2; cy = y0 + ri * lh
             for sp, tw in ws:
-                cx = x - sp.width / 2; x -= sp.width + gap
+                cw = sp.width - 2 * P; cx = x - cw / 2; x -= cw + gap
                 if t < tw: continue
-                p = ease((t - tw) / 0.28)
-                s_ = sp if p >= 1 else sp.filter(ImageFilter.GaussianBlur(10 * (1 - p)))
-                put(c, s_, cx - 30 * (1 - p), cy, p * fa)
+                p = ease((t - tw) / 0.3)
+                s_ = sp if p >= 1 else sp.filter(ImageFilter.GaussianBlur(9 * (1 - p)))
+                put(c, s_, cx - 26 * (1 - p), cy, p * fa)
     elif k == "card":
         sp = sprite(("card", e["path"], e["w"]), lambda: card_img(e["path"], e["w"], e["r"]))
         p = ease((t - e["t"]) / 0.3)
