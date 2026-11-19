@@ -26,6 +26,12 @@ def word(t0, t1, text, col=None, size=None, x=540, y=None):
     """15 (كلمة كلمة): one spoken word at a time. col=None → small plain white Naskh word with a soft shadow;
     col=(r,g,b) → big glowing neon keyword (Amiri Bold). Place keywords in empty space with x/y."""
     return dict(k="word", t0=t0, t1=t1, text=text, col=col, size=size, x=x, y=y)
+def iz(t0, t1, *rows, y=None, glass=False):
+    """16 (iaz.199 reel): 1–2 centred rows, each word slides/blur-fades in on its time. rows = [("كلمة", t, "g"|"w"), ...];
+    "g" = mustard gold (IZ_GOLD), "w" = white; soft shadow, Tajawal Black. glass=True puts the whole block on a frosted pill."""
+    return dict(k="iz", t0=t0, t1=t1, rows=rows, y=y, glass=glass)
+
+
 def kin(t0, t1, *rows, y=1200, gap=26, nudge=0):
     """12: kinetic brand words. rows = [("word", t, size), ...] per row; each row is laid out right-to-left and
     re-centred on the words already shown, so a half-spoken row stays balanced. nudge=40 staggers rows sideways."""
@@ -48,7 +54,7 @@ def pop(t0, t1, big=None, tag=None, y=None, top=None):
     return dict(k="pop", t0=t0, t1=t1, big=big, tag=tag, top=top, y=y)
 
 
-spec = dict(duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card, pop=pop, word=word)
+spec = dict(iz=iz, duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card, pop=pop, word=word)
 _src = open(SPEC, encoding="utf-8").read()
 exec("\n".join(l for l in _src.splitlines() if re.match(r"^[A-Z_0-9]+ *=", l) and not l.startswith("EV")), spec)
 COLOR = tuple(spec.get("COLOR", (245, 170, 20)))      # duo English word
@@ -60,6 +66,7 @@ Y_POP = spec.get("Y_POP", 520)
 TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (style 13)
 TAG_STYLE = spec.get("TAG_STYLE", "box")                # tag look: box (default) | pill | ribbon | outline
 TAG_FG = tuple(spec.get("TAG_FG", (15, 15, 15)))         # tag text colour for pill/ribbon/outline
+IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 118); IZ_Y = spec.get("IZ_Y", 1000)
 STRIKE = tuple(spec.get("STRIKE", (235, 30, 40)))     # strike-through colour for an old price in pop(top=(..., strike_t))
 KIN = tuple(spec.get("KIN", (64, 225, 235)))           # kinetic word colour (brand)
 KIN2 = tuple(spec.get("KIN2", (140, 70, 255)))         # its offset shadow colour
@@ -375,6 +382,34 @@ def draw(c, t, e):
             p = ease((t - tt) / 0.2)
             ty = e["tag"][2] if len(e["tag"]) > 2 else y + ((e["big"][4] if len(e["big"]) > 4 else 200) * 0.85 if e["big"] else 0)
             put(c, sp, W / 2, ty + 12 * (1 - p), p * fa)
+    elif k == "iz":
+        fnt = F_AR(IZ_SIZE)
+        rows = []
+        for row in e["rows"]:
+            ws = []
+            for txt, tw, cc in row:
+                col = IZ_GOLD if cc == "g" else (255, 255, 255)
+                sp = sprite(("iz", txt, col, IZ_SIZE), lambda txt=txt, col=col: shadowed(mask(txt, fnt), col, sh=200, blur=12, dy=6))
+                ws.append((sp, tw))
+            rows.append(ws)
+        gap = int(IZ_SIZE * 0.05); lh = int(IZ_SIZE * 1.12)
+        y0 = (e["y"] or IZ_Y) - lh * (len(rows) - 1) / 2
+        if e["glass"]:
+            tot = max(sum(sp.width for sp, _ in r) + gap * (len(r) - 1) for r in rows) - 40
+            gh = lh * len(rows) + 30; gx0 = W / 2 - tot / 2; gy0 = y0 - lh / 2 - 15
+            box = c.crop((int(gx0), int(gy0), int(gx0 + tot), int(gy0 + gh))).filter(ImageFilter.GaussianBlur(18))
+            wash = Image.new("RGBA", box.size, (255, 255, 255, 70)); box = box.convert("RGBA"); box.alpha_composite(wash)
+            m = Image.new("L", box.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 34, fill=int(255 * fa))
+            c.paste(box, (int(gx0), int(gy0)), m)
+        for ri, ws in enumerate(rows):
+            tot = sum(sp.width for sp, _ in ws) + gap * (len(ws) - 1)
+            x = W / 2 + tot / 2; cy = y0 + ri * lh
+            for sp, tw in ws:
+                cx = x - sp.width / 2; x -= sp.width + gap
+                if t < tw: continue
+                p = ease((t - tw) / 0.28)
+                s_ = sp if p >= 1 else sp.filter(ImageFilter.GaussianBlur(10 * (1 - p)))
+                put(c, s_, cx - 30 * (1 - p), cy, p * fa)
     elif k == "card":
         sp = sprite(("card", e["path"], e["w"]), lambda: card_img(e["path"], e["w"], e["r"]))
         p = ease((t - e["t"]) / 0.3)
