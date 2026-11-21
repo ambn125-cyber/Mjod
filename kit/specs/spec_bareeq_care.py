@@ -1,6 +1,7 @@
 # مغاسل بريق العناية المثالية Bareeq Al-Enaya car wash & detailing (حي اليرموك) — 30% off interior detailing; style 13 sign blue + white, yellow prices; source times
 B_ = ((30, 95, 235), (255, 255, 255)); Y_ = (255, 210, 40); W_ = (255, 255, 255)
 Y_POP = 380
+POP2 = True; AUTO_FACE = True
 EV = [
     pop(0.00, 2.82, top=("بريق العناية", 0.00, W_), big=("خصم 30%", 1.02, Y_, [1.02, 1.26]), tag=("على التلميع الداخلي", 1.80), y=560),
     pop(2.84, 4.94, big=("تلميع داخلي", 3.52, B_, [3.52, 4.52]), tag=("تخيّل سيارتك تلمع من الداخل", 2.84)),

@@ -74,6 +74,8 @@ shadow, bilingual titles (white Arabic + huge mustard serif English, Fraunces fo
 over the product, typed-in text, elegant serif date/place sign-off. 9/10/11 mix freely in one spec.
 `COLOR` = big-word colour (an Arabic big word renders in Lalezar automatically — use it when the user wants Arabic only), `NEON` = number glow colour, `Y_DUO/Y_NEON/Y_PLAIN` = vertical positions.
 
+Style 13 upgrades (user asked to fix its weak points, first used on `spec_bareeq_care.py` → `bareeqcare2_*`): set `POP2 = True` → thin dark rim under light outlines (reads on white/beige), prices count up from 0, pops shrink+lift on exit, long tags auto-shrink; `AUTO_FACE = True` → Haar face detection (needs `pip install "opencv-python-headless<5"` — v5 has no CascadeClassifier) moves any pop that overlaps a face to the nearest free y and prints it. Short word_times lists are now padded automatically.
+
 Style 13 gotcha: `big=(text,t,col,word_times)` needs **one time per word** (a «·» separator counts as a word — check with a quick script: split() length == len(times)) — a shorter list silently drops the last word (happened on «خبز من الفرن», «جاي من جدة»).
 
 Style 1 colours: `BOX_BG/BOX_FG` normal word, `BOX_HI/BOX_HI_FG` keyword (`"o"`), `BOX_KEY/BOX_KEY_FG` price (`"p"`),

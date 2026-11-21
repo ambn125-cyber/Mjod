@@ -67,6 +67,8 @@ TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (
 TAG_STYLE = spec.get("TAG_STYLE", "box")                # tag look: box (default) | pill | ribbon | outline
 TAG_FG = tuple(spec.get("TAG_FG", (15, 15, 15)))         # tag text colour for pill/ribbon/outline
 IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000); IZ_SH = spec.get("IZ_SH", 200); IZ_BLUR = spec.get("IZ_BLUR", 12)
+POP2 = spec.get("POP2", False)        # style-13 upgrades: dark rim under light outlines, count-up prices, exit anim, tag auto-fit
+AUTO_FACE = spec.get("AUTO_FACE", False)  # move pops off detected faces
 STRIKE = tuple(spec.get("STRIKE", (235, 30, 40)))     # strike-through colour for an old price in pop(top=(..., strike_t))
 KIN = tuple(spec.get("KIN", (64, 225, 235)))           # kinetic word colour (brand)
 KIN2 = tuple(spec.get("KIN2", (140, 70, 255)))         # its offset shadow colour
@@ -215,6 +217,9 @@ def outlined(m, col, stroke=10):
     out = Image.new("RGBA", big.size, (0, 0, 0, 0))
     sh = Image.new("RGBA", big.size, (0, 0, 0, 255)); sh.putalpha(big.filter(ImageFilter.MaxFilter(stroke * 2 + 1)).filter(ImageFilter.GaussianBlur(10)).point(lambda v: v * 150 // 255))
     out.alpha_composite(sh, (0, 8))
+    if POP2 and sum(oc) > 500:   # light outline gets a thin dark rim so it reads on white/beige backgrounds too
+        rim = Image.new("RGBA", big.size, (20, 18, 18, 255)); rim.putalpha(big.filter(ImageFilter.MaxFilter(stroke * 2 + 7)))
+        out.alpha_composite(rim)
     ol = Image.new("RGBA", big.size, oc + (255,)); ol.putalpha(big.filter(ImageFilter.MaxFilter(stroke * 2 + 1)))
     out.alpha_composite(ol)
     f = Image.new("RGBA", big.size, col + (255,)); f.putalpha(big); out.alpha_composite(f)
@@ -250,6 +255,31 @@ def marker_tag(txt, size=58):
 _cache = {}
 exec(_src, spec)
 EV = spec["EV"]
+if AUTO_FACE:   # move style-13 pops that would sit on a face
+    import cv2
+    _cas = [cv2.CascadeClassifier(cv2.data.haarcascades + n) for n in ("haarcascade_frontalface_default.xml", "haarcascade_profileface.xml")]
+    _cap = cv2.VideoCapture(SRC)
+    def _faces(tt):
+        _cap.set(cv2.CAP_PROP_POS_MSEC, max(0.0, tt - T0) * 1000); ok, fr = _cap.read()
+        if not ok: return []
+        fr = cv2.resize(fr, (W, H)); g = cv2.cvtColor(fr, cv2.COLOR_BGR2GRAY); out = []
+        for cc in _cas:
+            for (x, y_, w, h) in cc.detectMultiScale(g, 1.1, 7, minSize=(90, 90)): out.append((y_ - 40, y_ + h + 60))
+        return out
+    def _band(e, y):
+        big = e["big"][4] if e["big"] and len(e["big"]) > 4 else 200
+        return (y - (205 + big * 0.45 + 60 if e["top"] else big * 0.5 + 10), y + (big * 0.85 + 60 if e["tag"] else big * 0.5 + 10))
+    for e in EV:
+        if e["k"] != "pop": continue
+        fs = [f for tt in (e["t0"] + 0.15, (e["t0"] + e["t1"]) / 2, e["t1"] - 0.15) for f in _faces(tt)]
+        if not fs: continue
+        y0 = e["y"] or Y_POP
+        hit = lambda y: any(a < _band(e, y)[1] and _band(e, y)[0] < b for a, b in fs)
+        if not hit(y0): continue
+        for y in sorted((380, 560, 800, 1050, 1300, 1450), key=lambda v: abs(v - y0)):
+            b0, b1 = _band(e, y)
+            if b0 >= 230 and b1 <= 1700 and not hit(y):
+                print(f"face: pop {e['t0']:.2f} y {y0} -> {y}", file=sys.stderr); e["y"] = y; break
 
 
 def sprite(key, make):
@@ -262,7 +292,11 @@ def ease(p):
     p = min(max(p, 0.0), 1.0); return 1 - (1 - p) ** 3
 
 
+_PS = [1.0]   # extra scale for the current pop (exit animation)
+
+
 def put(c, sp, cx, cy, a=1.0, s=1.0):
+    s *= _PS[0]
     if a <= 0:
         return
     if s != 1.0:
@@ -341,6 +375,10 @@ def draw(c, t, e):
                     put(c, sp, cx, cy, fa, 1 + 0.06 * np.exp(-(t - tw - 0.16) * 8) * np.sin((t - tw) * 20))
     elif k == "pop":
         y = e["y"] or Y_POP
+        if POP2:   # exit: shrink a little and lift while fading
+            ex = ease(min(1.0, max(0.0, (e["t1"] - t) / 0.2)))
+            y -= 30 * (1 - ex)
+            _PS[0] = 0.88 + 0.12 * ex
         def bigspr(txt, col):
             return sprite(("popb", txt, col), lambda: outlined(fitted(txt, F_BIG_AR, 200, 940), col))
         if e["top"] and t >= e["top"][1]:
@@ -361,6 +399,7 @@ def draw(c, t, e):
             col = tuple(tuple(c_) for c_ in col) if isinstance(col[0], (tuple, list)) else tuple(col)
             if times:   # word-by-word: final RTL layout fixed, each word pops at its own time
                 words = txt.split()
+                times = list(times) + [times[-1]] * (len(words) - len(times))   # never drop a word when the list is short
                 sps = [sprite(("popw", w_, col, size), lambda w_=w_: outlined(mask(w_, F_BIG_AR(size)), col)) for w_ in words]
                 gap = -40
                 total = sum(sp.width for sp in sps) + gap * (len(sps) - 1)
@@ -370,6 +409,11 @@ def draw(c, t, e):
                     cx = x - sp.width * k / 2; x -= (sp.width + gap) * k
                     if t >= tw:
                         p = (t - tw) / 0.14
+                        w_ = words[sps.index(sp)] if sp in sps else ""
+                        if POP2 and re.fullmatch(r"[0-9]+([.,][0-9]+)?%?", w_) and t - tw < 0.4:   # price counts up
+                            num = float(w_.rstrip("%").replace(",", "")); v = num * ease((t - tw) / 0.4)
+                            dig = (f"{v:.2f}" if "." in w_ else str(int(round(v)))) + ("%" if w_.endswith("%") else "")
+                            sp = sprite(("popw", dig, col, size), lambda d_=dig: outlined(mask(d_, F_BIG_AR(size)), col))
                         put(c, sp, cx, y, min(1, p * 2) * fa, k * (1.3 - 0.3 * ease(p)))
             else:
                 sp = sprite(("popb", txt, col, size), lambda: outlined(fitted(txt, F_BIG_AR, size, 940), col))
@@ -379,6 +423,8 @@ def draw(c, t, e):
         if e["tag"] and t >= e["tag"][1]:
             txt, tt = e["tag"][:2]
             sp = sprite(("popt", txt), lambda: marker_tag(txt))
+            if sp.width > 980:   # long tag: shrink to fit the frame
+                sp = sprite(("poptf", txt), lambda: sp.resize((980, int(sp.height * 980 / sp.width)), Image.LANCZOS))
             p = ease((t - tt) / 0.2)
             ty = e["tag"][2] if len(e["tag"]) > 2 else y + ((e["big"][4] if len(e["big"]) > 4 else 200) * 0.85 if e["big"] else 0)
             put(c, sp, W / 2, ty + 12 * (1 - p), p * fa)
@@ -440,7 +486,9 @@ def composite(raw, t):
     c = Image.frombytes("RGB", (W, H), raw).convert("RGBA")
     for e in EV:
         if e["t0"] <= t < e["t1"]:
+            _PS[0] = 1.0
             draw(c, t, e)
+    _PS[0] = 1.0
     return c.convert("RGB")
 
 
