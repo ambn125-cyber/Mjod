@@ -270,7 +270,7 @@ if AUTO_FACE:   # move style-13 pops that would sit on a face
         big = e["big"][4] if e["big"] and len(e["big"]) > 4 else 200
         return (y - (205 + big * 0.45 + 60 if e["top"] else big * 0.5 + 10), y + (big * 0.85 + 60 if e["tag"] else big * 0.5 + 10))
     for e in EV:
-        if e["k"] != "pop": continue
+        if e["k"] != "pop" or e.get("fix"): continue
         fs = [f for tt in (e["t0"] + 0.15, (e["t0"] + e["t1"]) / 2, e["t1"] - 0.15) for f in _faces(tt)]
         if not fs: continue
         y0 = e["y"] or Y_POP
