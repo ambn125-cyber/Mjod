@@ -68,7 +68,8 @@ TAG_STYLE = spec.get("TAG_STYLE", "box")                # tag look: box (default
 TAG_FG = tuple(spec.get("TAG_FG", (15, 15, 15)))         # tag text colour for pill/ribbon/outline
 IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000); IZ_SH = spec.get("IZ_SH", 200); IZ_BLUR = spec.get("IZ_BLUR", 12)
 POP2 = spec.get("POP2", False)        # style-13 upgrades: dark rim under light outlines, count-up prices, exit anim, tag auto-fit
-AUTO_FACE = spec.get("AUTO_FACE", False)  # move pops off detected faces
+AUTO_FACE = spec.get("AUTO_FACE", False)
+COUNT = spec.get("COUNT", True)   # POP2 count-up prices (False = numbers appear fixed)  # move pops off detected faces
 STRIKE = tuple(spec.get("STRIKE", (235, 30, 40)))     # strike-through colour for an old price in pop(top=(..., strike_t))
 KIN = tuple(spec.get("KIN", (64, 225, 235)))           # kinetic word colour (brand)
 KIN2 = tuple(spec.get("KIN2", (140, 70, 255)))         # its offset shadow colour
@@ -410,7 +411,7 @@ def draw(c, t, e):
                     if t >= tw:
                         p = (t - tw) / 0.14
                         w_ = words[sps.index(sp)] if sp in sps else ""
-                        if POP2 and re.fullmatch(r"[0-9]+([.,][0-9]+)?%?", w_) and t - tw < 0.4:   # price counts up
+                        if POP2 and COUNT and re.fullmatch(r"[0-9]+([.,][0-9]+)?%?", w_) and t - tw < 0.4:   # price counts up
                             num = float(w_.rstrip("%").replace(",", "")); v = num * ease((t - tw) / 0.4)
                             dig = (f"{v:.2f}" if "." in w_ else str(int(round(v)))) + ("%" if w_.endswith("%") else "")
                             sp = sprite(("popw", dig, col, size), lambda d_=dig: outlined(mask(d_, F_BIG_AR(size)), col))

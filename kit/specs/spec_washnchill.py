@@ -1,7 +1,7 @@
 # واش ان تشيل Wash N Chill car wash (grand opening; النسيم · شارع الدرع العربي) «خلها تبرق» — style 13 POP2 + AUTO_FACE, brand teal + white outline, yellow prices; source times
 T_ = ((35, 185, 180), (255, 255, 255)); Y_ = (255, 210, 40); W_ = (255, 255, 255)
 Y_POP = 380
-POP2 = True; AUTO_FACE = True
+POP2 = True; AUTO_FACE = True; COUNT = False   # user: fixed numbers, he talks fast
 TAG = (120, 225, 215)
 EV = [
     dict(pop(0.00, 2.00, big=("خلها تبرق!", 0.00, T_, [0.00, 0.28]), tag=("واش ان تشيل", 1.26)), fix=True),
