@@ -83,7 +83,7 @@ Y_POP = spec.get("Y_POP", 520)
 TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (style 13)
 TAG_STYLE = spec.get("TAG_STYLE", "box")                # tag look: box (default) | pill | ribbon | outline
 TAG_FG = tuple(spec.get("TAG_FG", (15, 15, 15)))         # tag text colour for pill/ribbon/outline
-IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000); IZ_SH = spec.get("IZ_SH", 200); IZ_GLINT = spec.get("IZ_GLINT", False); IZ_BLUR = spec.get("IZ_BLUR", 12)
+IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000); IZ_SH = spec.get("IZ_SH", 200); IZ_GLINT = spec.get("IZ_GLINT", False); IZ_TINT = tuple(spec.get("IZ_TINT", (255, 255, 255, 60))); IZ_BLUR = spec.get("IZ_BLUR", 12)   # IZ_TINT = glass wash; dark e.g. (20,12,0,150) for busy light walls
 POP2 = spec.get("POP2", False)        # style-13 upgrades: dark rim under light outlines, count-up prices, exit anim, tag auto-fit
 AUTO_FACE = spec.get("AUTO_FACE", False)
 COUNT = spec.get("COUNT", True)   # POP2 count-up prices (False = numbers appear fixed)  # move pops off detected faces
@@ -573,7 +573,7 @@ def draw(c, t, e):
         if e["glass"]:
             tot = max(widths) + 70; gx0 = W / 2 - tot / 2; gy0 = ys[0] - hs[0] / 2 - 26; gh = ys[-1] + hs[-1] / 2 + 26 - gy0
             box = c.crop((int(gx0), int(gy0), int(gx0 + tot), int(gy0 + gh))).filter(ImageFilter.GaussianBlur(22)).convert("RGBA")
-            box.alpha_composite(Image.new("RGBA", box.size, (255, 255, 255, 60)))
+            box.alpha_composite(Image.new("RGBA", box.size, IZ_TINT))
             m = Image.new("L", box.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 30, fill=int(255 * fa))
             c.paste(box, (int(gx0), int(gy0)), m)
         for ri, ws in enumerate(rows):
