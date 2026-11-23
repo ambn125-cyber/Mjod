@@ -68,7 +68,7 @@ Y_POP = spec.get("Y_POP", 520)
 TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (style 13)
 TAG_STYLE = spec.get("TAG_STYLE", "box")                # tag look: box (default) | pill | ribbon | outline
 TAG_FG = tuple(spec.get("TAG_FG", (15, 15, 15)))         # tag text colour for pill/ribbon/outline
-IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000); IZ_SH = spec.get("IZ_SH", 200); IZ_BLUR = spec.get("IZ_BLUR", 12)
+IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000); IZ_SH = spec.get("IZ_SH", 200); IZ_GLINT = spec.get("IZ_GLINT", False); IZ_BLUR = spec.get("IZ_BLUR", 12)
 POP2 = spec.get("POP2", False)        # style-13 upgrades: dark rim under light outlines, count-up prices, exit anim, tag auto-fit
 AUTO_FACE = spec.get("AUTO_FACE", False)
 COUNT = spec.get("COUNT", True)   # POP2 count-up prices (False = numbers appear fixed)  # move pops off detected faces
@@ -295,6 +295,21 @@ def ease(p):
     p = min(max(p, 0.0), 1.0); return 1 - (1 - p) ** 3
 
 
+def _glint(sp, dt, dur=0.8):
+    """one diagonal light sweep across a text sprite (dt = seconds since the sweep started); bright core + soft glow"""
+    if not (0 <= dt <= dur): return sp
+    q = dt / dur
+    a = np.asarray(sp.split()[3]).astype(np.float32)
+    xx = np.arange(sp.width)[None, :] + np.arange(sp.height)[:, None] * 0.45
+    cx_ = -sp.width * 0.25 + sp.width * 1.5 * q
+    band = np.clip(1 - np.abs(xx - cx_) / (sp.width * 0.07), 0, 1)
+    out = sp.copy()
+    glow = Image.new("RGBA", sp.size, (255, 255, 255, 0)); glow.putalpha(Image.fromarray((a * band).astype(np.uint8)).filter(ImageFilter.GaussianBlur(10)))
+    core = Image.new("RGBA", sp.size, (255, 255, 255, 0)); core.putalpha(Image.fromarray((a * np.clip(band * 1.6, 0, 1)).astype(np.uint8)))
+    out.alpha_composite(glow); out.alpha_composite(glow); out.alpha_composite(core)
+    return out
+
+
 _PS = [1.0]   # extra scale for the current pop (exit animation)
 
 
@@ -444,7 +459,15 @@ def draw(c, t, e):
             for txt, tw, cc in row:
                 if cc == "p":
                     psz = int(sz * 1.3)
-                    sp = sprite(("izp", txt, psz), lambda txt=txt, psz=psz: shadowed(mask(txt, F_AR(psz)), (255, 255, 255), sh=IZ_SH, blur=IZ_BLUR, dy=5))
+                    def _metal(txt=txt, psz=psz):
+                        m_ = mask(txt, F_AR(psz)); fill = Image.new("RGBA", m_.size)
+                        gy = np.linspace(0, 1, m_.height)[:, None]
+                        top, bot = np.array([255, 255, 255]), np.array([150, 185, 230])
+                        rgb = (top * (1 - gy[..., None]) + bot * gy[..., None]).repeat(m_.width, 1).astype(np.uint8)
+                        fill = Image.fromarray(np.dstack([rgb, np.asarray(m_)]), "RGBA")
+                        out = shadowed(m_, (255, 255, 255), sh=IZ_SH, blur=IZ_BLUR, dy=5)
+                        out.alpha_composite(fill, (0, 0)); return out
+                    sp = sprite(("izp2", txt, psz), _metal)
                 else:
                     col = IZ_GOLD if cc == "g" else (255, 255, 255)
                     sp = sprite(("iz", txt, col, sz), lambda txt=txt, col=col: shadowed(mask(txt, fnt), col, sh=IZ_SH, blur=IZ_BLUR, dy=5))
@@ -473,17 +496,11 @@ def draw(c, t, e):
                     hv = max(1, int(sp.height * p))
                     part = sp.crop((0, 0, sp.width, hv))
                     top = cy - sp.height / 2 + (sp.height - hv)
-                    if p >= 1 and 0.35 <= t - tw < 1.05:
-                        q = (t - tw - 0.35) / 0.7
-                        if 0 <= q <= 1:
-                            a = np.asarray(sp.split()[3]).astype(np.float32)
-                            xx = np.arange(sp.width)[None, :] + np.arange(sp.height)[:, None] * 0.4
-                            cx_ = -sp.width * 0.3 + sp.width * 1.6 * q
-                            band = np.clip(1 - np.abs(xx - cx_) / (sp.width * 0.09), 0, 1) * 0.85
-                            gl = Image.new("RGBA", sp.size, (255, 255, 255, 0)); gl.putalpha(Image.fromarray((a * band).astype(np.uint8)))
-                            part = sp.copy(); part.alpha_composite(gl)
+                    if p >= 1: part = _glint(sp, t - tw - 0.35)
                     put(c, part, cx, top + part.height / 2, fa)
                     continue
+                if cc == "g" and IZ_GLINT and t - tw >= 0.35:
+                    put(c, _glint(sp, t - tw - 0.35), cx, cy, fa); continue
                 p = ease((t - tw) / 0.3)
                 s_ = sp if p >= 1 else sp.filter(ImageFilter.GaussianBlur(9 * (1 - p)))
                 put(c, s_, cx - 26 * (1 - p), cy, p * fa)
