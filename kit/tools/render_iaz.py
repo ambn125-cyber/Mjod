@@ -216,6 +216,7 @@ def smear(sp, n):
 _CARDS = {}
 GW_SIZE = spec.get("GW_SIZE", 200); GW_Y = spec.get("GW_Y", 1350)
 GW_A = tuple(spec.get("GW_A", (255, 120, 210))); GW_B = tuple(spec.get("GW_B", (170, 60, 240))); GW_GLOW = tuple(spec.get("GW_GLOW", (200, 70, 255)))
+FLASH = spec.get("FLASH", [])
 EDGE = spec.get("EDGE", [])   # [(t0, t1)] purple glowing frame around the screen
 
 
@@ -669,6 +670,10 @@ def composite(raw, t):
                 m_ = Image.new("L", (W, H), 0); d_ = ImageDraw.Draw(m_); d_.rectangle((0, 0, W - 1, H - 1), outline=255, width=14)
                 fr = m_.filter(ImageFilter.GaussianBlur(18)).point(lambda v: min(255, int(v * 2.2))); _CARDS["_edge"] = fr
             ov = Image.new("RGBA", (W, H), (150, 70, 255, 255)); ov.putalpha(fr.point(lambda v: int(v * k_))); c.alpha_composite(ov)
+    for f0 in FLASH:   # quick white flash on a beat
+        if f0 <= t < f0 + 0.16:
+            k_ = 1 - (t - f0) / 0.16
+            c.alpha_composite(Image.new("RGBA", (W, H), (255, 245, 255, int(150 * k_))))
     for e in EV:
         if e["t0"] <= t < e["t1"]:
             _PS[0] = 1.0

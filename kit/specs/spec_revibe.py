@@ -4,6 +4,10 @@
 I = "kit/brands/revibe/icons/"; P = (200, 80, 255)
 GW_Y = 1390; GW_SIZE = 210
 EDGE = [(0.0, 3.0)]
+# v2 «وريني إبداعك»: punch-in zooms on key words, white flashes on the big beats, price/discount pills, inspection checklist,
+# warranty/delivery pills, WHITEFRIDAY code at the end
+ZOOM = [(3.4, 4.8), (10.2, 12.1), (21.9, 22.6), (24.6, 25.4), (25.5, 26.4)]
+FLASH = [4.82, 8.32, 12.16, 16.26, 20.64, 25.38]
 EV = [
     ico(0.20, 0.86, I + "c_iphone.png", cx=270, cy=930, w=260, glow=P, rot=8),
     gw(0.00, 0.86, "جوال؟", 0.26, top="خذ لك", tt=0.0),
@@ -13,14 +17,12 @@ EV = [
     gw(1.56, 2.40, "سماعة؟", 1.56, top="أو", tt=1.56),
     ico(2.40, 2.98, I + "c_macbook.png", cx=810, cy=960, w=380, glow=P),
     gw(2.40, 2.98, "لابتوب؟", 2.56, top="أو حتى", tt=2.40),
-    ico(3.52, 4.80, I + "e_money.png", cx=820, cy=1180, w=170, glow=(120, 255, 150), rot=-12),
     gw(2.98, 4.80, "أقل من السوق", 3.52, top="بسعر", tt=2.98, size=180),
     ico(5.30, 6.50, "kit/brands/revibe/logo_card.png", cx=540, cy=1380, w=560),
     gw(6.52, 8.30, "مجددة", 6.54, top="أجهزة", tt=5.98),
     ico(7.44, 8.30, I + "e_sparkle.png", cx=850, cy=1230, w=140),
     gw(8.32, 10.30, "فحص", 9.40, top="كل جهاز يمر على", tt=8.66),
     gw(10.30, 12.14, "50+ نقطة", 10.32, top="أكثر من", tt=9.84, size=230),
-    ico(10.40, 12.14, I + "e_check.png", cx=830, cy=1180, w=140),
     ico(13.72, 14.36, I + "c_samsung.png", cx=270, cy=950, w=300, glow=P, rot=6),
     gw(12.16, 14.36, "سامسونج", 13.72, top="كل الأجهزة", tt=12.16),
     ico(14.36, 15.00, I + "c_iphone.png", cx=810, cy=950, w=280, glow=P, rot=-6),
@@ -33,11 +35,21 @@ EV = [
     gw(19.40, 20.62, "قسّطها براحتك", 19.80, size=170),
     sc(16.26, 20.62, "kit/brands/revibe/rec/fr2", start=0.0, cx=540, cy=430, w=640, tilt=-1),
     gw(20.64, 22.56, "10 أيام", 21.96, top="والأقوى", tt=20.64, size=240),
-    ico(21.96, 25.36, I + "e_calendar.png", cx=830, cy=1150, w=150, glow=P, rot=-8),
+    ico(21.96, 22.56, I + "e_calendar.png", cx=830, cy=1150, w=150, glow=P, rot=-8),
     gw(22.58, 25.36, "فلوسك كاملة", 24.74, top="ما ناسبك؟ رجّعه", tt=22.58, size=180),
     ico(25.38, 28.72, "kit/brands/revibe/logo_card.png", cx=540, cy=470, w=520),
     gw(25.38, 26.50, "ريفايب", 25.68, top="حمّل", tt=25.38),
     gw(26.52, 28.04, "كأنه جديد", 27.34, top="جوال مجدد", tt=26.52),
     gw(28.06, 29.00, "وبسعر أقل", 28.06, size=200),
     sc(25.38, 29.00, "kit/brands/revibe/rec/fr3", start=4.0, cx=540, cy=1000, w=520, tilt=1) if False else ico(28.06, 29.00, I + "e_money.png", cx=840, cy=1180, w=160, glow=(120, 255, 150)),
+    ico(3.60, 4.80, I + "k_p14.png", cx=300, cy=1110, w=546, rot=-4),
+    ico(3.90, 4.80, I + "k_70.png", cx=760, cy=990, w=559, rot=4),
+    ico(9.40, 12.14, I + "k_bat.png", t=9.55, cx=230, cy=880, w=377, rot=-3),
+    ico(9.40, 12.14, I + "k_scr.png", t=9.90, cx=850, cy=880, w=351, rot=3),
+    ico(9.40, 12.14, I + "k_cam.png", t=10.25, cx=230, cy=1040, w=377, rot=-3),
+    ico(9.40, 12.14, I + "k_int.png", t=10.60, cx=840, cy=1040, w=429, rot=3),
+    ico(22.58, 25.36, I + "k_war.png", t=22.80, cx=270, cy=1180, w=429, rot=-4),
+    ico(22.58, 25.36, I + "k_del.png", t=23.30, cx=810, cy=1180, w=429, rot=4),
+    ico(26.52, 29.00, I + "c_iphone.png", t=26.60, cx=840, cy=980, w=230, glow=P, rot=-8),
+    ico(28.06, 29.00, I + "k_code.png", t=28.10, cx=540, cy=1620, w=960),
 ]
