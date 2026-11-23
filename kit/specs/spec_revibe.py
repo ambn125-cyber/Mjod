@@ -51,5 +51,4 @@ EV = [
     ico(22.58, 25.36, I + "k_war.png", t=22.80, cx=270, cy=1180, w=429, rot=-4),
     ico(22.58, 25.36, I + "k_del.png", t=23.30, cx=810, cy=1180, w=429, rot=4),
     ico(26.52, 29.00, I + "c_iphone.png", t=26.60, cx=840, cy=980, w=230, glow=P, rot=-8),
-    ico(28.06, 29.00, I + "k_code.png", t=28.10, cx=540, cy=1620, w=960),
 ]
