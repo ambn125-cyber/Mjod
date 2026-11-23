@@ -56,7 +56,22 @@ def pop(t0, t1, big=None, tag=None, y=None, top=None):
     return dict(k="pop", t0=t0, t1=t1, big=big, tag=tag, top=top, y=y)
 
 
-spec = dict(iz=iz, duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card, pop=pop, word=word)
+def gw(t0, t1, big, tb, top=None, tt=None, y=None, x=540, size=None):
+    """17 (Revibe ref): small white word on top + huge pink→purple gradient glowing word, bouncy pop. Straight."""
+    return dict(k="gw", t0=t0, t1=t1, big=big, tb=tb, top=top, tt=tt if tt is not None else t0, y=y, x=x, size=size)
+
+
+def ico(t0, t1, path, t=None, cx=540, cy=900, w=300, glow=None, rot=0):
+    """17: cut-out product / logo / emoji with a soft colour glow, bounces in and floats gently."""
+    return dict(k="ico", t0=t0, t1=t1, path=path, t=t0 if t is None else t, cx=cx, cy=cy, w=w, glow=glow, rot=rot)
+
+
+def sc(t0, t1, frames, fps=10, start=0.0, cx=540, cy=470, w=620, tilt=1):
+    """17: phone screen recording shown as a tilted 3D card (frames = folder of numbered PNGs at fps), slides down in."""
+    return dict(k="sc", t0=t0, t1=t1, frames=frames, fps=fps, start=start, cx=cx, cy=cy, w=w, tilt=tilt)
+
+
+spec = dict(gw=gw, ico=ico, sc=sc, iz=iz, duo=duo, neon=neon, plain=plain, serif=serif, kin=kin, card=card, pop=pop, word=word)
 _src = open(SPEC, encoding="utf-8").read()
 exec("\n".join(l for l in _src.splitlines() if re.match(r"^[A-Z_0-9]+ *=", l) and not l.startswith("EV")), spec)
 COLOR = tuple(spec.get("COLOR", (245, 170, 20)))      # duo English word
@@ -196,6 +211,80 @@ def smear(sp, n):
         acc[:, i:i + sp.width] += a
     acc /= len(range(0, n, max(1, n // 8)))
     return Image.fromarray(acc.clip(0, 255).astype(np.uint8))
+
+
+_CARDS = {}
+GW_SIZE = spec.get("GW_SIZE", 200); GW_Y = spec.get("GW_Y", 1350)
+GW_A = tuple(spec.get("GW_A", (255, 120, 210))); GW_B = tuple(spec.get("GW_B", (170, 60, 240))); GW_GLOW = tuple(spec.get("GW_GLOW", (200, 70, 255)))
+EDGE = spec.get("EDGE", [])   # [(t0, t1)] purple glowing frame around the screen
+
+
+def glowtxt(txt, size, col, glow):
+    m = mask(txt, F_AR(size), pad=60)
+    out = Image.new("RGBA", m.size, (0, 0, 0, 0))
+    g = Image.new("RGBA", m.size, glow + (255,)); g.putalpha(m.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(18)).point(lambda v: min(255, v * 2)))
+    out.alpha_composite(g)
+    sh = Image.new("RGBA", m.size, (40, 0, 60, 255)); sh.putalpha(m.filter(ImageFilter.GaussianBlur(4)).point(lambda v: v * 150 // 255)); out.alpha_composite(sh, (0, 0))
+    f = Image.new("RGBA", m.size, col + (255,)); f.putalpha(m); out.alpha_composite(f)
+    return out
+
+
+def gradtxt(txt, size):
+    """chunky Lalezar word: vertical pink→purple gradient, light inner highlight, thin light rim, wide magenta glow"""
+    m = mask(txt, F_BIG_AR(size), pad=80)
+    h = m.height; gy = np.linspace(0, 1, h)[:, None, None]
+    a, b = np.array(GW_A), np.array(GW_B)
+    rgb = (a * (1 - gy) + b * gy).repeat(m.width, 1)
+    hi = np.clip(1 - np.abs(np.linspace(0, 1, h) - 0.33) / 0.18, 0, 1)[:, None, None] * 0.35
+    rgb = (rgb * (1 - hi) + 255 * hi).astype(np.uint8)
+    out = Image.new("RGBA", m.size, (0, 0, 0, 0))
+    g = Image.new("RGBA", m.size, GW_GLOW + (255,)); g.putalpha(m.filter(ImageFilter.MaxFilter(15)).filter(ImageFilter.GaussianBlur(30)).point(lambda v: min(255, int(v * 1.6))))
+    out.alpha_composite(g)
+    sh = Image.new("RGBA", m.size, (60, 0, 80, 255)); sh.putalpha(m.filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.GaussianBlur(6)).point(lambda v: v * 170 // 255)); out.alpha_composite(sh, (0, 8))
+    rim = Image.new("RGBA", m.size, (255, 235, 250, 255)); rim.putalpha(m.filter(ImageFilter.MaxFilter(7))); out.alpha_composite(rim)
+    f = Image.fromarray(np.dstack([rgb, np.asarray(m)]), "RGBA"); out.alpha_composite(f)
+    return out
+
+
+def icon_img(path, w, glow, rot):
+    im = Image.open(path).convert("RGBA"); im = im.resize((w, int(im.height * w / im.width)), Image.LANCZOS)
+    if rot: im = im.rotate(rot, Image.BICUBIC, expand=True)
+    pad = 70; out = Image.new("RGBA", (im.width + 2 * pad, im.height + 2 * pad), (0, 0, 0, 0))
+    a = Image.new("L", out.size, 0); a.paste(im.split()[3], (pad, pad))
+    if glow:
+        g = Image.new("RGBA", out.size, tuple(glow) + (255,)); g.putalpha(a.filter(ImageFilter.MaxFilter(11)).filter(ImageFilter.GaussianBlur(26)).point(lambda v: min(255, int(v * 1.4)))); out.alpha_composite(g)
+    sh = Image.new("RGBA", out.size, (0, 0, 0, 255)); sh.putalpha(a.filter(ImageFilter.GaussianBlur(14)).point(lambda v: v * 110 // 255))
+    out.alpha_composite(sh, (0, 0)); out.alpha_composite(im, (pad, pad))
+    return out
+
+
+def screen_card(path, w, tilt):
+    im = Image.open(path).convert("RGBA"); hgt = int(im.height * w / im.width)
+    im = im.resize((w, hgt), Image.LANCZOS)
+    hgt = min(hgt, int(w * 0.62)); im = im.crop((0, int(im.height * 0.06), w, int(im.height * 0.06) + hgt))   # top strip of the page, like the ref
+    m = Image.new("L", im.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, w - 1, hgt - 1), 28, fill=255); im.putalpha(m)
+    # perspective: far edge narrower (tilt=1 right side farther, -1 left)
+    pad = 60; d = int(w * 0.10)
+    W2, H2 = w + 2 * pad, hgt + 2 * pad
+    if tilt >= 0: quad = (0, 0, 0, hgt, w, hgt + d, w, -d)
+    else: quad = (0, -d, 0, hgt + d, w, hgt, w, 0)
+    big = Image.new("RGBA", (w, hgt + 2 * d), (0, 0, 0, 0)); big.paste(im, (0, d))
+    q = [quad[0], quad[1] + d, quad[2], quad[3] + d, quad[4], quad[5] + d, quad[6], quad[7] + d]
+    # PIL QUAD maps output rect corners (UL, LL, LR, UR) to input quad: invert by warping the card into the quad
+    tgt = Image.new("RGBA", big.size, (0, 0, 0, 0))
+    src_pts = [(0, d), (0, d + hgt), (w, d + hgt), (w, d)]
+    dst_pts = [(q[0], q[1]), (q[2], q[3]), (q[4], q[5]), (q[6], q[7])]
+    A = []; B = []
+    for (xs, ys), (xd, yd) in zip(src_pts, dst_pts):
+        A.append([xd, yd, 1, 0, 0, 0, -xs * xd, -xs * yd]); B.append(xs)
+        A.append([0, 0, 0, xd, yd, 1, -ys * xd, -ys * yd]); B.append(ys)
+    coef = np.linalg.solve(np.array(A, float), np.array(B, float))
+    tgt = big.transform(big.size, Image.PERSPECTIVE, tuple(coef), Image.BICUBIC)
+    out = Image.new("RGBA", (W2, tgt.height + 2 * pad), (0, 0, 0, 0))
+    a = Image.new("L", out.size, 0); a.paste(tgt.split()[3], (pad, pad))
+    g = Image.new("RGBA", out.size, (190, 90, 255, 255)); g.putalpha(a.filter(ImageFilter.GaussianBlur(30)).point(lambda v: v * 170 // 255)); out.alpha_composite(g)
+    out.alpha_composite(tgt, (pad, pad))
+    return out
 
 
 def card_img(path, w, r):
@@ -513,6 +602,32 @@ def draw(c, t, e):
                 d.rounded_rectangle((x0, ly + 3, x1, ly + 11), 4, fill=(0, 0, 0, int(90 * fa)))
                 d.rounded_rectangle((x0, ly, x1, ly + 7), 4, fill=IZ_GOLD + (int(255 * fa),))
                 c.alpha_composite(ov)
+    elif k == "gw":
+        y = e["y"] or GW_Y; sz = e["size"] or GW_SIZE
+        if e["top"] and t >= e["tt"]:
+            sp = sprite(("gwt", e["top"]), lambda: glowtxt(e["top"], int(sz * 0.42), (255, 255, 255), GW_GLOW))
+            p = ease((t - e["tt"]) / 0.25)
+            put(c, sp, e["x"] + 0, y - sz * 0.62 + 30 * (1 - p), p * fa)
+        if t >= e["tb"]:
+            sp = sprite(("gwb", e["big"], sz), lambda: gradtxt(e["big"], sz))
+            q = (t - e["tb"]) / 0.32
+            sc_ = 0.4 + 0.6 * ease(q) + (0.12 * np.sin(min(q, 1) * np.pi) if q < 1 else 0) + 0.04 * np.exp(-(t - e["tb"] - 0.32) * 6) * np.sin((t - e["tb"]) * 20) * (q >= 1)
+            put(c, sp, e["x"], y, min(1, q * 2.5) * fa, sc_)
+    elif k == "ico":
+        if t >= e["t"]:
+            sp = sprite(("ico", e["path"], e["w"], e["glow"], e["rot"]), lambda: icon_img(e["path"], e["w"], e["glow"], e["rot"]))
+            q = (t - e["t"]) / 0.35
+            sc_ = 0.3 + 0.7 * ease(q) + (0.15 * np.sin(min(q, 1) * np.pi) if q < 1 else 0)
+            fy = 10 * np.sin((t - e["t"]) * 2.6)
+            put(c, sp, e["cx"], e["cy"] + fy, min(1, q * 2) * fa, sc_)
+    elif k == "sc":
+        import glob as _g
+        fl = _CARDS.setdefault(e["frames"], sorted(_g.glob(e["frames"] + "/*.png")))
+        i = min(len(fl) - 1, max(0, int((t - e["t0"] + e["start"]) * e["fps"])))
+        sp = sprite(("sc", fl[i], e["w"], e["tilt"]), lambda: screen_card(fl[i], e["w"], e["tilt"]))
+        if len(_cache) > 900: _cache.clear()
+        p = ease((t - e["t0"]) / 0.4)
+        put(c, sp, e["cx"], e["cy"] - 160 * (1 - p), p * fa, 0.85 + 0.15 * p)
     elif k == "card":
         sp = sprite(("card", e["path"], e["w"]), lambda: card_img(e["path"], e["w"], e["r"]))
         p = ease((t - e["t"]) / 0.3)
@@ -546,6 +661,14 @@ def composite(raw, t):
             if s_ > 1.001:
                 nw, nh = int(W * s_), int(H * s_); c = c.resize((nw, nh), Image.BILINEAR).crop(((nw - W) // 2, (nh - H) // 2, (nw - W) // 2 + W, (nh - H) // 2 + H))
     c = c.convert("RGBA")
+    for e0, e1 in EDGE:
+        if e0 <= t < e1:
+            k_ = min(ease((t - e0) / 0.3), ease((e1 - t) / 0.5)) * (0.75 + 0.25 * np.sin(t * 9))
+            fr = _CARDS.get("_edge")
+            if fr is None:
+                m_ = Image.new("L", (W, H), 0); d_ = ImageDraw.Draw(m_); d_.rectangle((0, 0, W - 1, H - 1), outline=255, width=14)
+                fr = m_.filter(ImageFilter.GaussianBlur(18)).point(lambda v: min(255, int(v * 2.2))); _CARDS["_edge"] = fr
+            ov = Image.new("RGBA", (W, H), (150, 70, 255, 255)); ov.putalpha(fr.point(lambda v: int(v * k_))); c.alpha_composite(ov)
     for e in EV:
         if e["t0"] <= t < e["t1"]:
             _PS[0] = 1.0
