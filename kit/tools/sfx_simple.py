@@ -40,7 +40,19 @@ def whoosh():
     return norm((lo * (1 - x) + hi * x) * env)
 
 
-FX = {"whoosh": (whoosh, 0.22, -0.12), "kaching": (kaching, 0.30, 0.0)}   # (synth, gain, lead-in seconds)
+def pop():
+    """short bubbly pop (sine drop 900→250 Hz) for a word / icon bouncing in"""
+    d = 0.12; t = tt(d); f = 250 + 650 * np.exp(-t * 40)
+    return norm(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 32))
+
+
+def ding():
+    """bright tick for a checklist item"""
+    d = 0.35; t = tt(d)
+    return norm(sum(a * np.sin(2 * np.pi * f * t) for f, a in ((1568, 1), (2349, .5), (3136, .25))) * np.exp(-t * 14))
+
+
+FX = {"pop": (pop, 0.16, 0.0), "ding": (ding, 0.13, 0.0), "whoosh": (whoosh, 0.22, -0.12), "kaching": (kaching, 0.30, 0.0)}   # (synth, gain, lead-in seconds)
 raw = subprocess.run(["ffmpeg", "-v", "error", "-i", VIDEO, "-f", "s16le", "-ac", "2", "-ar", str(SR), "-"],
                      capture_output=True).stdout
 a = np.frombuffer(raw, np.int16).reshape(-1, 2).astype(np.float32) / 32768
