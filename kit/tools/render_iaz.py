@@ -26,10 +26,12 @@ def word(t0, t1, text, col=None, size=None, x=540, y=None):
     """15 (كلمة كلمة): one spoken word at a time. col=None → small plain white Naskh word with a soft shadow;
     col=(r,g,b) → big glowing neon keyword (Amiri Bold). Place keywords in empty space with x/y."""
     return dict(k="word", t0=t0, t1=t1, text=text, col=col, size=size, x=x, y=y)
-def iz(t0, t1, *rows, y=None, glass=False):
+def iz(t0, t1, *rows, y=None, glass=False, line=False):
     """16 (iaz.199 reel): 1–2 centred rows, each word slides/blur-fades in on its time. rows = [("كلمة", t, "g"|"w"), ...];
     "g" = mustard gold (IZ_GOLD), "w" = white; soft shadow, Tajawal Black. glass=True puts the whole block on a frosted pill."""
-    return dict(k="iz", t0=t0, t1=t1, rows=rows, y=y, glass=glass)
+    #   colour "p" = price: bigger white, rises from behind a hidden baseline, then a light glint sweeps across it once.
+    #   line=True draws a thin IZ_GOLD rule under row 1 (right → left) once its words are in. Spec ZOOM=[(t0,t1),..] = gentle punch-in.
+    return dict(k="iz", t0=t0, t1=t1, rows=rows, y=y, glass=glass, line=line)
 
 
 def kin(t0, t1, *rows, y=1200, gap=26, nudge=0):
@@ -440,27 +442,60 @@ def draw(c, t, e):
         for row in e["rows"]:
             ws = []
             for txt, tw, cc in row:
-                col = IZ_GOLD if cc == "g" else (255, 255, 255)
-                sp = sprite(("iz", txt, col, sz), lambda txt=txt, col=col: shadowed(mask(txt, fnt), col, sh=IZ_SH, blur=IZ_BLUR, dy=5))
-                ws.append((sp, tw))
+                if cc == "p":
+                    psz = int(sz * 1.3)
+                    sp = sprite(("izp", txt, psz), lambda txt=txt, psz=psz: shadowed(mask(txt, F_AR(psz)), (255, 255, 255), sh=IZ_SH, blur=IZ_BLUR, dy=5))
+                else:
+                    col = IZ_GOLD if cc == "g" else (255, 255, 255)
+                    sp = sprite(("iz", txt, col, sz), lambda txt=txt, col=col: shadowed(mask(txt, fnt), col, sh=IZ_SH, blur=IZ_BLUR, dy=5))
+                ws.append((sp, tw, cc))
             rows.append(ws)
         lh = int(sz * 1.25)
+        hs = [max(sp.height for sp, _, _ in r) - 2 * P for r in rows]
         y0 = (e["y"] or IZ_Y) - lh * (len(rows) - 1) / 2
-        widths = [sum(sp.width - 2 * P for sp, _ in r) + gap * (len(r) - 1) for r in rows]
+        ys = [y0]
+        for ri in range(1, len(rows)):
+            ys.append(ys[-1] + max(lh, (hs[ri - 1] + hs[ri]) / 2 + sz * 0.15))
+        widths = [sum(sp.width - 2 * P for sp, _, _ in r) + gap * (len(r) - 1) for r in rows]
         if e["glass"]:
-            tot = max(widths) + 70; gh = lh * len(rows) + 20; gx0 = W / 2 - tot / 2; gy0 = y0 - lh / 2 - 6
+            tot = max(widths) + 70; gx0 = W / 2 - tot / 2; gy0 = ys[0] - hs[0] / 2 - 26; gh = ys[-1] + hs[-1] / 2 + 26 - gy0
             box = c.crop((int(gx0), int(gy0), int(gx0 + tot), int(gy0 + gh))).filter(ImageFilter.GaussianBlur(22)).convert("RGBA")
             box.alpha_composite(Image.new("RGBA", box.size, (255, 255, 255, 60)))
             m = Image.new("L", box.size, 0); ImageDraw.Draw(m).rounded_rectangle((0, 0, box.width - 1, box.height - 1), 30, fill=int(255 * fa))
             c.paste(box, (int(gx0), int(gy0)), m)
         for ri, ws in enumerate(rows):
-            x = W / 2 + widths[ri] / 2; cy = y0 + ri * lh
-            for sp, tw in ws:
+            x = W / 2 + widths[ri] / 2; cy = ys[ri]
+            for sp, tw, cc in ws:
                 cw = sp.width - 2 * P; cx = x - cw / 2; x -= cw + gap
                 if t < tw: continue
+                if cc == "p":   # rise from a hidden baseline, then one glint
+                    p = ease((t - tw) / 0.35)
+                    hv = max(1, int(sp.height * p))
+                    part = sp.crop((0, 0, sp.width, hv))
+                    top = cy - sp.height / 2 + (sp.height - hv)
+                    if p >= 1 and 0.35 <= t - tw < 1.05:
+                        q = (t - tw - 0.35) / 0.7
+                        if 0 <= q <= 1:
+                            a = np.asarray(sp.split()[3]).astype(np.float32)
+                            xx = np.arange(sp.width)[None, :] + np.arange(sp.height)[:, None] * 0.4
+                            cx_ = -sp.width * 0.3 + sp.width * 1.6 * q
+                            band = np.clip(1 - np.abs(xx - cx_) / (sp.width * 0.09), 0, 1) * 0.85
+                            gl = Image.new("RGBA", sp.size, (255, 255, 255, 0)); gl.putalpha(Image.fromarray((a * band).astype(np.uint8)))
+                            part = sp.copy(); part.alpha_composite(gl)
+                    put(c, part, cx, top + part.height / 2, fa)
+                    continue
                 p = ease((t - tw) / 0.3)
                 s_ = sp if p >= 1 else sp.filter(ImageFilter.GaussianBlur(9 * (1 - p)))
                 put(c, s_, cx - 26 * (1 - p), cy, p * fa)
+        if e.get("line") and rows:
+            tl = max(tw for _, tw, _ in rows[0]) + 0.25
+            if t >= tl:
+                q = ease((t - tl) / 0.5); lw = widths[0] + 40
+                x1 = W / 2 + lw / 2; x0 = x1 - lw * q; ly = ys[0] + hs[0] / 2 + 14
+                ov = Image.new("RGBA", c.size, (0, 0, 0, 0)); d = ImageDraw.Draw(ov)
+                d.rounded_rectangle((x0, ly + 3, x1, ly + 11), 4, fill=(0, 0, 0, int(90 * fa)))
+                d.rounded_rectangle((x0, ly, x1, ly + 7), 4, fill=IZ_GOLD + (int(255 * fa),))
+                c.alpha_composite(ov)
     elif k == "card":
         sp = sprite(("card", e["path"], e["w"]), lambda: card_img(e["path"], e["w"], e["r"]))
         p = ease((t - e["t"]) / 0.3)
@@ -483,8 +518,17 @@ def draw(c, t, e):
         put(c, sp, W / 2, y, ease((t - e["t0"]) / 0.5) * fa)
 
 
+ZOOM = spec.get("ZOOM", [])   # [(t0, t1), ...] gentle punch-in windows
+
+
 def composite(raw, t):
-    c = Image.frombytes("RGB", (W, H), raw).convert("RGBA")
+    c = Image.frombytes("RGB", (W, H), raw)
+    for z0, z1 in ZOOM:
+        if z0 <= t < z1:
+            k_ = min(ease((t - z0) / 0.45), ease((z1 - t) / 0.45)); s_ = 1 + 0.07 * k_
+            if s_ > 1.001:
+                nw, nh = int(W * s_), int(H * s_); c = c.resize((nw, nh), Image.BILINEAR).crop(((nw - W) // 2, (nh - H) // 2, (nw - W) // 2 + W, (nh - H) // 2 + H))
+    c = c.convert("RGBA")
     for e in EV:
         if e["t0"] <= t < e["t1"]:
             _PS[0] = 1.0
