@@ -111,7 +111,9 @@ WORD_SIZE = spec.get("WORD_SIZE", 74); WORD_Y = spec.get("WORD_Y", 380)         
 WORD_BIG = spec.get("WORD_BIG", 170); WORD_BIG_Y = spec.get("WORD_BIG_Y", 600)   # style 15 neon keyword
 GRADE = spec.get("GRADE", "")                         # optional ffmpeg colour filter on the footage, e.g. "eq=saturation=1.3"
 DUO_BIG = spec.get("DUO_BIG", 210)                     # size of an Arabic big word in duo()
-DUO_POP = spec.get("DUO_POP", False)                   # bouncy pop-in for the duo big word
+DUO_POP = spec.get("DUO_POP", False)
+DUO_SCRIM = spec.get("DUO_SCRIM")   # e.g. (40,20,8,170): soft horizontal band behind duo() text
+DUO_FONT = spec.get("DUO_FONT", "lalezar")               # "amiri" = calligraphic Naskh big word (luxury / weddings)                   # bouncy pop-in for the duo big word
 
 
 def F_PLAIN_FOR(text, size=None, maxw=940):
@@ -431,8 +433,15 @@ def draw(c, t, e):
     if k == "duo":
         (ar, ta), (en, te) = e["ar"], e["en"]
         y = e["y"] or Y_DUO
+        if DUO_SCRIM:   # soft chocolate band behind the block (white/gold stores ate gold text)
+            sk = _CARDS.get("_scrim")
+            if sk is None:
+                hh = 520; g = np.exp(-((np.arange(hh) - hh / 2) / (hh * 0.28)) ** 2)
+                sk = Image.fromarray((np.repeat(g[:, None], W, 1) * DUO_SCRIM[3]).astype(np.uint8)); _CARDS["_scrim"] = sk
+            ov = Image.new("RGBA", sk.size, tuple(DUO_SCRIM[:3]) + (255,)); ov.putalpha(sk.point(lambda v: int(v * fa)))
+            c.alpha_composite(ov, (0, int(y - 60 - sk.height / 2)))
         sa = sprite(("ar", ar), lambda: shadowed(fitted(ar, F_AR, 104), (255, 255, 255)))
-        se = sprite(("en", en), lambda: shadowed(fitted(en, F_BIG_AR if re.search(r"[\u0600-\u06ff]", en) else F_SERIF,
+        se = sprite(("en", en), lambda: shadowed(fitted(en, (F_AMIRI if DUO_FONT == "amiri" else F_BIG_AR) if re.search(r"[\u0600-\u06ff]", en) else F_SERIF,
                                                            DUO_BIG if re.search(r"[\u0600-\u06ff]", en) else 250), COLOR, sh=235 if NEON_SHADOW else 120, blur=16 if NEON_SHADOW else 10))
         pa, pe = ease((t - ta) / 0.3), ease((t - te) / 0.35)
         put(c, sa, W / 2, y - se.height * 0.32 - sa.height / 2 + 30 + 20 * (1 - pa), pa * fa)
