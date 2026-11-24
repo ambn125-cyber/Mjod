@@ -83,7 +83,7 @@ Y_POP = spec.get("Y_POP", 520)
 TAG = tuple(spec.get("TAG", (255, 222, 40)))           # marker-tag background (style 13)
 TAG_STYLE = spec.get("TAG_STYLE", "box")                # tag look: box (default) | pill | ribbon | outline
 TAG_FG = tuple(spec.get("TAG_FG", (15, 15, 15)))         # tag text colour for pill/ribbon/outline
-IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000); IZ_SH = spec.get("IZ_SH", 200); IZ_GLINT = spec.get("IZ_GLINT", False); IZ_TINT = tuple(spec.get("IZ_TINT", (255, 255, 255, 60))); IZ_BLUR = spec.get("IZ_BLUR", 12)   # IZ_TINT = glass wash; dark e.g. (20,12,0,150) for busy light walls
+IZ_GOLD = tuple(spec.get("IZ_GOLD", (245, 175, 45))); IZ_SIZE = spec.get("IZ_SIZE", 100); IZ_Y = spec.get("IZ_Y", 1000); IZ_SH = spec.get("IZ_SH", 200); IZ_GLINT = spec.get("IZ_GLINT", False); IZ_TINT = tuple(spec.get("IZ_TINT", (255, 255, 255, 60))); IZ_BLUR = spec.get("IZ_BLUR", 12); IZ_WHITE = tuple(spec.get("IZ_WHITE", (255, 255, 255)))   # IZ_TINT = glass wash; dark e.g. (20,12,0,150) for busy light walls
 POP2 = spec.get("POP2", False)        # style-13 upgrades: dark rim under light outlines, count-up prices, exit anim, tag auto-fit
 AUTO_FACE = spec.get("AUTO_FACE", False)
 COUNT = spec.get("COUNT", True)   # POP2 count-up prices (False = numbers appear fixed)  # move pops off detected faces
@@ -559,7 +559,7 @@ def draw(c, t, e):
                         out.alpha_composite(fill, (0, 0)); return out
                     sp = sprite(("izp2", txt, psz), _metal)
                 else:
-                    col = IZ_GOLD if cc == "g" else (255, 255, 255)
+                    col = IZ_GOLD if cc == "g" else IZ_WHITE
                     sp = sprite(("iz", txt, col, sz), lambda txt=txt, col=col: shadowed(mask(txt, fnt), col, sh=IZ_SH, blur=IZ_BLUR, dy=5))
                 ws.append((sp, tw, cc))
             rows.append(ws)
